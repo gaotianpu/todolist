@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import web
+import os
 import platform
 import logging
 import datetime
+
+debug = "SERVER_SOFTWARE" not in os.environ
+web.config.debug = debug
+
 
 dbw = web.database(dbn='mysql', host='127.0.0.1', db='planc', user='root', pw='root')
 dbr = web.database(dbn='mysql', host='127.0.0.1', db='planc', user='root', pw='root')
