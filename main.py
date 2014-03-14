@@ -23,7 +23,8 @@ class DateList:
     def GET(self):
         i = web.input(date=datetime.now().strftime('%Y-%m-%d'))
         rows = da.subject.load_by_date(cust_id,i.date)
-        r = {'code':1,'list':rows}
+        date = {'shortDate':u'今天','strDate':datetime.now().strftime('%y/%m/%d'),'dayOfWeek':'Fri'}
+        r = {'code':1,'list':rows,'date':date}
         return json.dumps(r)
 
 class New:

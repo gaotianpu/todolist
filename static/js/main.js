@@ -9,7 +9,7 @@ var Util = {
 var Index = {
 	render_list:function(date){
 		$.getJSON('/datelist', {'date':date}, function(data){
-			$('#list_' + date).html(juicer($("#tpl_tasklist").html(), data));
+			$('#today').html(juicer($("#tpl_date_tasklist").html(), data));
 		});
 	},
 	
