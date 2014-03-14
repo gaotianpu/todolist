@@ -23,17 +23,24 @@ DROP TABLE IF EXISTS `subjects`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `subjects` (
-  `subject_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `creator_id` bigint(20) NOT NULL,
-  `subject` varchar(200) NOT NULL,
-  `body` varchar(3000) NOT NULL,
-  `participator_ids` varchar(3000) NOT NULL,
-  `created_date` datetime NOT NULL DEFAULT '1901-01-01 00:00:00',
-  `last_update` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
-  `closed_date` datetime NOT NULL,
-  `task_status` tinyint(4) DEFAULT '0' COMMENT '尚未开始 NotBegun 0，已开始 Doing 10，结束Done2，Block3',
-  PRIMARY KEY (`subject_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+`pk_id`  bigint(20) NOT NULL AUTO_INCREMENT ,
+`user_id`  bigint(20) NOT NULL ,
+`subject`  varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+`body`  varchar(3000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+`participator_ids`  varchar(3000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+`created_date`  datetime NOT NULL DEFAULT '1901-01-01 00:00:00' ,
+`last_update`  timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP ,
+`task_status`  tinyint(4) NULL DEFAULT 0 COMMENT '尚未开始 NotBegun 0，已开始 Doing 10，结束Done2，Block3' ,
+`closed_date`  datetime NULL DEFAULT NULL ,
+`is_delete`  tinyint(4) NULL DEFAULT NULL ,
+`plan_start_date`  datetime NULL DEFAULT NULL ,
+`plan_closed_date`  datetime NULL DEFAULT NULL ,
+`start_date`  datetime NULL DEFAULT NULL ,
+PRIMARY KEY (`pk_id`),
+INDEX `ix_user_id` (`user_id`) USING BTREE ,
+INDEX `ix_plan_start_date` (`plan_start_date`) USING BTREE 
+)
+ENGINE=MyISAM
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
