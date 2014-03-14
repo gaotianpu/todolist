@@ -3,7 +3,7 @@
 import web
 import da
 from datetime import *
-import simplejson as json
+import json 
 
 urls = (
     '/datelist','DateList',    
