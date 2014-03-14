@@ -7,7 +7,9 @@
 <div id="yestoday">  
 </div> 
 
-<nav id="navPost" class="navbar navbar-default navbar-fixed-bottom" role="navigation"> 
+<div style="height:40px;"></div>
+
+<nav id="navPost" class="navbar navbar-default navbar-fixed-bottom" role="navigation">   
   <form id="newPostForm" class="form-inline" role="form">
     <div class="form-group col-lg-8 ">
       <label class="sr-only alert" for="txtContent">Email address</label>
@@ -15,19 +17,13 @@
     </div> 
     <button id="btnSubmit" type="submit" class="btn btn-default">Submit</button>
   </form> 
-</nav>
-
-<script id="tpl_tasklist" type="text/template">
-{@each list as it,index}
-<li class="list-group-item"><label><input type="checkbox">$${it.subject}</label></li>   
-{@/each}
-</script>
+</nav> 
 
 <script id="tpl_date_tasklist" type="text/template">
 <h1>$${date.shortDate} <small>$${date.strDate},$${date.dayOfWeek}</small></h1>
 <ul id="list_$${date.strDate}" class="list-group"> 
 {@each list as it,index}
-<li class="list-group-item"><label><input type="checkbox">$${it.subject}</label></li>   
+<li id="t_$${it.pk_id}" class="list-group-item"><label><input type="checkbox">$${it.subject}</label></li>   
 {@/each}
 </ul>
 </script>

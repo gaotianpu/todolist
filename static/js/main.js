@@ -41,6 +41,10 @@ $(function(){
 		$.post('/new',{'content':content},function(data){
 			Index.render_list(today);
 
+			$("html,body").animate({
+            	scrollTop:$("#navPost").offset().top - 5
+            },300);
+
 			Index.last_content = content;
 			$('#txtContent').val('');
 		})		 
