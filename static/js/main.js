@@ -23,7 +23,13 @@ $(function(){
 
 	//bindding
 	$('#newPostForm').submit(function(e){
-		$.post('/new',{'content':$('#txtContent').val()},function(data){			
+		var content = $('#txtContent').val().trim(); 
+
+		if(content==''){			 
+			//$(".alert").alert();
+			return false; 
+		}
+		$.post('/new',{'content':content},function(data){			
 			$('#txtContent').val('');
 			Index.render_list(today);
 		})		 
