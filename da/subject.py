@@ -10,5 +10,5 @@ def insert(user_id,subject,body):
 		last_update=web.SQLLiteral('now()'),
 		plan_start_date=web.SQLLiteral('now()'))
 
-def load_by_date(date):
-	return list(dbr.select(table_name,what="pk_id,subject",where='date(plan_start_date)=$date',vars=locals()))
+def load_by_date(user_id,date):
+	return list(dbr.select(table_name,what="pk_id,subject",where='user_id=$user_id and date(plan_start_date)=$date',vars=locals()))

@@ -5,13 +5,15 @@ import da
 from datetime import *
 import json 
 
+cust_id = 1  #tmp
+
 urls = (
     '/datelist','DateList',    
     '/new','New',    
     '/', 'Index',
 )
 
-render = web.template.render('templates/',base='layout')
+render = web.template.render('templates/',base='layout') 
 
 class Index:
     def GET(self):
@@ -20,14 +22,14 @@ class Index:
 class DateList:
     def GET(self):
         i = web.input(date=datetime.now().strftime('%Y-%m-%d'))
-        rows = da.subject.load_by_date(i.date)
+        rows = da.subject.load_by_date(cust_id,i.date)
         r = {'code':1,'list':rows}
         return json.dumps(r)
 
 class New:
     def POST(self):
         i = web.input(content='')
-        da.subject.insert(1,i.content,i.content)
+        da.subject.insert(cust_id,i.content,i.content)
         return '{"code":1}'  
 
 app = web.application(urls, globals())
