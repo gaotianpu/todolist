@@ -7,6 +7,8 @@ var Util = {
 };
 
 var Index = {
+	last_content: '',
+
 	render_list:function(date){
 		$.getJSON('/datelist', {'date':date,'r':Math.random()}, function(data){
 			$('#today').html(juicer($("#tpl_date_tasklist").html(), data));
@@ -25,20 +27,27 @@ $(function(){
 	$('#newPostForm').submit(function(){
 		var content = $('#txtContent').val().trim(); 
 
-		if(content==''){
+		if(content=='' || Index.last_content==content){
 			$('#navPost').addClass('alert-danger');	
-			$('#btnSubmit').removeClass('btn-default').addClass('btn-danger');		 
-			//$(".alert").alert();
+			$('#btnSubmit').removeClass('btn-default').addClass('btn-danger');	
 			return false; 
 		}
-		$.post('/new',{'content':content},function(data){			
+
+		if(Index.last_content==content){
+			//?
+			return false;
+		} 
+
+		$.post('/new',{'content':content},function(data){
+			Index.last_content = content;
 			$('#txtContent').val('');
 			Index.render_list(today);
+
 		})		 
 		return false; //禁止提交后页面刷新
 	});
 
-	$("#txtContent").keyup(function(){
+	$("#txtContent").keydown(function(){
 		var content = $('#txtContent').val().trim(); 
 		if(content!=''){
 			$('#navPost').removeClass('alert-danger');	
