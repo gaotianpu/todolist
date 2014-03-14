@@ -28,7 +28,7 @@ $(function(){
 		var content = $('#txtContent').val().trim(); 
 
 		if(content=='' || Index.last_content==content){
-			$('#navPost').addClass('alert-danger');	
+			$('#newPostForm').addClass('alert-danger');	
 			$('#btnSubmit').removeClass('btn-default').addClass('btn-danger');	
 			return false; 
 		}
@@ -50,7 +50,7 @@ $(function(){
 	$("#txtContent").keydown(function(){
 		var content = $('#txtContent').val().trim(); 
 		if(content!=''){
-			$('#navPost').removeClass('alert-danger');	
+			$('#newPostForm').removeClass('alert-danger');	
 			$('#btnSubmit').removeClass('btn-danger').addClass('btn-default');	
 		}
 
