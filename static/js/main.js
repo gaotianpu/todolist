@@ -39,10 +39,10 @@ $(function(){
 		} 
 
 		$.post('/new',{'content':content},function(data){
-			Index.last_content = content;
-			$('#txtContent').val('');
 			Index.render_list(today);
 
+			Index.last_content = content;
+			$('#txtContent').val('');
 		})		 
 		return false; //禁止提交后页面刷新
 	});

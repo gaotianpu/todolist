@@ -30,7 +30,8 @@ class DateList:
 class New:
     def POST(self):
         i = web.input(content='')
-        da.subject.insert(cust_id,i.content,i.content)
+        content = web.websafe(i.content)
+        da.subject.insert(cust_id,content,content)
         return '{"code":1}'  
 
 app = web.application(urls, globals())
