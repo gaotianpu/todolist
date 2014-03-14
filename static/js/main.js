@@ -8,7 +8,7 @@ var Util = {
 
 var Index = {
 	render_list:function(date){
-		$.getJSON('/datelist', {'date':date}, function(data){
+		$.getJSON('/datelist', {'date':date,'r':Math.random()}, function(data){
 			$('#today').html(juicer($("#tpl_date_tasklist").html(), data));
 		});
 	},
@@ -22,10 +22,12 @@ $(function(){
 	Index.render_list(today);
 
 	//bindding
-	$('#newPostForm').submit(function(e){
+	$('#newPostForm').submit(function(){
 		var content = $('#txtContent').val().trim(); 
 
-		if(content==''){			 
+		if(content==''){
+			$('#navPost').addClass('alert-danger');	
+			$('#btnSubmit').removeClass('btn-default').addClass('btn-danger');		 
 			//$(".alert").alert();
 			return false; 
 		}
@@ -34,6 +36,15 @@ $(function(){
 			Index.render_list(today);
 		})		 
 		return false; //禁止提交后页面刷新
+	});
+
+	$("#txtContent").keyup(function(){
+		var content = $('#txtContent').val().trim(); 
+		if(content!=''){
+			$('#navPost').removeClass('alert-danger');	
+			$('#btnSubmit').removeClass('btn-danger').addClass('btn-default');	
+		}
+
 	}); 
 
 });
