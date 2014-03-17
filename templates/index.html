@@ -1,17 +1,14 @@
-<div id="tommorrow">  
-</div>
+<div id="tommorrow"></div>
 
-<div id="today">  
-</div>
+<div id="today"></div>
 
-<div id="yestoday">  
-</div> 
+<div id="yestoday"></div>  
 
 <div style="height:40px;"></div>
 
 <nav id="navPost" class="navbar navbar-default navbar-fixed-bottom" role="navigation">   
   <form id="newPostForm" class="form-inline" role="form">    
-    <div class="form-group col-lg-8 ">       
+    <div class="form-group col-lg-8">       
       <input type="text" class="form-control" id="txtContent" placeholder="Enter your task here ...">
     </div> 
     <button id="btnSubmit" type="submit" class="btn btn-default">Submit</button>
@@ -21,9 +18,13 @@
 
 <script id="tpl_date_tasklist" type="text/template">
 <h1>$${date.shortDate} <small>$${date.strDate},$${date.dayOfWeek}</small></h1>
-<ul id="list_$${date.strDate}" class="list-group"> 
+<ul id="list_$${date.queryDate}" class="list-group"> 
 {@each list as it,index}
 <li id="t_$${it.pk_id}" class="list-group-item"><label><input type="checkbox">$${it.subject}</label></li>   
 {@/each}
 </ul>
+</script>
+
+<script id="tpl_newtask_form" type="text/template">
+<li id="t_$${data.pk_id}" class="list-group-item"><label><input type="checkbox">$${data.subject}</label></li>   
 </script>

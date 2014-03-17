@@ -38,8 +38,8 @@ $(function(){
 			return false;
 		} 
 
-		$.post('/new',{'content':content},function(data){
-			Index.render_list(today);
+		$.post('/new', {'content':content}, function(result){			 
+			$("#list_"+today).append(juicer($("#tpl_newtask_form").html(), $.parseJSON(result)));
 
 			$("html,body").animate({
             	scrollTop:$("#navPost").offset().top - 5
