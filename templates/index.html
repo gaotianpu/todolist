@@ -1,3 +1,7 @@
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <h1>今天 <small>14/03/17,Fri</small></h1>
+</nav>
+
 <div id="tommorrow"></div>
 
 <div id="today"></div>
@@ -17,7 +21,7 @@
 </nav> 
 
 <script id="tpl_date_tasklist" type="text/template">
-<h1>$${date.shortDate} <small>$${date.strDate},$${date.dayOfWeek}</small></h1>
+<!--<h1>$${date.shortDate} <small>$${date.strDate},$${date.dayOfWeek}</small></h1>-->
 <ul id="list_$${date.queryDate}" class="list-group"> 
 {@each list as it,index}
 <li id="t_$${it.pk_id}" class="list-group-item"><label><input type="checkbox">$${it.subject}</label></li>   
