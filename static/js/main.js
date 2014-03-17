@@ -1,30 +1,58 @@
+var log={
+	debug:function(str){
+		console.log(str);
+	},
+}
+
+Date.prototype.addDays = function(days){
+    return new Date(this.getTime() + 24*60*60*1000*days);
+};
+
 var Util = {
 	format_date:function(date){
 		var month = date.getMonth() + 1;
 		month = month<10 ? "0"+month : month;
-        return date.getFullYear() + "-" + month + '-' + date.getDate();
+        return date.getFullYear() + "" + month + '' + date.getDate();
 	},
 };
 
 var Index = {
 	last_content: '',
+	show_dates:[],
 
 	render_list:function(date){
 		$.getJSON('/datelist', {'date':date,'r':Math.random()}, function(data){
-			$('#today').html(juicer($("#tpl_date_tasklist").html(), data));
+			$("#container").append(juicer($("#tpl_date_tasklist").html(), data));
+
+			// var divEle = $("#div_"+date);			 
+			// if(divEle === undefined){				 
+			// 	$("#div_"+date).html(juicer($("#tpl_date_tasklist").html(), data));
+			// }else{				
+				
+			// }
 		});
+
+		 
+		
 	},
 	
 };
 
 $(function(){
 	var today = Util.format_date(new Date());
+	var yestoday = Util.format_date((new Date()).addDays(-1));
+	log.debug(yestoday);
 
 	//init
 	Index.render_list(today);
+	Index.render_list(yestoday);
+	Index.render_list(Util.format_date((new Date()).addDays(-2)));
+	Index.render_list(Util.format_date((new Date()).addDays(-3)));
+	Index.render_list(Util.format_date((new Date()).addDays(-4)));
 
 	//bindding
 	$('#newPostForm').submit(function(){
+		//alert($.now());
 		var content = $('#txtContent').val().trim(); 
 
 		if(content=='' || Index.last_content==content){

@@ -33,8 +33,9 @@ class DateList:
         i = web.input(date=datetime.now().strftime('%Y-%m-%d'))
         rows = da.subject.load_by_date(cust_id,i.date)
         #date format 应该放在js端处理 
-        date = {'shortDate':u'今天','queryDate':datetime.now().strftime('%Y-%m-%d'), 'strDate':datetime.now().strftime('%y/%m/%d'),'dayOfWeek':'Fri'}
-        r = {'code':1,'list':rows,'date':date}
+        
+        date = {'shortDate':i.date,'queryDate':i.date, 'strDate':i.date,'dayOfWeek':''}
+        r = {'code':1,'list':rows,'date':date,'count':len(rows)}
         return json.dumps(r)
 
 class New:
