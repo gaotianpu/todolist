@@ -21,19 +21,23 @@ var Index = {
 	show_dates:[],
 
 	render_list:function(date){
+		$("#container").append('<div id="day_tasks_'+ date +'"/>');
+
 		$.getJSON('/datelist', {'date':date,'r':Math.random()}, function(data){
-			$("#container").append(juicer($("#tpl_date_tasklist").html(), data));
+			//if(data.list.length==0){ return ;} 数据为空的情况下也保留占位div
+			var loaded_days = Index.get_loaded_days();			 
+			$("#day_tasks_" + date).html(juicer($("#tpl_date_tasklist").html(), data));
+		}); 
+	},
 
-			// var divEle = $("#div_"+date);			 
-			// if(divEle === undefined){				 
-			// 	$("#div_"+date).html(juicer($("#tpl_date_tasklist").html(), data));
-			// }else{				
-				
-			// }
+	get_loaded_days: function(){  //获得已加载的日期
+		var days=[];
+		$("div[id^=day_tasks_").each(function(){
+			days.push(this.id.split('_')[2]);			 
 		});
-
-		 
-		
+		days.sort();
+		log.debug(days.join(','));
+		return days;
 	},
 	
 };

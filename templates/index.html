@@ -18,14 +18,14 @@
 </nav> 
 
 <script id="tpl_date_tasklist" type="text/template">
-<div id="div_$${date.queryDate}">
+{@if list.length>0}
 <h1>$${date.shortDate} <small>$${count},$${date.dayOfWeek}</small></h1>
+{@/if}
 <ul id="list_$${date.queryDate}" class="list-group"> 
 {@each list as it,index}
 <li id="t_$${it.pk_id}" class="list-group-item"><label><input type="checkbox">$${it.subject}</label></li>   
 {@/each}
 </ul>
-</div>
 </script>
 
 <script id="tpl_newtask_form" type="text/template">
