@@ -56,6 +56,26 @@ $(function(){
 	Index.render_list(Util.format_date((new Date()).addDays(-3)));
 	Index.render_list(Util.format_date((new Date()).addDays(-4)));
 
+	var last_scrollTop = 0 ;
+	$(window).scroll(function(e){		
+		if( $(document).scrollTop() >  last_scrollTop  ){
+			log.debug("down," + $(document).scrollTop()  );
+		}else{
+			log.debug("up," + $(document).scrollTop() );
+		}
+
+		last_scrollTop = $(document).scrollTop();		 
+	});
+
+	//form
+	$("#txtContent").keydown(function(){
+		var content = $('#txtContent').val().trim(); 
+		if(content!=''){
+			$('#newPostForm').removeClass('alert-danger');	
+			$('#btnSubmit').removeClass('btn-danger').addClass('btn-default');	
+		}
+	});
+
 	//bindding
 	$('#newPostForm').submit(function(){
 		//alert($.now());
@@ -83,14 +103,6 @@ $(function(){
 			$('#txtContent').val('');
 		})		 
 		return false; //禁止提交后页面刷新
-	});
-
-	$("#txtContent").keydown(function(){
-		var content = $('#txtContent').val().trim(); 
-		if(content!=''){
-			$('#newPostForm').removeClass('alert-danger');	
-			$('#btnSubmit').removeClass('btn-danger').addClass('btn-default');	
-		}
-	}); 
+	});  
 
 });
