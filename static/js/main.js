@@ -36,9 +36,7 @@ var Index = {
 
 	get_loaded_days: function(dayOnly){  //获得已加载的日期
 		var days=[];
-		$("div[id^=day_tasks_").each(function(){
-			log.debug('??' + $(this).find('li').length);
-			
+		$("div[id^=day_tasks_").each(function(){ 
 			var x = {'elementId':this.id,
 				'offset_top':$(this).offset().top,
 				'height': $(this).height(),
@@ -49,17 +47,9 @@ var Index = {
 				days.push(this.id.split('_')[2]);
 			}else{
 				days.push( x  );
-			}
-
-			//var elem = 
-			// days.push(this.id.split('_')[2]);
-			// log.debug('cc:' + $(this).offset().top);
-			
-			//log.debug( x.elementId + ',' + x.offset_top + ',' + x.day );
-			//$("#day_tasks_" + loaded_days[i]).offset().top			 
+			} 
 		});
-		days.sort();
-		//log.debug(days.join(','));
+		days.sort();		 
 		return days;
 	},
 	
@@ -67,8 +57,7 @@ var Index = {
 
 $(function(){
 	var today = Util.format_date(new Date());
-	var yestoday = Util.format_date((new Date()).addDays(-1));
-	//log.debug(yestoday);
+	var yestoday = Util.format_date((new Date()).addDays(-1)); 
 
 	//init
 	Index.render_list(today);
@@ -86,35 +75,14 @@ $(function(){
 		for(var i in loaded_days){
 			if(loaded_days[i].item_length==0){continue;}
 
-			if((loaded_days[i].offset_top + loaded_days[i].height) >document_scrollTop){
-				//var index = i;// last_index; //  i-1>0 ? i-1 : 0;
+			if((loaded_days[i].offset_top + loaded_days[i].height) >document_scrollTop){				 
 				var tmp = $("#day_tasks_" + loaded_days[i].day).find("h2").html()
-				$("#hNavHeader").html(tmp);
-				
-				// log.debug('day tmp:' + tmp);
-				// log.debug('day:' + loaded_days[i].day + ',' + loaded_days[i].offset_top + ',' + document_scrollTop + ',' +loaded_days[index].day );
+				$("#hNavHeader").html(tmp); 
 				break;
 			}
 			last_index = i;
-		}
-		
-		// var height = 0;
-		// var day = 0;
-		// for(var i in loaded_days){
-		// 	log.debug('document scrollTop:' + $(document).scrollTop());
-		// 	// log.debug(loaded_days[i] + ':' + $("#day_tasks_" + loaded_days[i]).scrollTop());
-		// 	height = height + $("#day_tasks_" + loaded_days[i]).height();
-		// 	log.debug(loaded_days[i] + ':' + $("#day_tasks_" + loaded_days[i]).offset().top);
-			
-		// }
-		// log.debug('height:' + height);
-
-		// if( $(document).scrollTop() >  last_scrollTop  ){
-		// 	log.debug("down," + $(document).scrollTop()  );
-		// }else{
-		// 	log.debug("up," + $(document).scrollTop() );
-		// }
-		last_scrollTop = $(document).scrollTop();		 
+		} 
+		//last_scrollTop = $(document).scrollTop();		 
 	});
 
 	//form
