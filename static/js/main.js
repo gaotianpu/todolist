@@ -48,7 +48,7 @@ var Index = {
 			// days.push(this.id.split('_')[2]);
 			// log.debug('cc:' + $(this).offset().top);
 			
-			log.debug( x.elementId + ',' + x.offset_top + ',' + x.day );
+			//log.debug( x.elementId + ',' + x.offset_top + ',' + x.day );
 			//$("#day_tasks_" + loaded_days[i]).offset().top			 
 		});
 		days.sort();
