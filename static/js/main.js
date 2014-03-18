@@ -28,10 +28,13 @@ var Index = {
 
 		$.getJSON('/datelist', {'date':date,'r':Math.random()}, function(data){
 			//if(data.list.length==0){ return ;} 数据为空的情况下也保留占位div						 
-			$("#day_tasks_" + date).html(juicer($("#tpl_date_tasklist").html(), data));
-
-			//log.debug(date + ',' + $("#day_tasks_" + date).offset().top);
+			$("#day_tasks_" + date).html(juicer($("#tpl_date_tasklist").html(), data)); 
 		}); 
+	},
+
+	set_head_nav:function(day){
+		var tmp = $("#day_tasks_" + day).find("h2").html()
+		$("#hNavHeader").html(tmp); 
 	},
 
 	get_loaded_days: function(dayOnly){  //获得已加载的日期
@@ -75,9 +78,10 @@ $(function(){
 		for(var i in loaded_days){
 			if(loaded_days[i].item_length==0){continue;}
 
-			if((loaded_days[i].offset_top + loaded_days[i].height) >document_scrollTop){				 
-				var tmp = $("#day_tasks_" + loaded_days[i].day).find("h2").html()
-				$("#hNavHeader").html(tmp); 
+			if((loaded_days[i].offset_top + loaded_days[i].height) >document_scrollTop){
+				Index.set_head_nav(loaded_days[i].day);				 
+				//var tmp = $("#day_tasks_" + loaded_days[i].day).find("h2").html()
+				//$("#hNavHeader").html(tmp); 
 				break;
 			}
 			last_index = i;
@@ -116,6 +120,8 @@ $(function(){
 			$("html,body").animate({				
             	scrollTop: $("#day_tasks_" + today).height() - $(window).height() + 76  //计算定位比较陌生
             },300);
+
+            Index.set_head_nav(today);	
 
 			Index.last_content = content;
 			$('#txtContent').val('');
