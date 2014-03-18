@@ -21,11 +21,13 @@ var Index = {
 	show_dates:[],
 
 	render_list:function(date){
-		$("#container").append('<div id="day_tasks_'+ date +'"/>');
+		var loaded_days = Index.get_loaded_days();
+		if(loaded_days.indexOf(date)<0){
+			$("#container").append('<div id="day_tasks_'+ date +'"/>');
+		}
 
 		$.getJSON('/datelist', {'date':date,'r':Math.random()}, function(data){
-			//if(data.list.length==0){ return ;} 数据为空的情况下也保留占位div
-			var loaded_days = Index.get_loaded_days();			 
+			//if(data.list.length==0){ return ;} 数据为空的情况下也保留占位div						 
 			$("#day_tasks_" + date).html(juicer($("#tpl_date_tasklist").html(), data));
 		}); 
 	},
@@ -36,7 +38,7 @@ var Index = {
 			days.push(this.id.split('_')[2]);			 
 		});
 		days.sort();
-		log.debug(days.join(','));
+		//log.debug(days.join(','));
 		return days;
 	},
 	
@@ -70,11 +72,11 @@ $(function(){
 			return false;
 		} 
 
-		$.post('/new', {'content':content}, function(result){			 
-			$("#list_"+today).append(juicer($("#tpl_newtask_form").html(), $.parseJSON(result)));
-
-			$("html,body").animate({
-            	scrollTop:$("#navPost").offset().top - 5
+		$.post('/new', {'content':content}, function(result){
+			var data = 	$.parseJSON(result);		 
+			$("#list_"+today).append(juicer($("#tpl_newtask_form").html(), data)); 			 
+			$("html,body").animate({				
+            	scrollTop: $("#day_tasks_" + today).height() - $(window).height() + 76  //计算定位比较陌生
             },300);
 
 			Index.last_content = content;
@@ -89,7 +91,6 @@ $(function(){
 			$('#newPostForm').removeClass('alert-danger');	
 			$('#btnSubmit').removeClass('btn-danger').addClass('btn-default');	
 		}
-
 	}); 
 
 });
