@@ -37,7 +37,14 @@ var Index = {
 	get_loaded_days: function(dayOnly){  //获得已加载的日期
 		var days=[];
 		$("div[id^=day_tasks_").each(function(){
-			var x = {'elementId':this.id,'offset_top':$(this).offset().top,'day':this.id.split('_')[2]  } ;
+			log.debug('??' + $(this).find('li').length);
+			
+			var x = {'elementId':this.id,
+				'offset_top':$(this).offset().top,
+				'height': $(this).height(),
+				'day':this.id.split('_')[2],
+				'item_length':$(this).find('li').length } ;
+
 			if(dayOnly){
 				days.push(this.id.split('_')[2]);
 			}else{
@@ -74,12 +81,21 @@ $(function(){
 	$(window).scroll(function(e){
 		var document_scrollTop = $(document).scrollTop();
 		var loaded_days = Index.get_loaded_days(false);
+		
+		var last_index = 0;
 		for(var i in loaded_days){
-			if(loaded_days[i].offset_top>document_scrollTop){
-				var index = i-1>0 ? i-1 : 0;
-				//log.debug('day:' + loaded_days[index].day);
+			if(loaded_days[i].item_length==0){continue;}
+
+			if((loaded_days[i].offset_top + loaded_days[i].height) >document_scrollTop){
+				//var index = i;// last_index; //  i-1>0 ? i-1 : 0;
+				var tmp = $("#day_tasks_" + loaded_days[i].day).find("h2").html()
+				$("#hNavHeader").html(tmp);
+				
+				// log.debug('day tmp:' + tmp);
+				// log.debug('day:' + loaded_days[i].day + ',' + loaded_days[i].offset_top + ',' + document_scrollTop + ',' +loaded_days[index].day );
 				break;
 			}
+			last_index = i;
 		}
 		
 		// var height = 0;
