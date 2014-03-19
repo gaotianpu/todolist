@@ -1,5 +1,5 @@
 body{padding-top:5px;margin:0px 5px 0px 5px;}
-label{font-weight:normal;}
+
 .list-group-item{border:none;border-bottom: solid 1px #ddd;border-top: solid 1px #ddd;}
 .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;border:none;}
 .list-group-item:last-child {border-bottom-right-radius:0px;border-bottom-left-radius:0px;}
