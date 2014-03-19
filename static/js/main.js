@@ -17,8 +17,7 @@ var Util = {
 };
 
 var Index = {
-	last_content: '',
-	show_dates:[],
+	last_content: '', 
 
 	render_list:function(date){
 		var loaded_days = Index.get_loaded_days(true);
@@ -55,6 +54,18 @@ var Index = {
 		days.sort();		 
 		return days;
 	},
+
+	set_li_normal:function(current_edit_id){
+		//只允许一个task处于编辑状态,清理重置之前处于编辑状态的li
+		//是否需要post数据？
+		$("li[status=edit]").each(function(){
+			if(this.id!=current_edit_id){		
+				var data = {'subject':$(this).find("#txt_subject").val()};
+				var html = juicer($("#tpl_task_normal").html(), data) ;
+				$(this).html(juicer($("#tpl_task_normal").html(), data)).attr('status','normal');
+			}				 
+		});
+	},
 	
 };
 
@@ -86,21 +97,25 @@ $(function(){
 			}
 			last_index = i;
 		} 
-		//last_scrollTop = $(document).scrollTop();		 
+		//last_scrollTop = $(document).scrollTop();	
+
+		//滚动加载tasks	 
 	});
 
 	$(document).delegate('li.list-group-item', 'click', function() {
+		//dblclick  or click ?
 		var li = this;
-		var taskId = this.id.split('_')[1];
+		var taskId = this.id.split('_')[1]; 
 
-		//只允许一个task处于编辑状态,清理重置之前处于编辑状态的li,是否需要post数据？
-		$("li[status=edit]").each(function(){
-			if(this.id!=li.id){		
-				var data = {'subject':$(this).find("#txt_subject").val()};
-				var html = juicer($("#tpl_task_normal").html(), data) 
-				$(this).html(juicer($("#tpl_task_normal").html(), data)).attr('status','normal');
-			}				 
-		});
+		Index.set_li_normal(li.id);
+
+		// $("li[status=edit]").each(function(){
+		// 	if(this.id!=li.id){		
+		// 		var data = {'subject':$(this).find("#txt_subject").val()};
+		// 		var html = juicer($("#tpl_task_normal").html(), data) ;
+		// 		$(this).html(juicer($("#tpl_task_normal").html(), data)).attr('status','normal');
+		// 	}				 
+		// });
 
 		if($(this).find("input:text").length==0){
 			$(li).attr('status','edit');
@@ -115,7 +130,7 @@ $(function(){
 		// 	var html = '<input type="checkbox">' + $("#txtsubject_"+taskId).val() ;
 		// 	$(li).html(html); 
 		// } 
-		//dblclick 
+		
 		//log.debug(this.id+ ',' +$(this).html());
 	});
 
@@ -124,12 +139,15 @@ $(function(){
 
 		});
 
+		Index.set_li_normal(0);
+
 		log.debug('hell');
 		log.debug($(this).html());
 		return false;
 	});
 
-	$("#container").delegate('li input','click',function(){
+	$("#container").delegate('li input:button','click',function(){
+		Index.set_li_normal(0);
 		//?
 		//var html = '<input type="checkbox">' + $("#txtsubject_"+taskId).val() ;
 		log.debug($(this).val());
@@ -162,8 +180,14 @@ $(function(){
 		} 
 
 		$.post('/new', {'content':content}, function(result){
-			var data = 	$.parseJSON(result);		 
-			$("#list_"+today).append(juicer($("#tpl_newtask_form").html(), data)); 			 
+			Index.set_li_normal(0);
+
+			var data = 	$.parseJSON(result); 
+			var html = '<li id="t_'+ data.pk_id +'" class="list-group-item" status="edit">';
+			html = html + juicer($("#tpl_task_update_form").html(), data);
+			html = html + '</li>'; 
+			$("#list_"+today).append(html); 
+
 			$("html,body").animate({				
             	scrollTop: $("#day_tasks_" + today).height() - $(window).height() + 76  //计算定位比较陌生
             },300);
