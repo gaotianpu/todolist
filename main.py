@@ -9,7 +9,8 @@ cust_id = 1  #tmp
 
 urls = (
     '/datelist','DateList',    
-    '/new','New',    
+    '/new','New',  
+    '/details','Details',  
     '/', 'Index',
 )
 
@@ -32,8 +33,7 @@ class DateList:
     def GET(self):
         i = web.input(date=datetime.now().strftime('%Y-%m-%d'))
         rows = da.subject.load_by_date(cust_id,i.date)
-        #date format 应该放在js端处理 
-        
+        #date format 应该放在js端处理 ?
         date = {'shortDate':i.date,'queryDate':i.date, 'strDate':i.date,'dayOfWeek':''}
         r = {'code':1,'list':rows,'date':date,'count':len(rows)}
         return json.dumps(r)
@@ -46,6 +46,16 @@ class New:
         task = da.subject.load_by_id(pk_id)
         r = {"code":1,"data":task}
         return json.dumps(r,cls=CJsonEncoder) 
+
+class Details:
+    def GET(self):
+        i = web.input(pk_id=0)
+        detail = da.subject.load_by_id(i.pk_id)
+        r = {"code":1,"data":detail}
+        return json.dumps(r,cls=CJsonEncoder) 
+    def POST(self):
+        i = web.input(pk_id=0)
+        return  
 
 app = web.application(urls, globals())
 if __name__ == "__main__":

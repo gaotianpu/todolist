@@ -28,7 +28,7 @@ var Index = {
 
 		$.getJSON('/datelist', {'date':date,'r':Math.random()}, function(data){
 			//if(data.list.length==0){ return ;} 数据为空的情况下也保留占位div						 
-			$("#day_tasks_" + date).html(juicer($("#tpl_date_tasklist").html(), data)); 
+			$("#day_tasks_" + date).html(juicer($("#tpl_tasklist").html(), data)); 
 		}); 
 	},
 
@@ -88,6 +88,53 @@ $(function(){
 		} 
 		//last_scrollTop = $(document).scrollTop();		 
 	});
+
+	$(document).delegate('li.list-group-item', 'click', function() {
+		var li = this;
+		var taskId = this.id.split('_')[1];
+
+		//只允许一个task处于编辑状态,清理重置之前处于编辑状态的li,是否需要post数据？
+		$("li[status=edit]").each(function(){
+			if(this.id!=li.id){		
+				var data = {'subject':$(this).find("#txt_subject").val()};
+				var html = juicer($("#tpl_task_normal").html(), data) 
+				$(this).html(juicer($("#tpl_task_normal").html(), data)).attr('status','normal');
+			}				 
+		});
+
+		if($(this).find("input:text").length==0){
+			$(li).attr('status','edit');
+
+			//log.debug(taskId);
+			$.getJSON('/details',{pk_id:taskId,r:Math.random()},function(data){
+				log.debug(this.id);
+				$(li).html(juicer($("#tpl_task_update_form").html(), data)); 
+			});
+		} 
+		// else {
+		// 	var html = '<input type="checkbox">' + $("#txtsubject_"+taskId).val() ;
+		// 	$(li).html(html); 
+		// } 
+		//dblclick 
+		//log.debug(this.id+ ',' +$(this).html());
+	});
+
+	$("#container").delegate('form','submit',function(){
+		$.post('/details',{},function(data){
+
+		});
+
+		log.debug('hell');
+		log.debug($(this).html());
+		return false;
+	});
+
+	$("#container").delegate('li input','click',function(){
+		//?
+		//var html = '<input type="checkbox">' + $("#txtsubject_"+taskId).val() ;
+		log.debug($(this).val());
+	}); 
+	
 
 	//form
 	$("#txtContent").keydown(function(){

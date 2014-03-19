@@ -17,17 +17,36 @@
   </form> 
 </nav> 
 
-<script id="tpl_date_tasklist" type="text/template">
+<script id="tpl_tasklist" type="text/template">
 {@if list.length>0}
-<h2>$${date.shortDate} <small>$${date.dayOfWeek},$${count}</small></h2>
+	<h2>$${date.shortDate} <small>$${date.dayOfWeek},$${count}</small></h2>
 {@/if}
 <ul id="list_$${date.queryDate}" class="list-group"> 
-{@each list as it,index}
-<li id="t_$${it.pk_id}" class="list-group-item"><input type="checkbox">$${it.subject}</li>   
-{@/each}
+	{@each list as it,index}
+	<li id="t_$${it.pk_id}" class="list-group-item"><input type="checkbox">$${it.subject}</li>   
+	{@/each}
 </ul>
 </script>
 
+<script id="tpl_task_update_form" type="text/template">
+<form role="form">
+	<div class="form-group">
+		<label class="sr-only" for="txtsubject"></label>
+		<input id="txt_subject" name="subject" value="$${data.subject}" class="form-control" type="text" />		
+	</div>
+	<div class="form-group">
+		<label class="sr-only" for="txt_body"></label>
+		<textarea id="txt_body" name="body" class="form-control">$${data.body}</textarea>		
+	</div>
+	<input type="submit" value=" update " pk_id="$${data.pk_id}" /> 
+	<input type="button" value=" cancel " pk_id="$${data.pk_id}"/>
+</form>
+</script>
+
+<script id="tpl_task_normal" type="text/template">
+<input type="checkbox">$${subject}</li> 
+</script>
+
 <script id="tpl_newtask_form" type="text/template">
-<li id="t_$${data.pk_id}" class="list-group-item"><label><input type="checkbox">$${data.subject}</label></li>   
+<li id="t_$${data.pk_id}" class="list-group-item"><input type="checkbox">$${data.subject}</li>   
 </script>
