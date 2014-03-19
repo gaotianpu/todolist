@@ -54,7 +54,8 @@ class Details:
         r = {"code":1,"data":detail}
         return json.dumps(r,cls=CJsonEncoder) 
     def POST(self):
-        i = web.input(pk_id=0)
+        i = web.input(pk_id=0,subject='',body='')
+        da.subject.update(i.pk_id,subject=i.subject,body=i.body)
         return  
 
 app = web.application(urls, globals())

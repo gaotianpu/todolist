@@ -120,11 +120,9 @@ $(function(){
 	});
 
 	$("#container").delegate('li form','submit',function(){
-		$.post('/details',{},function(data){
-
-		});
-
-		Index.set_li_normal(0);		
+		$.post('/details',$( this ).serialize(),function(data){
+			Index.set_li_normal(0);	
+		}); 
 		return false;
 	});
 

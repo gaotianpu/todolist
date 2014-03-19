@@ -16,6 +16,9 @@ def insert(user_id,subject,body):
         last_update=web.SQLLiteral('now()'),
         plan_start_date=web.SQLLiteral('now()'))
 
+def update(pk_id,**kv):
+    return dbw.update(table_name,last_update=web.SQLLiteral('now()'),where='pk_id=$pk_id',vars=locals(),**kv)
+
 def load_by_id(pk_id):
     rows = list(dbr.select(table_name,where='pk_id=$pk_id' , vars=locals()))
     return rows[0]

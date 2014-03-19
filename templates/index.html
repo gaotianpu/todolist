@@ -29,7 +29,7 @@
 </script>
 
 <script id="tpl_task_update_form" type="text/template">
-<form role="form">
+<form role="form"> <input type="hidden" name="pk_id" value="$${data.pk_id}" />
 	<div class="form-group">
 		<label class="sr-only" for="txtsubject"></label>
 		<input id="txt_subject" name="subject" value="$${data.subject}" class="form-control" type="text" />		
