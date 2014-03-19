@@ -90,9 +90,7 @@ $(function(){
 			if(loaded_days[i].item_length==0){continue;}
 
 			if((loaded_days[i].offset_top + loaded_days[i].height) >document_scrollTop){
-				Index.set_head_nav(loaded_days[i].day);				 
-				//var tmp = $("#day_tasks_" + loaded_days[i].day).find("h2").html()
-				//$("#hNavHeader").html(tmp); 
+				Index.set_head_nav(loaded_days[i].day);
 				break;
 			}
 			last_index = i;
@@ -107,15 +105,7 @@ $(function(){
 		var li = this;
 		var taskId = this.id.split('_')[1]; 
 
-		Index.set_li_normal(li.id);
-
-		// $("li[status=edit]").each(function(){
-		// 	if(this.id!=li.id){		
-		// 		var data = {'subject':$(this).find("#txt_subject").val()};
-		// 		var html = juicer($("#tpl_task_normal").html(), data) ;
-		// 		$(this).html(juicer($("#tpl_task_normal").html(), data)).attr('status','normal');
-		// 	}				 
-		// });
+		Index.set_li_normal(li.id); 
 
 		if($(this).find("input:text").length==0){
 			$(li).attr('status','edit');
@@ -125,32 +115,21 @@ $(function(){
 				log.debug(this.id);
 				$(li).html(juicer($("#tpl_task_update_form").html(), data)); 
 			});
-		} 
-		// else {
-		// 	var html = '<input type="checkbox">' + $("#txtsubject_"+taskId).val() ;
-		// 	$(li).html(html); 
-		// } 
-		
-		//log.debug(this.id+ ',' +$(this).html());
+		}  
+
 	});
 
-	$("#container").delegate('form','submit',function(){
+	$("#container").delegate('li form','submit',function(){
 		$.post('/details',{},function(data){
 
 		});
 
-		Index.set_li_normal(0);
-
-		log.debug('hell');
-		log.debug($(this).html());
+		Index.set_li_normal(0);		
 		return false;
 	});
 
 	$("#container").delegate('li input:button','click',function(){
-		Index.set_li_normal(0);
-		//?
-		//var html = '<input type="checkbox">' + $("#txtsubject_"+taskId).val() ;
-		log.debug($(this).val());
+		Index.set_li_normal(0); //取消、关闭按钮		 
 	}); 
 	
 
