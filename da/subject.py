@@ -24,12 +24,12 @@ def load_by_id(pk_id):
     return rows[0]
 
 def load_by_date(user_id,date):
-    return list(dbr.select(table_name,what="pk_id,subject",
+    return list(dbr.select(table_name,what="pk_id,subject,task_status",
         where='user_id=$user_id and date(plan_start_date)=$date',
         order="pk_id",vars=locals()))
 
 def load_last_one(user_id):
-    rows = list(dbr.select(table_name,what="pk_id,subject",
+    rows = list(dbr.select(table_name,what="pk_id,subject,task_status",
         where='user_id=$user_id',vars=locals()))
     if rows:
         return rows[0]

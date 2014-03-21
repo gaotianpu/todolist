@@ -38,7 +38,7 @@ var Index = {
 
 	get_loaded_days: function(dayOnly){  //获得已加载的日期
 		var days=[];
-		$("div[id^=day_tasks_").each(function(){ 
+		$("div[id^=day_tasks_]").each(function(){ 
 			var x = {'elementId':this.id,
 				'offset_top':$(this).offset().top,
 				'height': $(this).height(),
@@ -100,7 +100,7 @@ $(function(){
 		//滚动加载tasks	 
 	});
 
-	$(document).delegate('li.list-group-item', 'click', function() {
+	$(document).delegate('li.list-group-item', 'dblclick', function() {
 		//dblclick  or click ?
 		var li = this;
 		var taskId = this.id.split('_')[1]; 
@@ -129,6 +129,20 @@ $(function(){
 	$("#container").delegate('li input:button','click',function(){
 		Index.set_li_normal(0); //取消、关闭按钮		 
 	}); 
+
+	//done or not done?
+	$("#container").delegate('input:checkbox','change',function(){	
+		var pk_id = $(this).attr("param");
+		var checked = $(this).prop("checked");
+		log.debug('cb,' + pk_id + checked );		
+		$.post('/done',{pk_id:pk_id,checked:checked},function(data){
+			if(checked){
+				$("#t_"+pk_id).addClass("done");
+			}else{
+				$("#t_"+pk_id).removeClass("done");
+			}
+		});		 
+	});
 	
 
 	//form

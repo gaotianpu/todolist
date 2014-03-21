@@ -4,3 +4,4 @@ body{padding-top:5px;margin:0px 5px 0px 5px;}
 .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;border:none;}
 .list-group-item:last-child {border-bottom-right-radius:0px;border-bottom-left-radius:0px;}
 .navbar {line-height: 50px;}
+.done {text-decoration:line-through;font-style:italic;}
