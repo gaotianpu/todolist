@@ -5,10 +5,13 @@
 /__private/planc.sql  #数据库结构文件
 
 2. 环境
+
 python, web.py, mysql-db
 
 3.运行
+
 cd todolist/
+
 python main.py
 
 
