@@ -25,7 +25,8 @@
 <ul id="list_$${date.queryDate}" class="list-group"> 
 	{@each list as it,index}
 	<li id="t_$${it.pk_id}" class="list-group-item {@if it.task_status==1 } done {@/if}">	 
-		<input id="cb_$${it.pk_id}" param="$${it.pk_id}" type="checkbox">  $${it.subject}	 
+		<input id="cb_$${it.pk_id}" param="$${it.pk_id}" type="checkbox" {@if it.task_status==1 } checked {@/if}>  
+		$${it.subject}	 
 	</li>   
 	{@/each}
 </ul>
