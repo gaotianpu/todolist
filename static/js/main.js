@@ -76,28 +76,50 @@ $(function(){
 	//init
 	Index.render_list(today);
 	Index.render_list(yestoday);
-	Index.render_list(Util.format_date((new Date()).addDays(-2)));
-	Index.render_list(Util.format_date((new Date()).addDays(-3)));
-	Index.render_list(Util.format_date((new Date()).addDays(-4)));
+	Index.render_list(Util.format_date((new Date()).addDays(-2))); 
 
-	var last_scrollTop = 0 ;
+	var last_doc_scrollTop = 0 ;
 	$(window).scroll(function(e){
-		var document_scrollTop = $(document).scrollTop();
-		var loaded_days = Index.get_loaded_days(false);
+		var loaded_days = Index.get_loaded_days(false); 
+		var doc_scrollTop = $(document).scrollTop();
+
+		// log.debug('document_scrollTop,'+ doc_scrollTop);
+		// log.debug('document_height,'+ $(document).height());
+		// log.debug('window_height,'+ $(window).height());
+		// log.debug('bottom_range,'+ bottom_range); 
 		
 		var last_index = 0;
 		for(var i in loaded_days){
 			if(loaded_days[i].item_length==0){continue;}
 
-			if((loaded_days[i].offset_top + loaded_days[i].height) >document_scrollTop){
+			if((loaded_days[i].offset_top + loaded_days[i].height) > doc_scrollTop){
 				Index.set_head_nav(loaded_days[i].day);
 				break;
 			}
+
 			last_index = i;
 		} 
-		//last_scrollTop = $(document).scrollTop();	
 
-		//滚动加载tasks	 
+		//滚动按天加载tasks	 
+		var bottom_range = $(document).height() - $(window).height() - doc_scrollTop;
+		if(doc_scrollTop>last_doc_scrollTop  && 
+			( bottom_range < $(window).height()*5 || $(document).height()<$(window).height() )
+			) {
+			log.debug('bottom_range:' + bottom_range + ',day:' + loaded_days[loaded_days.length-1].day);			 
+			var intDay = loaded_days[loaded_days.length-1].day;
+
+			var strDay = intDay.toString()   
+			log.debug('cc,' + strDay.substring(0,4) + strDay.substring(4,6) + strDay.substring(6,8) )
+			var date =  new Date(strDay.substring(0,4),parseInt(strDay.substring(4,6))-1,strDay.substring(6,8));
+			var odate = new Date(date - 24*60*60*1000* 1);
+			log.debug('odate:' + Util.format_date(odate) +',cdate:'+ Util.format_date(date) );
+			
+			Index.render_list(Util.format_date(odate));
+		}
+
+		last_doc_scrollTop = doc_scrollTop;	
+
+		
 	});
 
 	$(document).delegate('li.list-group-item', 'dblclick', function() {
