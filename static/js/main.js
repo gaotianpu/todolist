@@ -60,7 +60,7 @@ var Index = {
 		//是否需要post数据？
 		$("li[status=edit]").each(function(){
 			if(this.id!=current_edit_id){		
-				var data = {'subject':$(this).find("#txt_subject").val()};
+				var data = {'body':$(this).find("#txt_body").val()};
 				var html = juicer($("#tpl_task_normal").html(), data) ;
 				$(this).html(juicer($("#tpl_task_normal").html(), data)).attr('status','normal');
 			}				 

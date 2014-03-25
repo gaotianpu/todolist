@@ -43,7 +43,7 @@ class New:
     def POST(self):
         i = web.input(content='')
         content = web.websafe(i.content)
-        pk_id = da.subject.insert(cust_id,content,content)
+        pk_id = da.subject.insert(cust_id,content)
         task = da.subject.load_by_id(pk_id)
         r = {"code":1,"data":task}
         return json.dumps(r,cls=CJsonEncoder) 
@@ -56,7 +56,7 @@ class Details:
         return json.dumps(r,cls=CJsonEncoder) 
     def POST(self):
         i = web.input(pk_id=0,subject='',body='')
-        da.subject.update(i.pk_id,subject=i.subject,body=i.body)
+        da.subject.update(i.pk_id,subject="",body=i.body)
         return  
 
 class Done:

@@ -26,21 +26,17 @@
 	{@each list as it,index}
 	<li id="t_$${it.pk_id}" class="list-group-item {@if it.task_status==1 } done {@/if}">	 
 		<input id="cb_$${it.pk_id}" param="$${it.pk_id}" type="checkbox" {@if it.task_status==1 } checked {@/if}>  
-		$${it.subject}	 
+		$${it.subject}	$${it.body}  
 	</li>   
 	{@/each}
 </ul>
 </script>
 
 <script id="tpl_task_update_form" type="text/template">
-<form role="form"> <input type="hidden" name="pk_id" value="$${data.pk_id}" />
-	<div class="form-group">
-		<label class="sr-only" for="txtsubject"></label>
-		<input id="txt_subject" name="subject" value="$${data.subject}" class="form-control" type="text" />		
-	</div>
+<form role="form"> <input type="hidden" name="pk_id" value="$${data.pk_id}" />	
 	<div class="form-group">
 		<label class="sr-only" for="txt_body"></label>
-		<textarea id="txt_body" name="body" class="form-control">$${data.body}</textarea>		
+		<textarea id="txt_body" name="body" class="form-control">$${data.subject} $${data.body} </textarea>		
 	</div>
 	<input type="submit" value=" update " pk_id="$${data.pk_id}" /> 
 	<input type="button" value=" cancel " pk_id="$${data.pk_id}"/>
@@ -48,9 +44,9 @@
 </script>
 
 <script id="tpl_task_normal" type="text/template">
-<label class="sr-only" for="cb_$${pk_id}" /><input id="cb_$${pk_id}" type="checkbox">$${subject}
+<label class="sr-only" for="cb_$${pk_id}" /><input id="cb_$${pk_id}" type="checkbox">$${subject}$${body}
 </script>
 
 <script id="tpl_newtask_form" type="text/template">
-<li id="t_$${data.pk_id}" class="list-group-item"><input type="checkbox">$${data.subject}</li>   
+<li id="t_$${data.pk_id}" class="list-group-item"><input type="checkbox">$${data.subject}$${data.body}</li>   
 </script>
