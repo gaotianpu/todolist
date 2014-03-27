@@ -61,8 +61,8 @@ class Details:
 
 class Done:
     def POST(self):
-        i = web.input(pk_id=0,checked=True)
-        task_status = 1 if i.checked else 0
+        i = web.input(pk_id=0,checked='true')
+        task_status = 1 if i.checked=='true' else 0
         da.subject.update(i.pk_id,task_status=task_status) 
         r = {"code":1,"data":True}
         return json.dumps(r) 
