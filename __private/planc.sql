@@ -23,24 +23,25 @@ DROP TABLE IF EXISTS `subjects`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `subjects` (
-`pk_id`  bigint(20) NOT NULL AUTO_INCREMENT ,
-`user_id`  bigint(20) NOT NULL ,
-`subject`  varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-`body`  varchar(3000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-`participator_ids`  varchar(3000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
-`created_date`  datetime NOT NULL DEFAULT '1901-01-01 00:00:00' ,
-`last_update`  timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP ,
-`task_status`  tinyint(4) NULL DEFAULT 0 COMMENT '尚未开始 NotBegun 0，已开始 Doing 10，结束Done2，Block3' ,
-`closed_date`  datetime NULL DEFAULT NULL ,
-`is_delete`  tinyint(4) NULL DEFAULT NULL ,
-`plan_start_date`  datetime NULL DEFAULT NULL ,
-`plan_closed_date`  datetime NULL DEFAULT NULL ,
-`start_date`  datetime NULL DEFAULT NULL ,
-PRIMARY KEY (`pk_id`),
-INDEX `ix_user_id` (`user_id`) USING BTREE ,
-INDEX `ix_plan_start_date` (`plan_start_date`) USING BTREE 
-)
-ENGINE=MyISAM
+  `pk_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `subject` varchar(200) NOT NULL,
+  `body` varchar(3000) NOT NULL,
+  `participator_ids` varchar(3000) DEFAULT NULL,
+  `created_date` datetime NOT NULL DEFAULT '1901-01-01 00:00:00',
+  `last_update` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `task_status` tinyint(4) DEFAULT '0' COMMENT '尚未开始 NotBegun 0，已开始 Doing 10，结束Done2，Block3',
+  `closed_date` datetime DEFAULT NULL,
+  `is_delete` tinyint(4) DEFAULT NULL,
+  `plan_start_date` datetime DEFAULT NULL,
+  `plan_closed_date` datetime DEFAULT NULL,
+  `start_date` datetime DEFAULT NULL,
+  `terms` varchar(3000) DEFAULT NULL,
+  `tf_idf` varchar(3000) DEFAULT NULL,
+  PRIMARY KEY (`pk_id`),
+  KEY `ix_user_id` (`user_id`) USING BTREE,
+  KEY `ix_plan_start_date` (`plan_start_date`) USING BTREE
+) ENGINE=MyISAM CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,5 +52,14 @@ ENGINE=MyISAM
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+DROP TABLE IF EXISTS `term_doc_count`;
+CREATE TABLE `term_doc_count` (
+  `term` varchar(255) NOT NULL DEFAULT '',
+  `count` int(11) NOT NULL DEFAULT '0',
+  `idf` float DEFAULT NULL,
+  `last_update` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`term`),
+  KEY `ix_count` (`count`)
+) ENGINE=MyISAM CHARSET=utf8;
 
 -- Dump completed on 2013-12-27 16:34:25

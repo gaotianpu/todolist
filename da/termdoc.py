@@ -7,8 +7,7 @@ import datetime
 
 tname="term_doc_count"
 def load_all():
-	rows = dbr.select(tname,what="term")
-	return [r.term for r in rows]
+	return list(dbr.select(tname,what="term,idf")) 
 
 def insert(terms):
 	if not terms:

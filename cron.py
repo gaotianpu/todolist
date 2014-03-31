@@ -41,7 +41,7 @@ def update_term_count(subject):
 
 def test():
     rows = True
-    page_index = 2
+    page_index = 0
     page_size = 100
     terms = {}
     doc_count = 0
@@ -59,16 +59,49 @@ def test():
         page_index = page_index + 1
 
     #update idf        
-    set_new = set([k for k,v in terms.items()]) 
-    set_old = set(da.termdoc.load_all())
+    set_new = set([k for k,v in terms.items()])     
+    set_old = set([r.term for r in  da.termdoc.load_all()])
     set_insert = set_new-set_old
     da.termdoc.insert(list(set_insert))
     for k,v in terms.items():
         if k in set_old:
             idf = math.log(float(doc_count)/(v+1))
-            da.termdoc.update(k,v,idf)  
+            da.termdoc.update(k,v,idf)
+
+def compute_tf_idf():
+    #compute tf-idf 
+    term_idfs = {}
+    terms_idf = da.termdoc.load_all()
+    for t in terms_idf:       
+        term_idfs[t.term] = t.idf
+
+    rows = True
+    page_index = 0
+    page_size = 100
+    while rows:
+        rows = da.subject.load_all(page_index*page_size,page_size)
+        for r in rows: 
+            termsl = parse_term_count(r.terms) 
+            l=[]
+            for t in termsl:                
+                if not t[-1].strip():
+                    print t 
+                    continue
+                if t[0] in term_idfs:
+                    # print t[-1],t[0],term_idfs[t[0]]
+                    tf_idf = int(t[-1])*term_idfs[t[0]] 
+                    l.append([t[0],tf_idf])                     
+                else:
+                    print t[0]
+                    pass
+            # print l
+            l.sort(cmp=lambda x,y : cmp(y[1], x[1]))
+            da.subject.update(r.pk_id,tf_idf=' '.join(x[0] for x in l)) 
+
+        page_index = page_index + 1
 
 
 if __name__ == "__main__":
-    test()
+    # test()
+    compute_tf_idf()
     # ctf("中文分词指的是将一个汉字序列切分成一个一个单独的词。中文分词是文本挖掘的基础，对于输入的一段中文，成功的进行中文分词，可以达到电脑自动识别语句含义的效果。SAE分词系统基于隐马模型开发出的汉语分析系統，主要功能包括中文分词、词性标注、命名实体识别、新词识别。")
