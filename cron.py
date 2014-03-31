@@ -5,14 +5,16 @@ import urllib2
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
+import config
 
 def segment(chinese_text,word_tag): 
-    _SEGMENT_BASE_URL = 'http://segment.sae.sina.com.cn/urlclient.php'
+    _SEGMENT_BASE_URL = 'http://segment.sae.sina.com.cn/urlclient.php'  
+    if  config.debug:   
+        _SEGMENT_BASE_URL = "http://ftodo.sinaapp.com/segment" 
 
     payload = urllib.urlencode([('context', chinese_text),])
     args = urllib.urlencode([('word_tag', word_tag), ('encoding', 'UTF-8'),])
-    url = _SEGMENT_BASE_URL + '?' + args
-    print payload
+    url = _SEGMENT_BASE_URL + '?' + args     
     result = urllib2.urlopen(url, payload).read()
     return result
 
