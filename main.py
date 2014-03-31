@@ -12,6 +12,7 @@ urls = (
     '/new','New',  
     '/details','Details',
     '/done', 'Done',  
+    '/segment', 'Segment',  
     '/', 'Index',
 )
 
@@ -59,13 +60,31 @@ class Details:
         da.subject.update(i.pk_id,subject="",body=i.body)
         return  
 
+import cron
 class Done:
+    def GET(self):
+        i = web.input(id=0)
+        detail = da.subject.load_by_id(i.id)
+        x = cron.segment(detail.body)
+        return x
+
     def POST(self):
         i = web.input(pk_id=0,checked='true')
         task_status = 1 if i.checked=='true' else 0
         da.subject.update(i.pk_id,task_status=task_status) 
         r = {"code":1,"data":True}
         return json.dumps(r) 
+
+class Segment:
+    def POST(self):  
+    # curl -d "c=是由新浪爱问提供的分词服务，是扩展服务。 该服务分词准确率高,而且可以返回给每个词的词性，详细使用方法请看API文档" "http://ftodo.sinaapp.com/segment"
+        i = web.input(c='')
+        if i.c:         
+            x = cron.segment(i.c)
+            return x
+        else:
+            return ""
+
 
 app = web.application(urls, globals())
 if __name__ == "__main__":

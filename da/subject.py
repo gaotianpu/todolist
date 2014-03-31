@@ -21,7 +21,7 @@ def update(pk_id,**kv):
 
 def load_by_id(pk_id):
     rows = list(dbr.select(table_name,where='pk_id=$pk_id' , vars=locals()))
-    return rows[0]
+    return rows[0] if rows else False
 
 def load_by_date(user_id,date):
     return list(dbr.select(table_name,what="pk_id,subject,body,task_status",
