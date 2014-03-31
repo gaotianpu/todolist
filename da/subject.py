@@ -34,3 +34,6 @@ def load_last_one(user_id):
     if rows:
         return rows[0]
     return False 
+
+def load_all(offset,limit=100):
+    return list(dbr.select(table_name,offset=offset,limit=limit))

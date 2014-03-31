@@ -77,8 +77,8 @@ class Done:
 
 class Segment:
     def POST(self):  
-    # curl -d "c=是由新浪爱问提供的分词服务，是扩展服务。 该服务分词准确率高,而且可以返回给每个词的词性，详细使用方法请看API文档" "http://ftodo.sinaapp.com/segment"
-        i = web.input(context='',word_tag='1')
+    # curl -d "context=是由新浪爱问提供的分词服务，是扩展服务。 该服务分词准确率高,而且可以返回给每个词的词性，详细使用方法请看API文档" "http://ftodo.sinaapp.com/segment"
+        i = web.input(context='',word_tag='0')
         if i.context:         
             x = cron.segment(i.context,i.word_tag)
             return x
