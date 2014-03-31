@@ -37,3 +37,7 @@ def load_last_one(user_id):
 
 def load_all(offset,limit=100):
     return list(dbr.select(table_name,offset=offset,limit=limit))
+
+def load_count():
+    r = dbr.select(table_name,what="count(*) as count")
+    return r[0].count

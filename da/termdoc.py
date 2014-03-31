@@ -14,7 +14,8 @@ def insert(terms):
 		return 
 	values = []	
 	for t in terms:
-		values.append({'term':t,'count':0,'last_update':datetime.datetime.now()} )
+		if not t[0].strip(): continue
+		values.append({'term':t[0],'count':t[1],'idf':t[2],'last_update':datetime.datetime.now()} )
 	dbw.supports_multiple_insert = True
 	dbw.multiple_insert(tname, values=values) 
 
