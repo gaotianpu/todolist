@@ -6,11 +6,11 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-def segment(chinese_text): 
+def segment(chinese_text,word_tag): 
     _SEGMENT_BASE_URL = 'http://segment.sae.sina.com.cn/urlclient.php'
 
     payload = urllib.urlencode([('context', chinese_text),])
-    args = urllib.urlencode([('word_tag', 1), ('encoding', 'UTF-8'),])
+    args = urllib.urlencode([('word_tag', word_tag), ('encoding', 'UTF-8'),])
     url = _SEGMENT_BASE_URL + '?' + args
     print payload
     result = urllib2.urlopen(url, payload).read()
