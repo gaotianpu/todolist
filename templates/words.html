@@ -1,0 +1,9 @@
+$def with (words)
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <h1 id="hNavHeader">words</h1>
+</nav>
+
+<div id="container" style="margin-top:100px;">
+$for word in words:
+	<a href="/word#$(word.term)">$(word.term)</a>		
+</div>

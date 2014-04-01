@@ -22,3 +22,7 @@ def insert(terms):
 def update(term,count,idf=0):
 	return dbw.update(tname,count=count,idf=idf,where="term=$term",vars=locals())
 	#web.sqlquote
+
+
+def load_all():
+	return dbr.select(tname, what="term",where="CHAR_LENGTH(term)>1",order="count desc")
