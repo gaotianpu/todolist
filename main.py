@@ -4,6 +4,7 @@ import web
 import da
 from datetime import *
 import json 
+import cron
 
 cust_id = 1  #tmp
 
@@ -46,6 +47,7 @@ class New:
         content = web.websafe(i.content)
         pk_id = da.subject.insert(cust_id,content)
         task = da.subject.load_by_id(pk_id)
+        cron.update_term_count(task) #remove to eda?
         r = {"code":1,"data":task}
         return json.dumps(r,cls=CJsonEncoder) 
 
@@ -58,6 +60,7 @@ class Details:
     def POST(self):
         i = web.input(pk_id=0,subject='',body='')
         da.subject.update(i.pk_id,subject="",body=i.body)
+        cron.update_term_count_by_id(i.pk_id) #remove to eda?
         return  
 
 import cron
