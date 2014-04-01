@@ -44,9 +44,9 @@ def update_idf():
     rows = True
     page_index = 0
     page_size = 100
-    terms = {}
+    terms = {}  #全部数据都放在该容器中，数据量大的时候就挂掉了，计算term-doc idf, hadoop计算
     while rows:
-        rows = da.subject.load_all(page_index*page_size,page_size)  #last_update > last_comput_tfidf ?  
+        rows = da.subject.load_all(page_index*page_size,page_size)  #last_update > last_comput_tfidf ?          
         for r in rows:  
             termsl = parse_term_count(r.terms)  if r.terms else  update_term_count(r)  
             for t in termsl:
