@@ -23,6 +23,10 @@ def load_by_id(pk_id):
     rows = list(dbr.select(table_name,where='pk_id=$pk_id' , vars=locals()))
     return rows[0] if rows else False
 
+def load_by_ids(pk_ids):
+    rows = list(dbr.select(table_name,where='pk_id in $pk_ids' , vars=locals()))
+    return rows
+
 def load_by_date(user_id,date):
     return list(dbr.select(table_name,what="pk_id,subject,body,task_status",
         where='user_id=$user_id and date(plan_start_date)=$date',
@@ -41,3 +45,5 @@ def load_all(offset,limit=100):
 def load_count():
     r = dbr.select(table_name,what="count(*) as count")
     return r[0].count
+
+

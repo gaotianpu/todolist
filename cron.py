@@ -114,15 +114,47 @@ def update_tf_idf():
 
         page_index = page_index + 1
 
+def load_terms():
+    dterms = {}
+    terms = da.termdoc.load_best_terms()
+    for t in terms:
+        dterms[t.term] = t.pk_id
+    return dterms
+
+def update_term_doc():
+    dterms = load_terms() 
+
+    rows = True
+    page_index = 0
+    page_size = 100
+    while rows:
+        rows = da.subject.load_all(page_index*page_size,page_size)
+        for r in rows: 
+            if not r.terms: continue            
+            terms = [term.split(' ') for term in r.terms.split('\n')]            
+            for t in terms:                
+                if t[0] in dterms:
+                    da.termdoc.insertRealt(dterms[t[0]],r.pk_id)
+        page_index = page_index + 1            
+
+def tmp(term_id):
+    doc_ids = da.termdoc.load_doc_ids(term_id)
+    subjects = da.subject.load_by_ids(doc_ids)
+    for s in subjects:
+        print s.body
+
 import math
 def combination(n,k=2):
     return math.factorial(n) / math.factorial(n-k)/ math.factorial(k)
-    
-if __name__ == "__main__":     
-    print combination(3)
-    print combination(4)
-    print combination(5)
-    print combination(6)
+
+if __name__ == "__main__":   
+    tmp(709)
+    # update_term_doc()
+
+    # print combination(3)
+    # print combination(4)
+    # print combination(5)
+    # print combination(6)
 
     # update_idf()
     # update_tf_idf()

@@ -16,6 +16,22 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `public_terms`
+--
+
+DROP TABLE IF EXISTS `public_terms`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `public_terms` (
+  `term` varchar(10) NOT NULL DEFAULT '',
+  `sogou_count` int(11) NOT NULL DEFAULT '0',
+  `sogou_idf` float DEFAULT '0',
+  `sogou_last_get` datetime DEFAULT NULL,
+  PRIMARY KEY (`term`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `subject_participator_relation`
 --
 
@@ -26,7 +42,7 @@ CREATE TABLE `subject_participator_relation` (
   `subject_id` bigint(20) NOT NULL,
   `participator_id` bigint(20) NOT NULL,
   `is_delete` tinyint(4) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +61,7 @@ CREATE TABLE `subject_reviews` (
   `last_update` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `is_delete` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`review_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -60,7 +76,7 @@ CREATE TABLE `subject_similarity` (
   `subject_id_1` int(11) NOT NULL,
   `Similarity` float DEFAULT NULL,
   `las_update` datetime DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -89,7 +105,7 @@ CREATE TABLE `subjects` (
   PRIMARY KEY (`pk_id`),
   KEY `ix_user_id` (`user_id`) USING BTREE,
   KEY `ix_plan_start_date` (`plan_start_date`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=127 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,8 +118,9 @@ DROP TABLE IF EXISTS `term_doc`;
 CREATE TABLE `term_doc` (
   `term_id` bigint(20) DEFAULT NULL,
   `doc_id` bigint(20) DEFAULT NULL,
-  `last_update` datetime DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `last_update` datetime DEFAULT NULL,
+  KEY `ix_term_id` (`term_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -114,6 +131,7 @@ DROP TABLE IF EXISTS `term_doc_count`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `term_doc_count` (
+  `pk_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `term` varchar(255) NOT NULL DEFAULT '',
   `count` int(11) NOT NULL DEFAULT '0',
   `idf` float DEFAULT NULL,
@@ -122,9 +140,9 @@ CREATE TABLE `term_doc_count` (
   `sogou_idf` float DEFAULT NULL,
   `sogou_last_get` datetime DEFAULT NULL,
   `sogou_tf_idf` float DEFAULT NULL,
-  PRIMARY KEY (`term`),
+  PRIMARY KEY (`pk_id`),
   KEY `ix_count` (`count`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=717 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -136,4 +154,4 @@ CREATE TABLE `term_doc_count` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-04-04 10:26:32
+-- Dump completed on 2014-04-04 11:24:53

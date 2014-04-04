@@ -32,7 +32,7 @@ def load_all():
 	return dbr.select(tname, what="term",where="CHAR_LENGTH(term)>1",order="count desc")
 
 def load_best_terms():
-	return dbr.select(tname, what="term",where="sogou_tf_idf is not null",order="sogou_tf_idf desc")
+	return dbr.select(tname, what="pk_id,term",where="count>1 and sogou_tf_idf is not null",order="sogou_tf_idf desc")
 
 #####
 def load_sogou_terms():
@@ -44,3 +44,12 @@ def load_has_sogou_terms():
 def update_sogou_idf(term,count,idf):
 	return dbw.update(tname,sogou_ix_count=count,sogou_idf=idf,sogou_last_get=web.SQLLiteral('now()'),
 		where="term=$term",vars=locals())
+
+
+####
+def insertRealt(term_id,doc_id):
+	dbw.query('replace into term_doc set term_id=%s,doc_id=%s,last_update=sysdate()'%(term_id,doc_id))
+
+def load_doc_ids(term_id):
+	rows = list(dbr.select('term_doc',what="doc_id",where="term_id=$term_id",vars=locals()))
+	return [r.doc_id for r in rows]
