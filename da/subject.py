@@ -47,3 +47,4 @@ def load_count():
     return r[0].count
 
 
+#update subjects a, subjects_old b set a.terms = b.terms where a.pk_id=b.pk_id and b.terms is not null;

@@ -153,18 +153,47 @@ def tmp(term_id):
     for s in subjects:
         print s.body
 
+def similary():
+    terms = da.termdoc.load_best_terms()
+    terms_count = len(terms)
+    for i in range(0,terms_count):
+        i_doc_ids = da.termdoc.load_doc_ids(terms[i].pk_id) 
+        for j in range(i+1,terms_count):
+            j_doc_ids = da.termdoc.load_doc_ids(terms[j].pk_id)
+            comm_set_len = len(set(i_doc_ids) & set(j_doc_ids)) 
+            if not comm_set_len: 
+                print terms[i].term,terms[j].term,float(comm_set_len)/len(i_doc_ids),float(comm_set_len)/len(j_doc_ids)
+
 import math
+def cos_dist(a, b):
+    if len(a) != len(b):
+        return None
+    part_up = 0.0
+    a_sq = 0.0
+    b_sq = 0.0
+    for a1, b1 in zip(a,b):
+        part_up += a1*b1
+        a_sq += a1**2
+        b_sq += b1**2
+    part_down = math.sqrt(a_sq*b_sq)
+    if part_down == 0.0:
+        return None
+    else:
+        return part_up / part_down
+
 def combination(n,k=2):
     return math.factorial(n) / math.factorial(n-k)/ math.factorial(k)
 
 if __name__ == "__main__":  
     # update_idf()
-    update_tf_idf()
-    update_term_doc()
-
-    # tmp(709)
+    # update_tf_idf()
     # update_term_doc()
 
+    similary()
+    # print cos_dist([1,0,1],[0,1,1])
+
+    # tmp(709)
+     
     # print combination(3)
     # print combination(4)
     # print combination(5)

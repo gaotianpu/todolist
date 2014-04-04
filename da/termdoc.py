@@ -32,7 +32,7 @@ def load_all():
 	return dbr.select(tname, what="pk_id,term,idf",where="CHAR_LENGTH(term)>1",order="count desc")
 
 def load_best_terms():
-	return dbr.select(tname, what="pk_id,term",where="count>1 and sogou_tf_idf is not null",order="sogou_tf_idf desc")
+	return list(dbr.select(tname, what="pk_id,term",where="count>1 and sogou_tf_idf is not null",order="sogou_tf_idf desc"))
 
 #####
 def load_sogou_terms():
