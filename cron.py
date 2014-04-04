@@ -44,6 +44,16 @@ def update_term_count_by_id(subject_id):
     subject = da.subject.load_by_id(subject_id)
     update_term_count(subject)
 
+def handler(subject_id):
+    subject = da.subject.load_by_id(subject_id)
+
+    termsl = parse_term_count(subject.terms)  if subject.terms else update_term_count(subject)
+    #update term_doc
+    #update term_doc_count
+    #update sogou idf 
+    #comm term tf-idf
+    #subject term tf-idf 
+
 def update_idf():
     #此版本的idf，每次需重新计算，不能增量计算?
     rows = True
@@ -147,8 +157,12 @@ import math
 def combination(n,k=2):
     return math.factorial(n) / math.factorial(n-k)/ math.factorial(k)
 
-if __name__ == "__main__":   
-    tmp(709)
+if __name__ == "__main__":  
+    # update_idf()
+    update_tf_idf()
+    update_term_doc()
+
+    # tmp(709)
     # update_term_doc()
 
     # print combination(3)
@@ -156,8 +170,7 @@ if __name__ == "__main__":
     # print combination(5)
     # print combination(6)
 
-    # update_idf()
-    # update_tf_idf()
+    
 
     # doc_count = da.subject.load_count()
     # print doc_count    

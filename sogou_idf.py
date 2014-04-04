@@ -21,8 +21,9 @@ def get_doc_count(kword):
 	return l[0] if l else 0
 
 def run():
-	doc_count = get_doc_count(u'的')
-
+	terms = da.termdoc.load_has_sogou_terms()
+	doc_count = max([t.sogou_ix_count for t in terms])
+	
 	terms = da.termdoc.load_sogou_terms()
 	for t in terms:
 		term_count = get_doc_count(t.term)
@@ -40,6 +41,7 @@ def fix():
 		da.termdoc.update_a(t.term,sogou_idf=idf,sogou_tf_idf=tf_idf)
 
 if __name__ == "__main__":
+	run()
 	fix()
 	
 
