@@ -15,6 +15,7 @@ urls = (
     '/done', 'Done',  
     '/segment', 'Segment',
     '/words', 'Words',  
+    '/wordlist','WordList',
     '/', 'Index',
 )
 
@@ -93,6 +94,15 @@ class Words:
     def GET(self):
         words = da.termdoc.load_best_terms()
         return render.words(words)
+
+class WordList:
+    def GET(self):
+        i = web.input(term='')
+        term_id = da.termdoc.load_term_id(i.term.replace('#',''))   
+        doc_ids = da.termdoc.load_doc_ids(term_id)
+        subjects = da.subject.load_by_ids(doc_ids)        
+        r = {"code":1,"data":subjects}
+        return json.dumps(r) 
 
 app = web.application(urls, globals())
 if __name__ == "__main__":

@@ -1,4 +1,6 @@
 $def with (words)
+<script src="/static/js/words.js"></script>
+
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
   <h1 id="hNavHeader">words</h1>
 </nav>
@@ -7,3 +9,15 @@ $def with (words)
 $for word in words:
 	<a href="#$(word.term)">$(word.term)</a>		
 </div>
+
+<div id="test"></div>
+
+<script id="tpl_word_tasks" type="text/template">
+<ul class="list-group"> 
+	{@each data as it,index}
+	<li id="t_$${it.pk_id}" class="list-group-item">	 
+	$${it.body}  
+	</li>   
+	{@/each}
+</ul>
+</script>

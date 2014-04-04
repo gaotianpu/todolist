@@ -24,7 +24,7 @@ def load_by_id(pk_id):
     return rows[0] if rows else False
 
 def load_by_ids(pk_ids):
-    rows = list(dbr.select(table_name,where='pk_id in $pk_ids' , vars=locals()))
+    rows = list(dbr.select(table_name,what="pk_id,body",where='pk_id in $pk_ids' , vars=locals()))
     return rows
 
 def load_by_date(user_id,date):

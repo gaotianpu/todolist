@@ -53,3 +53,7 @@ def insertRealt(term_id,doc_id):
 def load_doc_ids(term_id):
 	rows = list(dbr.select('term_doc',what="doc_id",where="term_id=$term_id",vars=locals()))
 	return [r.doc_id for r in rows]
+
+def load_term_id(term):
+	rows = list(dbr.select(tname,what="pk_id",where="term=$term",vars=locals()))
+	return rows[0].pk_id if rows else 0
