@@ -45,6 +45,7 @@ def update_term_count_by_id(subject_id):
     update_term_count(subject)
 
 def update_idf():
+    #此版本的idf，每次需重新计算，不能增量计算?
     rows = True
     page_index = 0
     page_size = 100
@@ -113,10 +114,18 @@ def update_tf_idf():
 
         page_index = page_index + 1
 
+import math
+def combination(n,k=2):
+    return math.factorial(n) / math.factorial(n-k)/ math.factorial(k)
+    
+if __name__ == "__main__":     
+    print combination(3)
+    print combination(4)
+    print combination(5)
+    print combination(6)
 
-if __name__ == "__main__":
-    update_idf()
-    update_tf_idf()
+    # update_idf()
+    # update_tf_idf()
 
     # doc_count = da.subject.load_count()
     # print doc_count    

@@ -16,6 +16,54 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `subject_participator_relation`
+--
+
+DROP TABLE IF EXISTS `subject_participator_relation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `subject_participator_relation` (
+  `subject_id` bigint(20) NOT NULL,
+  `participator_id` bigint(20) NOT NULL,
+  `is_delete` tinyint(4) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `subject_reviews`
+--
+
+DROP TABLE IF EXISTS `subject_reviews`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `subject_reviews` (
+  `review_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `subject_id` bigint(20) NOT NULL,
+  `responder_id` bigint(20) NOT NULL,
+  `review_content` varchar(3000) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `last_update` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `is_delete` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`review_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `subject_similarity`
+--
+
+DROP TABLE IF EXISTS `subject_similarity`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `subject_similarity` (
+  `subject_id` int(11) NOT NULL,
+  `subject_id_1` int(11) NOT NULL,
+  `Similarity` float DEFAULT NULL,
+  `las_update` datetime DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `subjects`
 --
 
@@ -41,7 +89,42 @@ CREATE TABLE `subjects` (
   PRIMARY KEY (`pk_id`),
   KEY `ix_user_id` (`user_id`) USING BTREE,
   KEY `ix_plan_start_date` (`plan_start_date`) USING BTREE
-) ENGINE=MyISAM CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `term_doc`
+--
+
+DROP TABLE IF EXISTS `term_doc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `term_doc` (
+  `term_id` bigint(20) DEFAULT NULL,
+  `doc_id` bigint(20) DEFAULT NULL,
+  `last_update` datetime DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `term_doc_count`
+--
+
+DROP TABLE IF EXISTS `term_doc_count`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `term_doc_count` (
+  `term` varchar(255) NOT NULL DEFAULT '',
+  `count` int(11) NOT NULL DEFAULT '0',
+  `idf` float DEFAULT NULL,
+  `last_update` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `sogou_ix_count` bigint(20) DEFAULT NULL,
+  `sogou_idf` float DEFAULT NULL,
+  `sogou_last_get` datetime DEFAULT NULL,
+  `sogou_tf_idf` float DEFAULT NULL,
+  PRIMARY KEY (`term`),
+  KEY `ix_count` (`count`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,14 +135,5 @@ CREATE TABLE `subjects` (
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-DROP TABLE IF EXISTS `term_doc_count`;
-CREATE TABLE `term_doc_count` (
-  `term` varchar(255) NOT NULL DEFAULT '',
-  `count` int(11) NOT NULL DEFAULT '0',
-  `idf` float DEFAULT NULL,
-  `last_update` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`term`),
-  KEY `ix_count` (`count`)
-) ENGINE=MyISAM CHARSET=utf8;
 
--- Dump completed on 2013-12-27 16:34:25
+-- Dump completed on 2014-04-04 10:26:32

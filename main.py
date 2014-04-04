@@ -91,7 +91,7 @@ class Segment:
 
 class Words:
     def GET(self):
-        words = da.termdoc.load_all()
+        words = da.termdoc.load_best_terms()
         return render.words(words)
 
 app = web.application(urls, globals())
