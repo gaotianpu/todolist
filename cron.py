@@ -186,10 +186,10 @@ def combination(n,k=2):
 
 if __name__ == "__main__":  
     # update_idf()
-    # update_tf_idf()
-    # update_term_doc()
+    update_tf_idf()
+    update_term_doc()
 
-    similary()
+    # similary()
     # print cos_dist([1,0,1],[0,1,1])
 
     # tmp(709)
