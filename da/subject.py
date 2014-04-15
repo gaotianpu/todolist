@@ -40,7 +40,10 @@ def load_last_one(user_id):
     return False 
 
 def load_all(offset,limit=100):
-    return list(dbr.select(table_name,offset=offset,limit=limit))
+    return list(dbr.select(table_name,order="pk_id desc",offset=offset,limit=limit))
+
+def load_all_2(offset,limit=100):
+    return list(dbr.select(table_name,what="pk_id,body,created_date",order="pk_id desc",offset=offset,limit=limit))
 
 def load_count():
     r = dbr.select(table_name,what="count(*) as count")
