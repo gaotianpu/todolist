@@ -33,12 +33,13 @@ class CJsonEncoder(json.JSONEncoder):
 
 class Index:
     def GET(self):
-        return render.index()
+        return render.index2()
+        # return render.index()
 
 class List:
     def GET(self):
         i = web.input(page_index=1,page_size=500)
-        rows = da.subject.load_all_2((i.page_index-1) * i.page_size,i.page_size)
+        rows = da.subject.load_page((i.page_index-1) * i.page_size,i.page_size)
         r = {'code':1,'list':rows}
         return json.dumps(r,cls=CJsonEncoder)
 
