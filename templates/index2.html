@@ -16,7 +16,8 @@
 </nav>
 
 <div id="container">  
-  <div class="scroll">  
+  <div class="scroll">
+
   </div> 
 </div>
 
@@ -29,18 +30,22 @@
       <input type="text" class="form-control" id="txtContent" placeholder="Enter your task here, press Enter key to submit ...">
     </div> 
   </form> 
-</nav>
+</nav> 
 
 <script id="tpl_tasklist" type="text/template">
+{@each list as day,day_index}
 <ul class="list-group"> 
-  {@each list as it,index}
-  <li id="t_$${it.pk_id}" class="list-group-item">  
+  $${day[0]} | 
+  {@each day[1] as it,index} 
+  <li class="list-group-item">  
     <input id="cb_$${it.pk_id}" param="$${it.pk_id}" type="checkbox" >  
     $${it.body}  
-  </li>   
+  </li> 
   {@/each}
 </ul>
+{@/each}
 </script>
+
 
 <script src="/static/js/lib/jquery-2.1.0.min.js"></script>
 <script src="/static/js/lib/bootstrap-3.0.0.min.js"></script>
