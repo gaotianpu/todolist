@@ -17,10 +17,6 @@
 
 <div id="container">  
   <div class="scroll">  
-        第一页内容第一页内容<br>  
-        第一页内容<br>第一页内容<br>第一页内容<br>  
-        第一页内容<br>第一页内容<br>第一页内容<br>  
-        第一页内容<br>第一页内容<br>第一页内容  
   </div> 
 </div>
 
@@ -35,10 +31,22 @@
   </form> 
 </nav>
 
+<script id="tpl_tasklist" type="text/template">
+<ul class="list-group"> 
+  {@each list as it,index}
+  <li id="t_$${it.pk_id}" class="list-group-item">  
+    <input id="cb_$${it.pk_id}" param="$${it.pk_id}" type="checkbox" >  
+    $${it.body}  
+  </li>   
+  {@/each}
+</ul>
+</script>
+
 <script src="/static/js/lib/jquery-2.1.0.min.js"></script>
 <script src="/static/js/lib/bootstrap-3.0.0.min.js"></script>
 <script src="/static/js/lib/juicer.min.js"></script> 
 <script src="/static/js/lib/jquery.infinitescroll-2.0.min.js"></script> 
 <script src="/static/js/m2.js"></script> 
-  </body>
+
+</body>
 </html>

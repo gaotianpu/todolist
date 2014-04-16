@@ -7,13 +7,10 @@
             maxPage: 10, 
             dataType: 'json',
   			appendCallback:false                                                 
-        }, function(json, opts) {
+        }, function(data, opts) {
         	var page = opts.state.currPage; 
-		  
-		  for(var i=1;i<1000;i++){
-		  	$('#container').append(json.list[0].body + '<br/>');
-		  } 
-		  
+        	$('#container').append(juicer($("#tpl_tasklist").html(), data)); 
+
 		}); 
 
 
