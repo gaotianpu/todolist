@@ -43,7 +43,19 @@ def load_all(offset,limit=100):
     return list(dbr.select(table_name,order="pk_id desc",offset=offset,limit=limit))
 
 def load_page(offset,limit):
-    return list(dbr.select(table_name,what="pk_id,body,created_date",order="pk_id desc",offset=offset,limit=limit))
+    print offset
+    r = {}
+    rows = list(dbr.select(table_name,what="pk_id,body,created_date",order="pk_id desc",offset=offset,limit=limit))
+    for row in rows:
+        day = row.created_date.strftime('%Y-%m-%d')
+        print day
+        if day in r:
+            r[day].append(row)
+        else:
+            r[day]=[row]
+    # print r 
+
+    return r #list(dbr.select(table_name,what="pk_id,body,created_date",order="pk_id desc",offset=offset,limit=limit))
 
 def load_count():
     r = dbr.select(table_name,what="count(*) as count")

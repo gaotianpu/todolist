@@ -40,7 +40,7 @@ class Index:
 class List:
     def GET(self):
         i = web.input(page=1,size=5)
-        rows = da.subject.load_page((int(i.page) - 1) * i.size,i.size)
+        rows = da.subject.load_page((int(i.page) - 1) * int(i.size),int(i.size))
         r = {'code':1,'list':rows}
         return json.dumps(r,cls=CJsonEncoder)
 
@@ -116,4 +116,5 @@ class WordList:
 
 app = web.application(urls, globals())
 if __name__ == "__main__":
+    # da.subject.load_page(1,10)
     app.run()
