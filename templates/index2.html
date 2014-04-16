@@ -10,23 +10,28 @@
     <link href="/static/css/custom.css" rel="stylesheet">
   </head>
   <body>
-     
+
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 <h1 id="hNavHeader">今天</h1>
 </nav>
 
 <div id="container">  
+  <div class="scroll">  
+        第一页内容第一页内容<br>  
+        第一页内容<br>第一页内容<br>第一页内容<br>  
+        第一页内容<br>第一页内容<br>第一页内容<br>  
+        第一页内容<br>第一页内容<br>第一页内容  
+  </div> 
 </div>
 
-<div style="height:40px;"></div>
+<div id="load_data" style="height:240px;"><a href="/list?page=1"></a></div>
+
 <nav id="navPost" class="navbar navbar-default navbar-fixed-bottom" role="navigation"> 
   <form id="newPostForm" class="form-inline" role="form">    
     <div class="form-group col-lg-12">
       <label class="sr-only" for="txtContent"></label>          
       <input type="text" class="form-control" id="txtContent" placeholder="Enter your task here, press Enter key to submit ...">
     </div> 
-    <!-- <button id="btnSubmit" type="submit" class="btn btn-default">Submit</button>
-    <button type="button" class="btn btn-default form-group"><span class="glyphicon glyphicon-th-list"></span></button>     -->
   </form> 
 </nav>
 
@@ -34,6 +39,6 @@
 <script src="/static/js/lib/bootstrap-3.0.0.min.js"></script>
 <script src="/static/js/lib/juicer.min.js"></script> 
 <script src="/static/js/lib/jquery.infinitescroll-2.0.min.js"></script> 
-
+<script src="/static/js/m2.js"></script> 
   </body>
 </html>
