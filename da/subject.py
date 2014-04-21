@@ -8,7 +8,7 @@ table_name = 'subjects'
 def insert(user_id,subject):
     #避免重复提交
     last_one = load_last_one(user_id)
-    if last_one and last_one.subject.strip()==subject.strip():  
+    if last_one and last_one.body.strip()==subject.strip():  
         return last_one.pk_id
 
     return dbw.insert(table_name,user_id=user_id,subject="",body=subject,
