@@ -17,6 +17,7 @@ urls = (
     '/segment', 'Segment',
     '/words', 'Words',  
     '/wordlist','WordList',
+    '/i2', 'Index2',
     '/', 'Index',
 )
 
@@ -32,10 +33,13 @@ class CJsonEncoder(json.JSONEncoder):
             return json.JSONEncoder.default(self, obj)
 
 class Index:
+    def GET(self):         
+        return render.index()
+
+class Index2:
     def GET(self):
         render = web.template.frender('templates/index2.html')
-        return render()
-        # return render.index()
+        return render() 
 
 class List:
     def GET(self):
