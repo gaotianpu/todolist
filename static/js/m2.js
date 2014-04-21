@@ -60,11 +60,13 @@ $(function(){
         } 
 
         $.post('/new', {'content':content}, function(result){
+            var today = Date.today().toString('yyyy-MM-dd');
+
             //if today exist,
             var result =  $.parseJSON(result); 
 
             var html = juicer($("#tpl_task_item_normal").html(), result.data );
-            $("#taskday_2014-04-21 h3").after( html ); 
+            $("#taskday_" + today+ " h3").after( html ); 
             //not exist            
 
             Index.last_content = content;
