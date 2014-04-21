@@ -25,8 +25,7 @@ $(function(){
                 var task_day = result1.list[i][0];
                 var taskday_dom = $("#taskday_"+task_day);
                 if(taskday_dom.length>0){                     
-                    exist_days_index.push(i);
-                    console.log(i);
+                    exist_days_index.push(i);                     
                 }                 
             });
 
@@ -38,7 +37,9 @@ $(function(){
 
             //remove已存在day的tasks, 剩下的全刷
             for(var i in exist_days_index){
-               result1.splice(i, 1);  
+                if(!!result1){
+                    result1.list.splice(i, 1);  
+               }
             } 
             $('#container').append(juicer($("#tpl_tasklist").html(), result1));  
         });
