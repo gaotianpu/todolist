@@ -15,10 +15,7 @@
 <h1 id="hNavHeader">今天</h1>
 </nav>
 
-<div id="container">  
-  <div class="scroll">
-
-  </div> 
+<div id="container">    
 </div>
 
 <div id="load_data" style="height:240px;"><a href="/list?page=1"></a></div>
@@ -32,20 +29,36 @@
   </form> 
 </nav> 
 
+<script type="text/juicer" id="tpl_task_item_normal">
+<li class="list-group-item">  
+    <input id="cb_$${pk_id}" param="$${pk_id}" type="checkbox" >  $${body}  
+  </li> 
+</script> 
+
+<script type="text/juicer" id="tpl_task_items">
+ {@each items as it,index} 
+<li class="list-group-item">  
+    <input id="cb_$${it.pk_id}" param="$${it.pk_id}" type="checkbox" >  $${it.body}  
+  </li> 
+{@/each}
+</script> 
+
 <script id="tpl_tasklist" type="text/template">
 {@each list as day,day_index}
-<ul class="list-group"> 
-  $${day[0]} | 
+<ul id="taskday_$${day[0]}" class="list-group taskday"> 
+  <h3>$${day[0]}</h3>  
   {@each day[1] as it,index} 
-  <li class="list-group-item">  
-    <input id="cb_$${it.pk_id}" param="$${it.pk_id}" type="checkbox" >  
-    $${it.body}  
-  </li> 
-  {@/each}
+    {@include "#tpl_task_item_normal", it}  
+{@/each}
 </ul>
 {@/each}
-</script>
+</script>  
 
+<script id="tpl_tmp" type="text/template">
+{@each day[1] as it,index} 
+  {@include "#tpl_task_item_normal", it}  
+{@/each}
+</script> 
 
 <script src="/static/js/lib/jquery-2.1.0.min.js"></script>
 <script src="/static/js/lib/bootstrap-3.0.0.min.js"></script>

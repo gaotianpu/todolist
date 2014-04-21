@@ -39,7 +39,7 @@ class Index:
 
 class List:
     def GET(self):
-        i = web.input(page=1,size=5)
+        i = web.input(page=1,size=50)
         rows = da.subject.load_page((int(i.page) - 1) * int(i.size),int(i.size))
         r = {'code':1,'list':rows}
         return json.dumps(r,cls=CJsonEncoder)
