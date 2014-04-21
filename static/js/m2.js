@@ -1,4 +1,8 @@
-;$(function(){
+;var Index = {
+    last_content: '',
+}; 
+
+$(function(){
     //首次加载数据
     $.getJSON("/list?page=1",function(result){
         $('#container').html(juicer($("#tpl_tasklist").html(), result)); 
@@ -38,6 +42,88 @@
             } 
             $('#container').append(juicer($("#tpl_tasklist").html(), result1));  
         });
+    }); 
+
+    //bindding
+    $('#newPostForm').submit(function(){        
+        var content = $('#txtContent').val().trim(); 
+
+        if(content=='' || Index.last_content==content){
+            $('#newPostForm').addClass('alert-danger'); 
+            $('#btnSubmit').removeClass('btn-default').addClass('btn-danger');  
+            return false; 
+        }
+
+        if(Index.last_content==content){
+            //?
+            return false;
+        } 
+
+        $.post('/new', {'content':content}, function(result){
+            //if today exist,
+            var result =  $.parseJSON(result); 
+
+            var html = juicer($("#tpl_task_item_normal").html(), result.data );
+            $("#taskday_2014-04-21 h3").after( html ); 
+            //not exist            
+
+            Index.last_content = content;
+            $('#txtContent').val('');
+        })       
+        return false; //禁止提交后页面刷新
+    });  
+
+    //form validate
+    $("#txtContent").keydown(function(){
+        var content = $('#txtContent').val().trim(); 
+        if(content!=''){
+            $('#newPostForm').removeClass('alert-danger');  
+            $('#btnSubmit').removeClass('btn-danger').addClass('btn-default');  
+        }
+    }); 
+
+    $(document).delegate('li.list-group-item', 'dblclick', function() {
+        //dblclick  or click ?
+        var li = this;
+        var taskId = this.id.split('_')[1]; 
+
+        Index.set_li_normal(li.id); 
+
+        if($(this).find("input:text").length==0){
+            $(li).attr('status','edit');
+
+            //log.debug(taskId);
+            $.getJSON('/details',{pk_id:taskId,r:Math.random()},function(data){
+                log.debug(this.id);
+                $(li).html(juicer($("#tpl_task_update_form").html(), data)); 
+            });
+        }  
+
     });
+
+    $("#container").delegate('li form','submit',function(){
+        $.post('/details',$( this ).serialize(),function(data){
+           // Index.set_li_normal(0); 
+        }); 
+        return false;
+    });
+
+    $("#container").delegate('li input:button','click',function(){
+       // Index.set_li_normal(0); //取消、关闭按钮        
+    }); 
+
+    //done or not done?
+    $("#container").delegate('input:checkbox','change',function(){  
+        var pk_id = $(this).attr("param");
+        var checked = $(this).prop("checked");
+        log.debug('cb,' + pk_id + checked );        
+        $.post('/done',{pk_id:pk_id,checked:checked},function(data){
+            // if(checked){
+            //     $("#t_"+pk_id).addClass("done");
+            // }else{
+            //     $("#t_"+pk_id).removeClass("done");
+            // }
+        });      
+    }); 
 	   
 });
