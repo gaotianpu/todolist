@@ -17,8 +17,8 @@ urls = (
     '/segment', 'Segment',
     '/words', 'Words',  
     '/wordlist','WordList',
-    '/i2', 'Index2',
-    '/', 'Index',
+    '/i1', 'Index',
+    '/', 'Index2',
 )
 
 render = web.template.render('templates/',base='layout') 

@@ -1,5 +1,17 @@
 ;var Index = {
     last_content: '',
+
+    set_li_normal:function(current_edit_id){
+        //只允许一个task处于编辑状态,清理重置之前处于编辑状态的li
+        //是否需要post数据？
+        $("li[status=edit]").each(function(){
+            if(this.id!=current_edit_id){       
+                var data = {'body':$(this).find("#txt_body").val()};
+                var html = juicer('<input id="cb_${pk_id}" param="${pk_id}" type="checkbox" >${body}' , data) ;
+                $(this).html(html).attr('status','normal');
+            }                
+        });
+    },
 }; 
 
 $(function(){
@@ -89,47 +101,42 @@ $(function(){
         }
     }); 
 
-    $(document).delegate('li.list-group-item', 'dblclick', function() {
-        //dblclick  or click ?
-        var li = this;
-        var taskId = this.id.split('_')[1]; 
-
-        Index.set_li_normal(li.id); 
+    $(document).delegate('li.list-group-item', 'dblclick', function() { 
+        Index.set_li_normal(0); 
 
         if($(this).find("input:text").length==0){
-            $(li).attr('status','edit');
+            $(this).attr('status','edit');
 
-            //log.debug(taskId);
-            $.getJSON('/details',{pk_id:taskId,r:Math.random()},function(data){
-                log.debug(this.id);
-                $(li).html(juicer($("#tpl_task_update_form").html(), data)); 
-            });
-        }  
+            var taskId = this.id.split('_')[1]; 
+            var data = {"pk_id":taskId,"body":$(this).text().trim()};
+            var html = juicer($("#tpl_task_update_form").html(), data) 
+            $(this).html(html);
+        } 
 
     });
 
     $("#container").delegate('li form','submit',function(){
         $.post('/details',$( this ).serialize(),function(data){
-           // Index.set_li_normal(0); 
+           Index.set_li_normal(0); 
         }); 
         return false;
     });
 
-    $("#container").delegate('li input:button','click',function(){
-       // Index.set_li_normal(0); //取消、关闭按钮        
+    $("#container").delegate('li input:button','click',function(){         
+        Index.set_li_normal(0); //取消、关闭按钮        
     }); 
 
     //done or not done?
     $("#container").delegate('input:checkbox','change',function(){  
         var pk_id = $(this).attr("param");
         var checked = $(this).prop("checked");
-        log.debug('cb,' + pk_id + checked );        
+        
         $.post('/done',{pk_id:pk_id,checked:checked},function(data){
-            // if(checked){
-            //     $("#t_"+pk_id).addClass("done");
-            // }else{
-            //     $("#t_"+pk_id).removeClass("done");
-            // }
+            if(checked){
+                $("#li_"+pk_id).addClass("done");
+            }else{
+                $("#li_"+pk_id).removeClass("done");
+            }
         });      
     }); 
 	   

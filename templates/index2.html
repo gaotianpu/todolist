@@ -30,14 +30,14 @@
 </nav> 
 
 <script type="text/juicer" id="tpl_task_item_normal">
-<li class="list-group-item">  
+<li id="li_$${pk_id}" class="list-group-item">  
     <input id="cb_$${pk_id}" param="$${pk_id}" type="checkbox" >  $${body}  
   </li> 
 </script> 
 
 <script type="text/juicer" id="tpl_task_items">
  {@each items as it,index} 
-<li class="list-group-item">  
+<li id="li_$${it.pk_id}" class="list-group-item">  
     <input id="cb_$${it.pk_id}" param="$${it.pk_id}" type="checkbox" >  $${it.body}  
   </li> 
 {@/each}
@@ -60,6 +60,17 @@
   {@include "#tpl_task_item_normal", data}
 </ul>
 </script>  
+
+<script id="tpl_task_update_form" type="text/template">
+<form role="form"> <input type="hidden" name="pk_id" value="$${pk_id}" />  
+  <div class="form-group">
+    <label class="sr-only" for="txt_body"></label>
+    <textarea id="txt_body" name="body" class="form-control">$${body} </textarea>   
+  </div>
+  <input type="submit" value=" update " pk_id="$${pk_id}" /> 
+  <input type="button" value=" cancel " pk_id="$${pk_id}"/>
+</form>
+</script>
 
 <script id="tpl_tmp" type="text/template">
 {@each day[1] as it,index} 
