@@ -12,7 +12,7 @@ $(function(){
             navSelector: "#load_data",     //页面分页元素--成功后自动隐藏  
             nextSelector: "#load_data a",  
             itemSelector: ".taskday " ,             
-            animate: true,  
+            animate: false,  
             maxPage: 10, 
             dataType: 'json',
             appendCallback:false                                                 
@@ -62,17 +62,21 @@ $(function(){
 
         $.post('/new', {'content':content}, function(result){
             var today = Date.today().toString('yyyy-MM-dd');
-
-            //if today exist,
             var result =  $.parseJSON(result); 
-
-            var html = juicer($("#tpl_task_item_normal").html(), result.data );
-            $("#taskday_" + today+ " h3").after( html ); 
-            //not exist            
+            
+            if($("#taskday_" + today).length>0){ //if today exist,
+                var html = juicer($("#tpl_task_item_normal").html(), result.data );
+                $("#taskday_" + today + " h3").after( html );               
+            }else{                
+                result.data.day = today;  
+                var html = juicer($("#tpl_today_new").html(), result );
+                $('#container').prepend(html); 
+            }   
 
             Index.last_content = content;
             $('#txtContent').val('');
-        })       
+        });
+
         return false; //禁止提交后页面刷新
     });  
 

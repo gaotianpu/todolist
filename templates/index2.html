@@ -54,6 +54,13 @@
 {@/each}
 </script>  
 
+<script id="tpl_today_new" type="text/template">
+<ul id="taskday_$${data.day}" class="list-group taskday"> 
+  <h3>$${data.day}</h3>
+  {@include "#tpl_task_item_normal", data}
+</ul>
+</script>  
+
 <script id="tpl_tmp" type="text/template">
 {@each day[1] as it,index} 
   {@include "#tpl_task_item_normal", it}  
