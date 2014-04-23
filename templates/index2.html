@@ -46,7 +46,7 @@
 <script id="tpl_tasklist" type="text/template">
 {@each list as day,day_index}
 <ul id="taskday_$${day[0]}" class="list-group taskday"> 
-  <h3>$${day[0]}</h3>  
+  <h3 param="$${day[0]}">$${day[0]}</h3>  
   {@each day[1] as it,index} 
     {@include "#tpl_task_item_normal", it}  
 {@/each}

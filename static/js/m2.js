@@ -56,6 +56,23 @@ $(function(){
             $('#container').append(juicer($("#tpl_tasklist").html(), result1));  
         });
     }); 
+    
+    $(window).scroll(function(e){
+        var doc_scrollTop = $(document).scrollTop();
+        // console.log('doc,'+doc_scrollTop);
+        var last_ul = false;
+        $("#container ul").each(function(index,element){
+            // console.log($(this).attr("id") + ',' + $(this).offset().top + ',' + $(this).height() ); 
+            if($(this).offset().top > doc_scrollTop){
+                var ele = index==0 ? this : last_ul; 
+                var show_day = $(ele).attr('id').split('_')[1];
+                $("#hNavHeader").html(show_day);                 
+                 return false;
+            } 
+            last_ul  = $(this);
+        });
+        
+    });
 
     //bindding
     $('#newPostForm').submit(function(){        
@@ -138,6 +155,6 @@ $(function(){
                 $("#li_"+pk_id).removeClass("done");
             }
         });      
-    }); 
+    });  
 	   
 });
