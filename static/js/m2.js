@@ -63,7 +63,7 @@ $(function(){
         var last_ul = false;
         $("#container ul").each(function(index,element){
             // console.log($(this).attr("id") + ',' + $(this).offset().top + ',' + $(this).height() ); 
-            if($(this).offset().top > doc_scrollTop){
+            if($(this).offset().top - 100 > doc_scrollTop){
                 var ele = index==0 ? this : last_ul; 
                 var show_day = $(ele).attr('id').split('_')[1];
                 $("#hNavHeader").html(show_day);                 
