@@ -75,6 +75,7 @@ $(function(){
     });
 
     //bindding
+    var is_posting=false;
     $('#newPostForm').submit(function(){        
         var content = $('#txtContent').val().trim(); 
 
@@ -87,24 +88,29 @@ $(function(){
         if(Index.last_content==content){
             //?
             return false;
-        } 
+        }
 
-        $.post('/new', {'content':content}, function(result){
-            var today = Date.today().toString('yyyy-MM-dd');
-            var result =  $.parseJSON(result); 
-            
-            if($("#taskday_" + today).length>0){ //if today exist,
-                var html = juicer($("#tpl_task_item_normal").html(), result.data );
-                $("#taskday_" + today + " h3").after( html );               
-            }else{                
-                result.data.day = today;  
-                var html = juicer($("#tpl_today_new").html(), result );
-                $('#container').prepend(html); 
-            }   
+        if(!is_posting){
+            is_posting = true; 
+            $.post('/new', {'content':content}, function(result){
+                var today = Date.today().toString('yyyy-MM-dd');
+                var result =  $.parseJSON(result); 
+                
+                if($("#taskday_" + today).length>0){ //if today exist,
+                    var html = juicer($("#tpl_task_item_normal").html(), result.data );
+                    $("#taskday_" + today + " h3").after( html );               
+                }else{                
+                    result.data.day = today;  
+                    var html = juicer($("#tpl_today_new").html(), result );
+                    $('#container').prepend(html); 
+                }   
 
-            Index.last_content = content;
-            $('#txtContent').val('');
-        });
+                Index.last_content = content;
+                $('#txtContent').val('');
+
+                is_posting = false;
+            });
+        }
 
         return false; //禁止提交后页面刷新
     });  
