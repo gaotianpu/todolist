@@ -4,5 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.gaotianpu.ftodo.MainActivity"
-    tools:ignore="MergeRootFrame" />
+    tools:ignore="MergeRootFrame" >
+
+    <ListView
+        android:id="@+id/lvDefault"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </ListView>
+
+    <EditText
+        android:id="@+id/txtNew"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text" />
+
+</FrameLayout>
 

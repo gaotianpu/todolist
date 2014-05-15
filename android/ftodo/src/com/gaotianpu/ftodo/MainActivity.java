@@ -3,15 +3,51 @@ package com.gaotianpu.ftodo;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnKeyListener;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.os.Build;
 
 public class MainActivity extends Activity {
+
+	private EditText txtNew;
+	private ListView lvDefault;
+
+	private void post_new_task() {
+
+		//
+		txtNew = (EditText) findViewById(R.id.txtNew);
+		txtNew.setOnKeyListener(new OnKeyListener() {
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// TODO Auto-generated method stub
+				if (keyCode == KeyEvent.KEYCODE_ENTER) {
+					InputMethodManager imm = (InputMethodManager) v
+							.getContext().getSystemService(
+									Context.INPUT_METHOD_SERVICE);
+					if (imm.isActive()) {
+						imm.hideSoftInputFromWindow(
+								v.getApplicationWindowToken(), 0);
+					}
+					return true;
+				}
+				return false;
+
+			}
+
+		});
+	}
+
+	// ///////////////////
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +58,9 @@ public class MainActivity extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+
+		post_new_task();
+
 	}
 
 	@Override
