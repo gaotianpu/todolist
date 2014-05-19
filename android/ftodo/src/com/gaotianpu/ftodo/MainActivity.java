@@ -76,7 +76,7 @@ public class MainActivity extends Activity {
 		try{
     		    	
         	/* 查询表，得到cursor对象 */
-        	Cursor cursor = db.query("subjects", null, null, null, null, null, "creation_date DESC");
+        	Cursor cursor = db.query("subjects", null, null, null, null, null, "remote_id DESC,pk_id desc");
         	cursor.moveToFirst();
         	while(!cursor.isAfterLast() && (cursor.getString(1) != null)){    
         		SubjectBean subject = new SubjectBean();
@@ -120,7 +120,12 @@ public class MainActivity extends Activity {
 						if(txtNew.getText().length() > 1 ){
 							ContentValues values = new ContentValues();
 							values.put("body", txtNew.getText().toString().trim());
-							 
+							values.put("creation_date",1); //
+							values.put("last_update",0);
+							values.put("last_sync",0);
+							values.put("is_del",0);
+							values.put("is_sync",0);
+							values.put("remote_id",0);
 							//插入数据 用ContentValues对象也即HashMap操作,并返回ID号
 							Long subjectID = db.insert("subjects", "pk_id", values);
 							
@@ -128,7 +133,7 @@ public class MainActivity extends Activity {
 			        		subject.setId(subjectID);
 			        		subject.setBody(txtNew.getText().toString().trim()  );
 			        		subject.setCreationDate(1);
-			        		subjectList.add(subject);  
+			        		subjectList.add(0,subject);  
 			        		
 			        		lvDefault.setAdapter(new ListAdapter());
 			        		txtNew.setText(""); 

@@ -14,6 +14,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+//		db.execSQL("CREATE TABLE IF NOT EXISTS subjects ("
+//				+ "pk_id  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+//				+ "body  TEXT NOT NULL," + "creation_date  INTEGER NOT NULL)"); 
+		
 		db.execSQL("CREATE TABLE IF NOT EXISTS subjects ("
 				+ "pk_id  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
 				+ "body  TEXT NOT NULL," + "creation_date  INTEGER NOT NULL,"
