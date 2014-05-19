@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
@@ -12,13 +12,19 @@
         android:layout_height="fill_parent" >
     </ListView>
 
-    <EditText
-        android:id="@+id/txtNew"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/bottom"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:imeOptions="actionSend"
-        android:inputType="text" />
+        android:layout_alignParentBottom="true" >
 
-</FrameLayout>
+        <EditText
+            android:id="@+id/txtNew"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:imeOptions="actionSend"
+            android:inputType="text" />
+    </LinearLayout>
 
+</RelativeLayout>
