@@ -2,13 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="vertical" >
-    
-<TextView
-		  android:layout_width="250dip"
-		  android:layout_height="wrap_content"
-		  android:gravity="left"
-		  android:id="@+id/tvBody"
-		  >
-	  </TextView>
+
+    <TextView
+        android:id="@+id/tvBody"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:textSize="@dimen/activity_vertical_margin" >
+    </TextView>
+
 </LinearLayout>
