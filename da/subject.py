@@ -18,11 +18,19 @@ def insert(user_id,subject):
 
 def insert2(user_id,body,device_type,device_no,local_id,created_date):
     #device_type, 手机型号，比如HUAWEI_G730
-    return dbw.insert(table_name,user_id=user_id,subject="",body=body,
-        device_no = device_no, local_id=local_id, device_type=device_type,
-        created_date=web.SQLLiteral('now()'),
-        last_update=web.SQLLiteral('now()'),
-        plan_start_date=web.SQLLiteral('now()'))
+    result = list(dbr.select(table_name,what="pk_id",
+        where="user_id=$user_id and local_id=$local_id and device_type=$device_type and device_no=$device_no",
+        vars=locals()))
+    if result:
+        pk_id = result[0].pk_id
+        dbw.update(table_name,body=body,where="pk_id=$pk_id",vars=locals())
+        return pk_id
+    else:
+        return dbw.insert(table_name,user_id=user_id,subject="",body=body,
+            device_no = device_no, local_id=local_id, device_type=device_type,
+            created_date=web.SQLLiteral('now()'),
+            last_update=web.SQLLiteral('now()'),
+            plan_start_date=web.SQLLiteral('now()'))
 
 def update(pk_id,**kv):
     return dbw.update(table_name,last_update=web.SQLLiteral('now()'),where='pk_id=$pk_id',vars=locals(),**kv)

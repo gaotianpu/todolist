@@ -147,7 +147,7 @@ public class MainActivity extends Activity {
 									device_type, deviceId, subjectID, 1,
 									new JsonHttpResponseHandler() {
 										@Override
-										public void onSuccess(JSONArray result) {
+										public void onSuccess(JSONArray result) { 
 
 											// Pull out the first event on the
 											// public timeline
