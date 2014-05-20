@@ -1,13 +1,15 @@
-package com.gaotianpu.ftodo; 
-
+package com.gaotianpu.ftodo;
 
 import com.gaotianpu.ftodo.R;
 import com.gaotianpu.ftodo.SubjectBean;
-import com.gaotianpu.ftodo.SQLiteHelper; 
-
+import com.gaotianpu.ftodo.SQLiteHelper;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.app.Activity;
 //import android.app.ActionBar;
@@ -30,22 +32,25 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
 //import android.os.Build;
 
 public class MainActivity extends Activity {
 
 	private EditText txtNew;
 	private ListView lvDefault;
-	
+
 	private SQLiteDatabase db;
 	private SQLiteHelper dbHelper;
 	private ListAdapter listAdapter;
-	
-	private String deviceId; //设备id
-	
+
+	private String device_type; // 设备型号
+	private String deviceId; // 设备id
+	private long cust_id = 1;
+
 	private List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
-	
-	private class ListAdapter extends BaseAdapter{
+
+	private class ListAdapter extends BaseAdapter {
 
 		@Override
 		public int getCount() {
@@ -54,58 +59,60 @@ public class MainActivity extends Activity {
 		}
 
 		@Override
-		public Object getItem(int position) {			 
+		public Object getItem(int position) {
 			return position;
 		}
 
 		@Override
-		public long getItemId(int position) {			 
+		public long getItemId(int position) {
 			return position;
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			convertView = getLayoutInflater().inflate(R.layout.listview_item, null);
-			
+			convertView = getLayoutInflater().inflate(R.layout.listview_item,
+					null);
+
 			TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
 			tv.setText("" + subjectList.get(position).getBody());
-			
+
 			return convertView;
 		}
-		
+
 	}
-	
-	private void render_lvDefault(){
-		try{
-    		    	
-        	/* 查询表，得到cursor对象 */
-        	Cursor cursor = db.query("subjects", null, null, null, null, null, "remote_id DESC,pk_id desc");
-        	cursor.moveToFirst();
-        	while(!cursor.isAfterLast() && (cursor.getString(1) != null)){    
-        		SubjectBean subject = new SubjectBean();
-        		subject.setId(cursor.getLong(0));
-        		subject.setBody(cursor.getString(1));
-        		subject.setCreationDate(cursor.getInt(2));
-        		subjectList.add(subject);
-        		cursor.moveToNext();
-        	}
-    	}catch(IllegalArgumentException e){
-    		//当用SimpleCursorAdapter装载数据时，表ID列必须是_id，否则报错column '_id' does not exist
-    		e.printStackTrace();
-    		//当版本变更时会调用SQLiteHelper.onUpgrade()方法重建表 注：表以前数据将丢失
-//    		++ DB_VERSION;
-//    		dbHelper.onUpgrade(db, --DB_VERSION, DB_VERSION);
-//    		dbHelper.updateColumn(db, SQLiteHelper.ID, "_"+SQLiteHelper.ID, "integer");
-    	}
-		
-		 
-    	listAdapter = new ListAdapter();
-    	lvDefault.setAdapter(listAdapter);
+
+	private void render_lvDefault() {
+		try {
+
+			/* 查询表，得到cursor对象 */
+			Cursor cursor = db.query("subjects", null, null, null, null, null,
+					"remote_id DESC,pk_id desc");
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast() && (cursor.getString(1) != null)) {
+				SubjectBean subject = new SubjectBean();
+				subject.setId(cursor.getLong(0));
+				subject.setBody(cursor.getString(1));
+				subject.setCreationDate(cursor.getInt(2));
+				subjectList.add(subject);
+				cursor.moveToNext();
+			}
+		} catch (IllegalArgumentException e) {
+			// 当用SimpleCursorAdapter装载数据时，表ID列必须是_id，否则报错column '_id' does not
+			// exist
+			e.printStackTrace();
+			// 当版本变更时会调用SQLiteHelper.onUpgrade()方法重建表 注：表以前数据将丢失
+			// ++ DB_VERSION;
+			// dbHelper.onUpgrade(db, --DB_VERSION, DB_VERSION);
+			// dbHelper.updateColumn(db, SQLiteHelper.ID, "_"+SQLiteHelper.ID,
+			// "integer");
+		}
+
+		listAdapter = new ListAdapter();
+		lvDefault.setAdapter(listAdapter);
 	}
 
 	private void bind_post_new_task() {
 
-		
 		txtNew.setOnKeyListener(new OnKeyListener() {
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -117,31 +124,55 @@ public class MainActivity extends Activity {
 					if (imm.isActive()) {
 						imm.hideSoftInputFromWindow(
 								v.getApplicationWindowToken(), 0);
-						
-						//insert into sqlite						
-						//show new item in ListView
-						if(txtNew.getText().length() > 1 ){
+
+						// insert into sqlite
+						// show new item in ListView
+						if (txtNew.getText().length() > 1) {
 							ContentValues values = new ContentValues();
-							values.put("body", txtNew.getText().toString().trim());
-							values.put("creation_date",1); //
-							values.put("last_update",0);
-							values.put("last_sync",0);
-							values.put("is_del",0);
-							values.put("is_sync",0);
-							values.put("remote_id",0);
-							//插入数据 用ContentValues对象也即HashMap操作,并返回ID号
-							Long subjectID = db.insert("subjects", "pk_id", values);
-							
+							String content = txtNew.getText().toString().trim();
+
+							values.put("body", content);
+							values.put("creation_date", 1); //
+							values.put("last_update", 0);
+							values.put("last_sync", 0);
+							values.put("is_del", 0);
+							values.put("is_sync", 0);
+							values.put("remote_id", 0);
+							// 插入数据 用ContentValues对象也即HashMap操作,并返回ID号
+							Long subjectID = db.insert("subjects", "pk_id",
+									values);
+
+							// upload new record
+//							FTDClient.post_new_task(cust_id, content,
+//									device_type, deviceId, subjectID, 1,
+//									new JsonHttpResponseHandler() {
+//										@Override
+//										public void onSuccess(JSONArray result) {
+//
+//											// Pull out the first event on the
+//											// public timeline
+//											// JSONObject firstEvent =
+//											// result.get(0);
+//											// String tweetText =
+//											// firstEvent.getString("text");
+//											//
+//											// // Do something with the response
+//											// System.out.println(tweetText);
+//
+//										}
+//
+//									});
+
 							SubjectBean subject = new SubjectBean();
-			        		subject.setId(subjectID);
-			        		subject.setBody(txtNew.getText().toString().trim()  );
-			        		subject.setCreationDate(1);
-			        		subjectList.add(0,subject);  
-			        		
-			        		lvDefault.setAdapter(new ListAdapter());
-			        		txtNew.setText(""); 
+							subject.setId(subjectID);
+							subject.setBody(txtNew.getText().toString().trim());
+							subject.setCreationDate(1);
+							subjectList.add(0, subject);
+
+							lvDefault.setAdapter(new ListAdapter());
+							txtNew.setText("");
 						}
-						
+
 					}
 					return true;
 				}
@@ -150,7 +181,7 @@ public class MainActivity extends Activity {
 			}
 
 		});
-	} 
+	}
 
 	// ///////////////////
 
@@ -163,19 +194,20 @@ public class MainActivity extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
-		
-		//控件初始化
+
+		// 控件初始化
 		txtNew = (EditText) findViewById(R.id.txtNew);
-		lvDefault = (ListView)findViewById(R.id.lvDefault);
-		
+		lvDefault = (ListView) findViewById(R.id.lvDefault);
+
 		// sqlite 初始化
-		dbHelper = new SQLiteHelper(this, "ftodo", null, 1);		 
-		db = dbHelper.getWritableDatabase();	
-		
-		//获得设备id
-		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE); 
+		dbHelper = new SQLiteHelper(this, "ftodo", null, 1);
+		db = dbHelper.getWritableDatabase();
+
+		// 获得设备id
+		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		deviceId = tm.getDeviceId();
-		
+		device_type = android.os.Build.MODEL;
+
 		render_lvDefault();
 		bind_post_new_task();
 

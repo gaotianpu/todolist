@@ -12,6 +12,7 @@ urls = (
     '/list','List',
     '/datelist','DateList',    
     '/new','New',  
+    '/new2','New2',
     '/details','Details',
     '/done', 'Done',  
     '/segment', 'Segment',
@@ -60,6 +61,16 @@ class DateList:
 class New:
     def POST(self):
         i = web.input(content='',cust_id=0,device_no='',local_id=0,creation_date=1)
+        content = web.websafe(i.content)
+        pk_id = da.subject.insert(cust_id,content)
+        task = da.subject.load_by_id(pk_id)
+        cron.update_term_count(task) #remove to eda?
+        r = {"code":1,"data":task}
+        return json.dumps(r,cls=CJsonEncoder) 
+
+class New2:
+    def POST(self):
+        i = web.input(cust_id=0,content='',device_no='',local_id=0,creation_date=1)
         content = web.websafe(i.content)
         pk_id = da.subject.insert(cust_id,content)
         task = da.subject.load_by_id(pk_id)
