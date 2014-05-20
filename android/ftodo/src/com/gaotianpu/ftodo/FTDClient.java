@@ -32,13 +32,13 @@ public class FTDClient {
 	}
 
 	public static void load_by_custId(int cust_id, int page_index,
-			int page_size,String order, AsyncHttpResponseHandler responseHandler) {
-		String url = BASE_URL + "list";
+			int page_size,AsyncHttpResponseHandler responseHandler) {
+		String url = BASE_URL + "list2";
 
 		RequestParams params = new RequestParams();
-		params.put("cust_id", cust_id);
-		params.put("page_index", page_index);
-		params.put("page_size", page_size);
+		params.put("cust_id", String.valueOf(cust_id) );
+		params.put("page", String.valueOf(page_index) );
+		params.put("size", String.valueOf(page_size));
 		client.get(url, params, responseHandler);
 		return;
 

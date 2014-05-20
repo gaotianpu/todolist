@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -111,6 +112,38 @@ public class MainActivity extends Activity {
 		lvDefault.setAdapter(listAdapter);
 	}
 
+	private void load_from_cloudy() {
+		FTDClient.load_by_custId(1, 1, 50, new JsonHttpResponseHandler() {
+			@Override
+			public void onSuccess(JSONObject  result) { 
+				try {
+					JSONArray  resultList = result.getJSONArray("list");
+					for(int i=0;i<resultList.length();i++){
+						JSONObject item = resultList.getJSONObject(i);
+						
+						SubjectBean subject = new SubjectBean();
+						subject.setId(item.getInt("pk_id"));
+						subject.setBody(item.getString("body"));
+						//item.getInt("local_id");
+						subject.setCreationDate(0);
+						subjectList.add(subject);
+						
+						listAdapter = new ListAdapter();
+						lvDefault.setAdapter(listAdapter); 
+					}
+					
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				 
+				
+				
+
+			}
+		});
+	}
+
 	private void bind_post_new_task() {
 
 		txtNew.setOnKeyListener(new OnKeyListener() {
@@ -147,7 +180,7 @@ public class MainActivity extends Activity {
 									device_type, deviceId, subjectID, 1,
 									new JsonHttpResponseHandler() {
 										@Override
-										public void onSuccess(JSONArray result) { 
+										public void onSuccess(JSONArray result) {
 
 											// Pull out the first event on the
 											// public timeline
@@ -208,7 +241,10 @@ public class MainActivity extends Activity {
 		deviceId = tm.getDeviceId();
 		device_type = android.os.Build.MODEL;
 
-		render_lvDefault();
+		//render_lvDefault();
+		
+		load_from_cloudy();
+		
 		bind_post_new_task();
 
 	}
