@@ -9,13 +9,13 @@ public class FTDClient {
 
 	public static void post_new_task(long cust_id, String content,
 			String device_type, String devie_no, long local_id,
-			int creation_date, AsyncHttpResponseHandler responseHandler) {
-
-		String url = BASE_URL + "new";
+			int creation_date, AsyncHttpResponseHandler responseHandler) { 
+		
+		String url = BASE_URL + "new2";
 
 		RequestParams params = new RequestParams();
 		params.put("cust_id", cust_id);
-		params.put("body", content);
+		params.put("content", content);
 		params.put("creation_date", creation_date); // 按哪个为准呢？
 		params.put("device_type", device_type);
 		params.put("device_no", devie_no);

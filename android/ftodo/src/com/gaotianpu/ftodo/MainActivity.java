@@ -141,27 +141,29 @@ public class MainActivity extends Activity {
 							// 插入数据 用ContentValues对象也即HashMap操作,并返回ID号
 							Long subjectID = db.insert("subjects", "pk_id",
 									values);
+							
+							System.out.println(subjectID);
 
 							// upload new record
-//							FTDClient.post_new_task(cust_id, content,
-//									device_type, deviceId, subjectID, 1,
-//									new JsonHttpResponseHandler() {
-//										@Override
-//										public void onSuccess(JSONArray result) {
-//
-//											// Pull out the first event on the
-//											// public timeline
-//											// JSONObject firstEvent =
-//											// result.get(0);
-//											// String tweetText =
-//											// firstEvent.getString("text");
-//											//
-//											// // Do something with the response
-//											// System.out.println(tweetText);
-//
-//										}
-//
-//									});
+							FTDClient.post_new_task(cust_id, content,
+									device_type, deviceId, subjectID, 1,
+									new JsonHttpResponseHandler() {
+										@Override
+										public void onSuccess(JSONArray result) {
+
+											// Pull out the first event on the
+											// public timeline
+											// JSONObject firstEvent =
+											// result.get(0);
+											// String tweetText =
+											// firstEvent.getString("text");
+											//
+											// // Do something with the response
+											// System.out.println(tweetText);
+
+										}
+
+									});
 
 							SubjectBean subject = new SubjectBean();
 							subject.setId(subjectID);
