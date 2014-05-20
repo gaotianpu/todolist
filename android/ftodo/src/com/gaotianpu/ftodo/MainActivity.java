@@ -141,8 +141,6 @@ public class MainActivity extends Activity {
 							// 插入数据 用ContentValues对象也即HashMap操作,并返回ID号
 							Long subjectID = db.insert("subjects", "pk_id",
 									values);
-							
-							System.out.println(subjectID);
 
 							// upload new record
 							FTDClient.post_new_task(cust_id, content,

@@ -14,12 +14,12 @@ public class FTDClient {
 		String url = BASE_URL + "new2";
 
 		RequestParams params = new RequestParams();
-		params.put("cust_id", cust_id);
+		params.put("cust_id", String.valueOf(cust_id));
 		params.put("content", content);
-		params.put("creation_date", creation_date); // 按哪个为准呢？
+		params.put("creation_date", String.valueOf(creation_date)); // 按哪个为准呢？
 		params.put("device_type", device_type);
 		params.put("device_no", devie_no);
-		params.put("local_id", local_id);
+		params.put("local_id", String.valueOf(local_id));
 
 		client.post(url, params, responseHandler);
 		return;
