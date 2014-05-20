@@ -33,6 +33,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.util.Log;
 
 //import android.os.Build;
 
@@ -112,12 +113,14 @@ public class MainActivity extends Activity {
 		lvDefault.setAdapter(listAdapter);
 	}
 
-	private void load_from_cloudy() {
-		FTDClient.load_by_custId(1, 1, 50, new JsonHttpResponseHandler() {
+	private void load_from_cloudy(int page,int size) {
+		FTDClient.load_by_custId(cust_id, page, size, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONObject  result) { 
 				try {
 					JSONArray  resultList = result.getJSONArray("list");
+					subjectList.clear();
+					
 					for(int i=0;i<resultList.length();i++){
 						JSONObject item = resultList.getJSONObject(i);
 						
@@ -241,9 +244,15 @@ public class MainActivity extends Activity {
 		deviceId = tm.getDeviceId();
 		device_type = android.os.Build.MODEL;
 
-		//render_lvDefault();
+		render_lvDefault();
 		
-		load_from_cloudy();
+		//检查是否联网，
+		//联网 检查本地是否有未上传的task，
+		//有，上传，
+		//上传成功后，更新sqlite的remote_id
+		//再load_from_cloudy
+		
+		load_from_cloudy(1,50);
 		
 		bind_post_new_task();
 

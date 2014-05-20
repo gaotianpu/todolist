@@ -31,7 +31,7 @@ public class FTDClient {
 		// 权限认证参数？
 	}
 
-	public static void load_by_custId(int cust_id, int page_index,
+	public static void load_by_custId(long cust_id, int page_index,
 			int page_size,AsyncHttpResponseHandler responseHandler) {
 		String url = BASE_URL + "list2";
 
