@@ -59,7 +59,7 @@ class DateList:
 
 class New:
     def POST(self):
-        i = web.input(content='')
+        i = web.input(content='',cust_id=0,device_no='',local_id=0,creation_date=1)
         content = web.websafe(i.content)
         pk_id = da.subject.insert(cust_id,content)
         task = da.subject.load_by_id(pk_id)

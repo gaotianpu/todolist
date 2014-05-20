@@ -3,14 +3,14 @@ package com.gaotianpu.ftodo;
 
 import com.gaotianpu.ftodo.R;
 import com.gaotianpu.ftodo.SubjectBean;
-import com.gaotianpu.ftodo.SQLiteHelper;
+import com.gaotianpu.ftodo.SQLiteHelper; 
 
 
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.ActionBar;
+//import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.ContentValues;
 import android.content.Context;
@@ -29,7 +29,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.os.Build;
+//import android.os.Build;
 
 public class MainActivity extends Activity {
 

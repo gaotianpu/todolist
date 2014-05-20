@@ -16,7 +16,8 @@
         android:id="@+id/bottom"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" >
+        android:layout_alignParentBottom="true"  
+        android:background="@drawable/editbox_boder">
 
         <EditText
             android:id="@+id/txtNew"
