@@ -10,6 +10,7 @@ cust_id = 1  #tmp
 
 urls = (
     '/list','List',
+    '/list2','List2',
     '/datelist','DateList',    
     '/new','New',  
     '/new2','New2',
@@ -49,6 +50,13 @@ class List:
         r = {'code':1,'list':rows}
         return json.dumps(r,cls=CJsonEncoder)
 
+class List2:
+    def GET(self):
+        i = web.input(cust_id=0,page=1,size=50)
+        rows = da.subject.load_page2(i.cust_id,(int(i.page) - 1) * int(i.size),int(i.size))
+        r = {'code':1,'list':rows}
+        return json.dumps(r,cls=CJsonEncoder)
+
 class DateList:
     def GET(self):
         i = web.input(date=datetime.now().strftime('%Y-%m-%d'))
@@ -73,7 +81,7 @@ class New2:
         i = web.input(cust_id=0,content='',device_type='',device_no='',local_id=0,creation_date=1)
         content = web.websafe(i.content)
         pk_id = da.subject.insert2(i.cust_id,i.content,i.device_type,i.device_no,i.local_id,i.creation_date) 
-         
+
         task = da.subject.load_by_id(pk_id)
         #cron.update_term_count(task) #remove to eda?
         r = {"code":1,"data":task}

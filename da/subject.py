@@ -58,6 +58,7 @@ def load_last_one(user_id):
 def load_all(offset,limit=100):
     return list(dbr.select(table_name,order="pk_id desc",offset=offset,limit=limit))
 
+
 def load_page(offset,limit): 
     rows = list(dbr.select(table_name,what="pk_id,body,created_date",order="pk_id desc",offset=offset,limit=limit))
     r = {}  
@@ -69,6 +70,14 @@ def load_page(offset,limit):
             r[day]=[row]
     return sorted(r.iteritems(), key=lambda k:k[0], reverse=True)  
     
+def load_page2(cust_id,offset,limit): 
+    rows = list(dbr.select(table_name,
+        what="pk_id,body,created_date,local_id",
+        where="user_id=$cust_id", 
+        order="pk_id desc",
+        offset=offset,limit=limit,
+        vars=locals()))
+    return rows
 
 def load_count():
     r = dbr.select(table_name,what="count(*) as count")
