@@ -17,6 +17,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,6 +40,8 @@ public class MainActivity extends Activity {
 	private SQLiteDatabase db;
 	private SQLiteHelper dbHelper;
 	private ListAdapter listAdapter;
+	
+	private String deviceId; //设备id
 	
 	private List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 	
@@ -168,6 +171,10 @@ public class MainActivity extends Activity {
 		// sqlite 初始化
 		dbHelper = new SQLiteHelper(this, "ftodo", null, 1);		 
 		db = dbHelper.getWritableDatabase();	
+		
+		//获得设备id
+		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE); 
+		deviceId = tm.getDeviceId();
 		
 		render_lvDefault();
 		bind_post_new_task();
