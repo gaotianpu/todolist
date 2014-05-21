@@ -20,6 +20,7 @@ import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class AsyncService extends Service {
@@ -44,11 +45,18 @@ public class AsyncService extends Service {
 	private ConnectivityManager cm;
 	private SQLiteHelper dbHelper;
 	private SQLiteDatabase db;
+	private String devie_no;
+	private String device_type;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		Log.d(TAG, "onCreate() executed");
+		
+		// 获得设备id
+				TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+				devie_no = tm.getDeviceId();
+				device_type = android.os.Build.MODEL;
 
 		mHandler = new Handler();
 
@@ -102,9 +110,7 @@ public class AsyncService extends Service {
 										+ String.valueOf(times));
 
 						for (SubjectBean subject : subjectList) {
-							long cust_id = 1;
-							String device_type = "";
-							String devie_no = "";
+							long cust_id = 1; 
 
 							FTDClient.post_new_task(cust_id, subject.getBody(),
 									device_type, devie_no, subject.getId(),
@@ -124,6 +130,8 @@ public class AsyncService extends Service {
 												values.put("last_sync", 1); //上次同步日期 
 												
 												db.update("subjects", values, "pk_id=?",new String[]{String.valueOf(local_id)});
+												
+												Log.d(TAG,"sucess");
 												
 											} catch (JSONException e) {												 
 												Log.e(TAG, e.toString()); 
