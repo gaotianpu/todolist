@@ -17,6 +17,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -179,25 +180,25 @@ public class MainActivity extends Activity {
 									values);
 
 							// upload new record
-							FTDClient.post_new_task(cust_id, content,
-									device_type, deviceId, subjectID, 1,
-									new JsonHttpResponseHandler() {
-										@Override
-										public void onSuccess(JSONArray result) {
-
-											// Pull out the first event on the
-											// public timeline
-											// JSONObject firstEvent =
-											// result.get(0);
-											// String tweetText =
-											// firstEvent.getString("text");
-											//
-											// // Do something with the response
-											// System.out.println(tweetText);
-
-										}
-
-									});
+//							FTDClient.post_new_task(cust_id, content,
+//									device_type, deviceId, subjectID, 1,
+//									new JsonHttpResponseHandler() {
+//										@Override
+//										public void onSuccess(JSONArray result) {
+//
+//											// Pull out the first event on the
+//											// public timeline
+//											// JSONObject firstEvent =
+//											// result.get(0);
+//											// String tweetText =
+//											// firstEvent.getString("text");
+//											//
+//											// // Do something with the response
+//											// System.out.println(tweetText);
+//
+//										}
+//
+//									});
 
 							SubjectBean subject = new SubjectBean();
 							subject.setId(subjectID);
@@ -243,6 +244,9 @@ public class MainActivity extends Activity {
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		deviceId = tm.getDeviceId();
 		device_type = android.os.Build.MODEL;
+		
+		Intent startIntent = new Intent(this, AsyncService.class);  
+        startService(startIntent); 
 
 		render_lvDefault();
 		

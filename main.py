@@ -83,6 +83,7 @@ class New2:
         pk_id = da.subject.insert2(i.cust_id,i.content,i.device_type,i.device_no,i.local_id,i.creation_date) 
 
         task = da.subject.load_by_id(pk_id)
+        task.local_id = i.local_id  #local_id必须是本次请求的id
         #cron.update_term_count(task) #remove to eda?
         r = {"code":1,"data":task}
         return json.dumps(r,cls=CJsonEncoder) 
