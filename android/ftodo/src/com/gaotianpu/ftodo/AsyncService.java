@@ -120,7 +120,10 @@ public class AsyncService extends Service {
 												
 												ContentValues values = new ContentValues();
 												values.put("remote_id", remote_id);
-												db.update("subjects", values, "local_id=?",new String[]{String.valueOf(local_id)});
+												values.put("is_sync", 1);
+												values.put("last_sync", 1); //上次同步日期 
+												
+												db.update("subjects", values, "pk_id=?",new String[]{String.valueOf(local_id)});
 												
 											} catch (JSONException e) {												 
 												Log.e(TAG, e.toString()); 
