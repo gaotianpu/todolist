@@ -6,6 +6,8 @@ public class SubjectBean {
 	public static final String CREATION_DATE = "creation_date";
 	
 	private long pk_id;
+	private long remote_id;
+	
 	private String body;
 	private int creation_date;
 	
@@ -26,5 +28,12 @@ public class SubjectBean {
 	}
 	public void setCreationDate(int creation_date) {
 		this.creation_date = creation_date;
+	}
+	
+	public long getRemoteId() {
+		return remote_id;
+	}
+	public void setRemoteId(long id) {
+		this.remote_id = id;
 	}
 }
