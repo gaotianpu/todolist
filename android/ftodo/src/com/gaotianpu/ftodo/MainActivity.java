@@ -42,15 +42,12 @@ public class MainActivity extends Activity {
 
 	private EditText txtNew;
 	private ListView lvDefault;
-	
-	private Context context;
-
-	private SQLiteDatabase db;
-	private SQLiteHelper dbHelper;
 	private ListAdapter listAdapter;
+	
+	private Context context;   
 
-	private String device_type; // Éè±¸ÐÍºÅ
-	private String deviceId; // Éè±¸id
+	private String device_type; // ï¿½è±¸ï¿½Íºï¿½
+	private String deviceId; // ï¿½è±¸id
 	private long cust_id = 1;
 
 	private List<SubjectBean> subjectList ;
@@ -65,7 +62,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		public Object getItem(int position) {
-			return position;
+			return position;  
 		}
 
 		@Override
@@ -86,7 +83,7 @@ public class MainActivity extends Activity {
 
 	}
 
-	private void render_lvDefault() {
+	private void rend_default_listview() {
 		subjectList = SubjectDa.load(context, cust_id, 1, 50); 
 		listAdapter = new ListAdapter();
 		lvDefault.setAdapter(listAdapter);
@@ -141,16 +138,17 @@ public class MainActivity extends Activity {
 								v.getApplicationWindowToken(), 0);
 
 						// insert into sqlite
-						// show new item in ListView
-						if (txtNew.getText().length() > 1) {
-							Long subjectID = SubjectDa.insert(context, txtNew.getText().toString().trim());  
+						String content = txtNew.getText().toString().trim();
+						if (content.length() > 1) {
+							Long subjectID = SubjectDa.insert(context, content);  
 
 							SubjectBean subject = new SubjectBean();
 							subject.setId(subjectID);
 							subject.setBody(txtNew.getText().toString().trim());
 							subject.setCreationDate(1);
 							subjectList.add(0, subject);
-
+							
+							// show new item in ListView
 							lvDefault.setAdapter(new ListAdapter());
 							txtNew.setText("");
 						}
@@ -177,35 +175,29 @@ public class MainActivity extends Activity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 
-		// ¿Ø¼þ³õÊ¼»¯
+		// ï¿½Ø¼ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
 		txtNew = (EditText) findViewById(R.id.txtNew);
 		lvDefault = (ListView) findViewById(R.id.lvDefault);
 		
-		context = this;
+		context = this;  
 
-		// sqlite ³õÊ¼»¯
-		dbHelper = new SQLiteHelper(this, "ftodo", null, 1);
-		db = dbHelper.getWritableDatabase();
-
-		// »ñµÃÉè±¸id
+		// ï¿½ï¿½ï¿½ï¿½è±¸id
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		deviceId = tm.getDeviceId();
 		device_type = android.os.Build.MODEL;
 		
+		//ï¿½ï¿½ï¿½ï¿½AsyncService
 		Intent startIntent = new Intent(this, AsyncService.class);  
         startService(startIntent); 
-
-		render_lvDefault();
-		
-		//¼ì²éÊÇ·ñÁªÍø£¬
-		//ÁªÍø ¼ì²é±¾µØÊÇ·ñÓÐÎ´ÉÏ´«µÄtask£¬
-		//ÓÐ£¬ÉÏ´«£¬
-		//ÉÏ´«³É¹¦ºó£¬¸üÐÂsqliteµÄremote_id
-		//ÔÙload_from_cloudy
-		
-		load_from_cloudy(1,50);
-		
-		bind_post_new_task();
+        
+        //ï¿½á½»ï¿½ï¿½subjectï¿½Â¼ï¿½ï¿½ï¿½
+        bind_post_new_task();
+        
+        //ï¿½ï¿½Ê¼ï¿½ï¿½listviewï¿½ï¿½Ä¬ï¿½ï¿½ï¿½ï¿½ï¿½Í±ï¿½ï¿½ï¿½sqliteï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        rend_default_listview();
+        
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶Ë»ï¿½È¡ï¿½ï¿½Ý£ï¿½ï¿½ï¿½ï¿½ï¿½listview
+        load_from_cloudy(1,50); 
 
 	}
 
