@@ -42,6 +42,8 @@ public class MainActivity extends Activity {
 
 	private EditText txtNew;
 	private ListView lvDefault;
+	
+	private Context context;
 
 	private SQLiteDatabase db;
 	private SQLiteHelper dbHelper;
@@ -51,7 +53,7 @@ public class MainActivity extends Activity {
 	private String deviceId; // 设备id
 	private long cust_id = 1;
 
-	private List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
+	private List<SubjectBean> subjectList ;
 
 	private class ListAdapter extends BaseAdapter {
 
@@ -85,31 +87,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void render_lvDefault() {
-		try {
-
-			/* 查询表，得到cursor对象 */
-			Cursor cursor = db.query("subjects", null, null, null, null, null,
-					"remote_id DESC,pk_id desc");
-			cursor.moveToFirst();
-			while (!cursor.isAfterLast() && (cursor.getString(1) != null)) {
-				SubjectBean subject = new SubjectBean();
-				subject.setId(cursor.getLong(0));
-				subject.setBody(cursor.getString(1));
-				subject.setCreationDate(cursor.getInt(2));
-				subjectList.add(subject);
-				cursor.moveToNext();
-			}
-		} catch (IllegalArgumentException e) {
-			// 当用SimpleCursorAdapter装载数据时，表ID列必须是_id，否则报错column '_id' does not
-			// exist
-			e.printStackTrace();
-			// 当版本变更时会调用SQLiteHelper.onUpgrade()方法重建表 注：表以前数据将丢失
-			// ++ DB_VERSION;
-			// dbHelper.onUpgrade(db, --DB_VERSION, DB_VERSION);
-			// dbHelper.updateColumn(db, SQLiteHelper.ID, "_"+SQLiteHelper.ID,
-			// "integer");
-		}
-
+		subjectList = SubjectDa.load(context, cust_id, 1, 50); 
 		listAdapter = new ListAdapter();
 		lvDefault.setAdapter(listAdapter);
 	}
@@ -165,40 +143,7 @@ public class MainActivity extends Activity {
 						// insert into sqlite
 						// show new item in ListView
 						if (txtNew.getText().length() > 1) {
-							ContentValues values = new ContentValues();
-							String content = txtNew.getText().toString().trim();
-
-							values.put("body", content);
-							values.put("creation_date", 1); //
-							values.put("last_update", 0);
-							values.put("last_sync", 0);
-							values.put("is_del", 0);
-							values.put("is_sync", 0);
-							values.put("remote_id", 0);
-							// 插入数据 用ContentValues对象也即HashMap操作,并返回ID号
-							Long subjectID = db.insert("subjects", "pk_id",
-									values);
-
-							// upload new record
-//							FTDClient.post_new_task(cust_id, content,
-//									device_type, deviceId, subjectID, 1,
-//									new JsonHttpResponseHandler() {
-//										@Override
-//										public void onSuccess(JSONArray result) {
-//
-//											// Pull out the first event on the
-//											// public timeline
-//											// JSONObject firstEvent =
-//											// result.get(0);
-//											// String tweetText =
-//											// firstEvent.getString("text");
-//											//
-//											// // Do something with the response
-//											// System.out.println(tweetText);
-//
-//										}
-//
-//									});
+							Long subjectID = SubjectDa.insert(context, txtNew.getText().toString().trim());  
 
 							SubjectBean subject = new SubjectBean();
 							subject.setId(subjectID);
@@ -235,6 +180,8 @@ public class MainActivity extends Activity {
 		// 控件初始化
 		txtNew = (EditText) findViewById(R.id.txtNew);
 		lvDefault = (ListView) findViewById(R.id.lvDefault);
+		
+		context = this;
 
 		// sqlite 初始化
 		dbHelper = new SQLiteHelper(this, "ftodo", null, 1);
