@@ -58,16 +58,17 @@ public class MainActivity extends Activity implements
 
 	private List<SubjectBean> subjectList;
 	
-	private int times = 0 ;
+//	private int times = 0 ;
 	@Override
 	public void onRefresh() {
 		new Handler().postDelayed(new Runnable() {
 			public void run() {
-				Log.d("Refresh", "times " + String.valueOf(times));
-				times ++ ;
-				 swipeLayout.setRefreshing(false);
+//				Log.d("Refresh", "times " + String.valueOf(times));
+//				times ++ ;
+				 //swipeLayout.setRefreshing(false);
 				// list.add(new SoftwareClassificationInfo(2, "ass"));
-				listAdapter.notifyDataSetChanged();
+				load_from_cloudy(1,50);
+				
 			}
 		}, 1000);
 	}
@@ -148,6 +149,9 @@ public class MainActivity extends Activity implements
 						} catch (JSONException e) {
 							Log.e("MainActivity", e.toString());
 						}
+
+						swipeLayout.setRefreshing(false);
+						listAdapter.notifyDataSetChanged();
 
 					}
 				});
