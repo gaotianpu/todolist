@@ -44,7 +44,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 //import android.os.Build;
 
 public class MainActivity extends Activity implements
-		SwipeRefreshLayout.OnRefreshListener,OnScrollListener {
+		SwipeRefreshLayout.OnRefreshListener {
 
 	private EditText txtNew;
 	private ListView lvDefault;
@@ -203,38 +203,39 @@ public class MainActivity extends Activity implements
 	private int startIndex = 0;  
     private int requestSize = 50; 
 	
-	@Override  
-    public void onScroll(AbsListView view, int firstVisibleItem,  
-            int visibleItemCount, int totalItemCount) {  
-  
-        lastItem = firstVisibleItem + visibleItemCount - 1;  
-  
-        // Log.i(TAG,  
-        // "firstVisibleItem:"+firstVisibleItem+"visibleItemCount:"+visibleItemCount+" lastItem:"+lastItem);  
-    }  
-	
-	@Override  
-    public void onScrollStateChanged(AbsListView view, int scrollState) {  
-  
-        if (lastItem == listAdapter.getCount()  
-                && scrollState == OnScrollListener.SCROLL_STATE_IDLE) {  
-  
-            Log.e("scroll", "load more");  
-              
-            startIndex += requestSize;  
-              
-            //loadMoreData();  
-            
+//	@Override  
+//    public void onScroll(AbsListView view, int firstVisibleItem,  
+//            int visibleItemCount, int totalItemCount) {  
+//  
+//        lastItem = firstVisibleItem + visibleItemCount - 1;  
+//  
+//        // Log.i(TAG,  
+//        // "firstVisibleItem:"+firstVisibleItem+"visibleItemCount:"+visibleItemCount+" lastItem:"+lastItem);  
+//    }  
+//	
+//	@Override  
+//    public void onScrollStateChanged(AbsListView view, int scrollState) {  
+//  
+//        if (lastItem == listAdapter.getCount()  
+//                && scrollState == OnScrollListener.SCROLL_STATE_IDLE) {  
+//  
+//            Log.e("scroll", "load more");  
+//              
+//            startIndex += requestSize;  
+//              
+//            //loadMoreData();  
+//            Log.d("scroll", "onScrollStateChanged " + String.valueOf(scrollState));
+//            
 //            tv_load_more.setText(R.string.loading_data);  
 //            pb_load_progress.setVisibility(View.VISIBLE);  
-            
-//            tv_load_more.setText(R.string.load_more_data);  
-//            pb_load_progress.setVisibility(View.GONE);  
 //            
-//            tv_load_more.setText(R.string.no_more_data);  
-//            pb_load_progress.setVisibility(View.GONE);  
-        }  
-    }  
+////            tv_load_more.setText(R.string.load_more_data);  
+////            pb_load_progress.setVisibility(View.GONE);  
+////            
+////            tv_load_more.setText(R.string.no_more_data);  
+////            pb_load_progress.setVisibility(View.GONE);  
+//        }  
+//    }  
 	
 	private View moreView;
 	private TextView tv_load_more;
@@ -265,30 +266,34 @@ public class MainActivity extends Activity implements
 		lvDefault = (ListView) findViewById(R.id.lvDefault);
 		
 		//滚动翻页
-		lvDefault.setOnScrollListener(this);
+		//lvDefault.setOnScrollListener(this);
 		
 		LayoutInflater inflater = LayoutInflater.from(getApplicationContext()); 
         moreView = inflater.inflate(R.layout.footer_more, null);  
         tv_load_more = (TextView) moreView.findViewById(R.id.tv_load_more);  
         pb_load_progress = (ProgressBar) moreView.findViewById(R.id.pb_load_progress);  
 		
-//		lvDefault.setOnScrollListener(new OnScrollListener() {
-//			// 添加滚动条滚到最底部，加载余下的元素
-//			@Override
-//			public void onScrollStateChanged(AbsListView view, int scrollState) {
-//				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-//					//loadRemnantListItem();
-//					Log.d("scroll", "onScrollStateChanged " + String.valueOf(scrollState));
-//				}
-//			}
-//
-//			@Override
-//			public void onScroll(AbsListView view, int firstVisibleItem,
-//					int visibleItemCount, int totalItemCount) {
-//				//
-//				Log.d("scroll", "onScroll " + String.valueOf(visibleItemCount));
-//			}
-//		});
+		lvDefault.setOnScrollListener(new OnScrollListener() {
+			// 添加滚动条滚到最底部，加载余下的元素
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+					//loadRemnantListItem();
+					
+		            tv_load_more.setText(R.string.loading_data);  
+		            pb_load_progress.setVisibility(View.VISIBLE); 
+				
+					Log.d("scroll", "onScrollStateChanged " + String.valueOf(scrollState));
+				}
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				//
+				Log.d("scroll", "onScroll " + String.valueOf(visibleItemCount));
+			}
+		});
 
 		// 获得设备的相关信息
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
