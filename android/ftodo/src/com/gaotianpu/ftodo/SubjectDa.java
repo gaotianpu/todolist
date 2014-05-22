@@ -27,7 +27,25 @@ public class SubjectDa {
 		values.put("is_sync", 0);
 		values.put("remote_id", 0);
 
-		// 插入数据 用ContentValues对象也即HashMap操作,并返回ID号
+		//
+		SQLiteDatabase db = getDb(context);
+		long subjectID = db.insert("subjects", "pk_id", values);
+
+		return subjectID;
+	}
+
+	public static long insert2(Context context, long remote_id, String content,
+			int creation_date, int last_update, int last_sync) {
+		ContentValues values = new ContentValues();
+		values.put("body", content);
+		values.put("creation_date", creation_date); //
+		values.put("last_update", last_update);
+		values.put("last_sync", last_sync);
+		values.put("is_del", 0);
+		values.put("is_sync", 1);
+		values.put("remote_id", remote_id);
+
+		//
 		SQLiteDatabase db = getDb(context);
 		long subjectID = db.insert("subjects", "pk_id", values);
 
@@ -42,7 +60,7 @@ public class SubjectDa {
 		ContentValues values = new ContentValues();
 		values.put("remote_id", remote_id);
 		values.put("is_sync", 1);
-		values.put("last_sync", 1); // 上次同步日期
+		values.put("last_sync", 1); //
 
 		SQLiteDatabase db = getDb(context);
 		db.update("subjects", values, "pk_id=?",
@@ -57,7 +75,7 @@ public class SubjectDa {
 	public static List<SubjectBean> load_not_uploaded_subjects(Context context) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		try {
-			/* 查询表，得到cursor对象 */
+
 			SQLiteDatabase db = getDb(context);
 			Cursor cursor = db.query("subjects", null, "is_sync=0", null, null,
 					null, null);
@@ -82,7 +100,6 @@ public class SubjectDa {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		try {
 
-			/* 查询表，得到cursor对象 */
 			SQLiteDatabase db = getDb(context);
 			Cursor cursor = db.query("subjects", null, null, null, null, null,
 					"remote_id DESC,pk_id desc");
@@ -106,7 +123,7 @@ public class SubjectDa {
 			long max_remote_id) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		try {
-			/* 查询表，得到cursor对象 */
+
 			SQLiteDatabase db = getDb(context);
 			Cursor cursor = db.query(
 					"subjects",
@@ -126,6 +143,6 @@ public class SubjectDa {
 			Log.e("SQLiteOp", e.toString());
 		}
 
-		// return subjectList;
+		// return subjectList ?;
 	}
 }
