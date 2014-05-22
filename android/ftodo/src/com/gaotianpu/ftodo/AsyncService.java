@@ -50,9 +50,9 @@ public class AsyncService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.d(TAG, "onCreate() executed");
+		//Log.d(TAG, "onCreate() executed");
 
-		// »ñµÃÉè±¸id
+		// ï¿½ï¿½ï¿½ï¿½è±¸id
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		devie_no = tm.getDeviceId();
 		device_type = android.os.Build.MODEL;
@@ -68,24 +68,24 @@ public class AsyncService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.d(TAG, "onStartCommand() executed");
+		//Log.d(TAG, "onStartCommand() executed");
 
-		// Ñ­»·Ö´ÐÐuploadÈÎÎñ
+		// Ñ­ï¿½ï¿½Ö´ï¿½ï¿½uploadï¿½ï¿½ï¿½ï¿½
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				// ¼ì²éÊÇ·ñÄÜÁªÍø
+				// ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				NetworkInfo info = cm.getActiveNetworkInfo();
 				if (info != null && info.isConnected()) {
-					Log.d(TAG, "isConnected times " + String.valueOf(times));
-					// ¼ì²ésqliteÖÐÊÇ·ñÓÐÎ´Í¬²½Êý¾Ý
+				//	Log.d(TAG, "isConnected times " + String.valueOf(times));
+					// ï¿½ï¿½ï¿½sqliteï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Î´Í¬ï¿½ï¿½ï¿½ï¿½ï¿½
 					List<SubjectBean> subjectList = SubjectDa
 							.load_not_uploaded_subjects(context);
 
 					if (subjectList.size() > 0) {
-						Log.d(TAG,
-								"has not async subjects times "
-										+ String.valueOf(times));
+					//	Log.d(TAG,
+					//			"has not async subjects times "
+					//					+ String.valueOf(times));
 
 						for (SubjectBean subject : subjectList) {
 							long cust_id = 1;
@@ -105,7 +105,7 @@ public class AsyncService extends Service {
 																context,
 																data.getLong("local_id"),
 																data.getLong("pk_id"));
-												Log.d(TAG, "sucess");
+											//	Log.d(TAG, "sucess");
 
 											} catch (JSONException e) {
 												Log.e(TAG, e.toString());
@@ -129,7 +129,7 @@ public class AsyncService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Log.d(TAG, "onDestroy() executed");
+	//	Log.d(TAG, "onDestroy() executed");
 	}
 
 }

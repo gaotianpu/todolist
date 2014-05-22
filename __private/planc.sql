@@ -215,6 +215,28 @@ CREATE TABLE `user_devices` (
   UNIQUE KEY `uniq_id` (`user_id`,`device_no`) USING HASH
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `pk_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `mobile` int(11) DEFAULT NULL,
+  `email` varchar(50) DEFAULT NULL,
+  `nick_name` varchar(50) DEFAULT NULL,
+  `password` varchar(100) DEFAULT NULL,
+  `creation_date` datetime DEFAULT NULL,
+  `last_update` datetime DEFAULT NULL,
+  `last_login` datetime DEFAULT NULL,
+  PRIMARY KEY (`pk_id`),
+  UNIQUE KEY `ix_mobile` (`mobile`),
+  UNIQUE KEY `ix_email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -225,4 +247,4 @@ CREATE TABLE `user_devices` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-05-22 11:45:21
+-- Dump completed on 2014-05-22 15:28:23

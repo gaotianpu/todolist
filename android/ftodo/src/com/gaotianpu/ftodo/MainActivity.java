@@ -31,9 +31,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnKeyListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.util.Log;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -41,7 +44,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 //import android.os.Build;
 
 public class MainActivity extends Activity implements
-		SwipeRefreshLayout.OnRefreshListener {
+		SwipeRefreshLayout.OnRefreshListener,OnScrollListener {
 
 	private EditText txtNew;
 	private ListView lvDefault;
@@ -195,17 +198,61 @@ public class MainActivity extends Activity implements
 	}
 
 	// ///////////////////
-
+	
+	private int lastItem; 
+	private int startIndex = 0;  
+    private int requestSize = 50; 
+	
+	@Override  
+    public void onScroll(AbsListView view, int firstVisibleItem,  
+            int visibleItemCount, int totalItemCount) {  
+  
+        lastItem = firstVisibleItem + visibleItemCount - 1;  
+  
+        // Log.i(TAG,  
+        // "firstVisibleItem:"+firstVisibleItem+"visibleItemCount:"+visibleItemCount+" lastItem:"+lastItem);  
+    }  
+	
+	@Override  
+    public void onScrollStateChanged(AbsListView view, int scrollState) {  
+  
+        if (lastItem == listAdapter.getCount()  
+                && scrollState == OnScrollListener.SCROLL_STATE_IDLE) {  
+  
+            Log.e("scroll", "load more");  
+              
+            startIndex += requestSize;  
+              
+            //loadMoreData();  
+            
+//            tv_load_more.setText(R.string.loading_data);  
+//            pb_load_progress.setVisibility(View.VISIBLE);  
+            
+//            tv_load_more.setText(R.string.load_more_data);  
+//            pb_load_progress.setVisibility(View.GONE);  
+//            
+//            tv_load_more.setText(R.string.no_more_data);  
+//            pb_load_progress.setVisibility(View.GONE);  
+        }  
+    }  
+	
+	private View moreView;
+	private TextView tv_load_more;
+	private ProgressBar pb_load_progress;  
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		context = this;
+
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
-
+		
+		//下拉刷新初始化设置
 		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 		swipeLayout.setOnRefreshListener(this);
 		swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
@@ -216,8 +263,32 @@ public class MainActivity extends Activity implements
 		//
 		txtNew = (EditText) findViewById(R.id.txtNew);
 		lvDefault = (ListView) findViewById(R.id.lvDefault);
-
-		context = this;
+		
+		//滚动翻页
+		lvDefault.setOnScrollListener(this);
+		
+		LayoutInflater inflater = LayoutInflater.from(getApplicationContext()); 
+        moreView = inflater.inflate(R.layout.footer_more, null);  
+        tv_load_more = (TextView) moreView.findViewById(R.id.tv_load_more);  
+        pb_load_progress = (ProgressBar) moreView.findViewById(R.id.pb_load_progress);  
+		
+//		lvDefault.setOnScrollListener(new OnScrollListener() {
+//			// 添加滚动条滚到最底部，加载余下的元素
+//			@Override
+//			public void onScrollStateChanged(AbsListView view, int scrollState) {
+//				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+//					//loadRemnantListItem();
+//					Log.d("scroll", "onScrollStateChanged " + String.valueOf(scrollState));
+//				}
+//			}
+//
+//			@Override
+//			public void onScroll(AbsListView view, int firstVisibleItem,
+//					int visibleItemCount, int totalItemCount) {
+//				//
+//				Log.d("scroll", "onScroll " + String.valueOf(visibleItemCount));
+//			}
+//		});
 
 		// 获得设备的相关信息
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
