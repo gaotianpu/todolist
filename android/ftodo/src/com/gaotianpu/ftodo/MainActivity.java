@@ -200,8 +200,8 @@ public class MainActivity extends Activity implements
 	// ///////////////////
 	
 	private int lastItem; 
-	private int startIndex = 0;  
-    private int requestSize = 50; 
+	private int page = 1;  
+    private int size = 50; 
 	
 //	@Override  
 //    public void onScroll(AbsListView view, int firstVisibleItem,  
@@ -280,10 +280,18 @@ public class MainActivity extends Activity implements
 				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
 					//loadRemnantListItem();
 					
+					if(view.getLastVisiblePosition() == view.getCount() - 1){
+						page ++ ;
+						//load_from_cloudy(page,size);
+						
+						Log.d("scroll", "onScrollStateChanged " + String.valueOf(view.getLastVisiblePosition()));
+					}
+					
 		            tv_load_more.setText(R.string.loading_data);  
 		            pb_load_progress.setVisibility(View.VISIBLE); 
-				
-					Log.d("scroll", "onScrollStateChanged " + String.valueOf(scrollState));
+		            
+		            Log.d("scroll", "onScrollStateChanged ");
+					
 				}
 			}
 
