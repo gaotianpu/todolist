@@ -45,9 +45,9 @@ public class MainActivity extends Activity implements
 
 	private EditText txtNew;
 	private ListView lvDefault;
-	
+
 	private SwipeRefreshLayout swipeLayout;
-	
+
 	private ListAdapter listAdapter;
 
 	private Context context;
@@ -57,18 +57,12 @@ public class MainActivity extends Activity implements
 	private long cust_id = 1;
 
 	private List<SubjectBean> subjectList;
-	
-//	private int times = 0 ;
+
 	@Override
 	public void onRefresh() {
 		new Handler().postDelayed(new Runnable() {
 			public void run() {
-//				Log.d("Refresh", "times " + String.valueOf(times));
-//				times ++ ;
-				 //swipeLayout.setRefreshing(false);
-				// list.add(new SoftwareClassificationInfo(2, "ass"));
-				load_from_cloudy(1,50);
-				
+				load_from_cloudy(1, 50);
 			}
 		}, 1000);
 	}
@@ -111,6 +105,7 @@ public class MainActivity extends Activity implements
 	}
 
 	private void load_from_cloudy(int page, int size) {
+		// 判断网络状态？
 		FTDClient.load_by_custId(cust_id, page, size,
 				new JsonHttpResponseHandler() {
 					@Override
@@ -150,6 +145,7 @@ public class MainActivity extends Activity implements
 							Log.e("MainActivity", e.toString());
 						}
 
+						// 结束下拉刷新提示条
 						swipeLayout.setRefreshing(false);
 						listAdapter.notifyDataSetChanged();
 
@@ -209,11 +205,13 @@ public class MainActivity extends Activity implements
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
-		
+
 		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        swipeLayout.setOnRefreshListener(this);
-        swipeLayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light,
-        android.R.color.holo_orange_light, android.R.color.holo_red_light);
+		swipeLayout.setOnRefreshListener(this);
+		swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
+				android.R.color.holo_green_light,
+				android.R.color.holo_orange_light,
+				android.R.color.holo_red_light);
 
 		//
 		txtNew = (EditText) findViewById(R.id.txtNew);
@@ -237,7 +235,7 @@ public class MainActivity extends Activity implements
 		rend_default_listview();
 
 		// 从cloudy加载数据，再刷新listview
-		load_from_cloudy(1, 50);
+		// load_from_cloudy(1, 50);
 
 	}
 
