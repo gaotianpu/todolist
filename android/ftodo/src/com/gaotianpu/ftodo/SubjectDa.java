@@ -47,7 +47,19 @@ public class SubjectDa {
 
 		//
 		SQLiteDatabase db = getDb(context);
-		long subjectID = db.insert("subjects", "pk_id", values);
+		
+		//检查sqlite 是否有remote_id, 无	
+		Cursor cursor = db.query("subjects", new String[] {"pk_id"} , "remote_id=?", new String[] { String.valueOf(remote_id)} , null,
+				null, null);
+		cursor.moveToFirst();
+		
+		long subjectID=0;
+		if (!cursor.isAfterLast()){
+			//has record, update
+			subjectID = cursor.getLong(0);
+		}else{
+			subjectID = db.insert("subjects", "pk_id", values);
+		} 
 
 		return subjectID;
 	}

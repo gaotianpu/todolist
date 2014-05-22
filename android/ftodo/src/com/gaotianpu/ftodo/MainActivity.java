@@ -101,9 +101,18 @@ public class MainActivity extends Activity {
 						JSONObject item = resultList.getJSONObject(i);
 						
 						SubjectBean subject = new SubjectBean();
-						subject.setId(item.getInt("pk_id"));
+						
+						
+						if(!item.isNull("local_id")){
+							subject.setId(item.getLong("local_id"));
+						}else{
+							subject.setId(0);
+						}
+						subject.setRemoteId(item.getLong("pk_id"));
 						subject.setBody(item.getString("body"));
-						//item.getInt("local_id");
+						
+						SubjectDa.insert2(context, item.getInt("pk_id"), item.getString("body"), 1, 1, 1);
+						 
 						subject.setCreationDate(0);
 						subjectList.add(subject);
 						
@@ -111,9 +120,8 @@ public class MainActivity extends Activity {
 						lvDefault.setAdapter(listAdapter); 
 					}
 					
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				} catch (JSONException e) {					 
+					Log.e("MainActivity", e.toString());
 				}
 				 
 				
@@ -175,28 +183,28 @@ public class MainActivity extends Activity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 
-		// �ؼ���ʼ��
+		// 
 		txtNew = (EditText) findViewById(R.id.txtNew);
 		lvDefault = (ListView) findViewById(R.id.lvDefault);
 		
 		context = this;  
 
-		// ����豸id
+		// 获得设备的相关信息
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		deviceId = tm.getDeviceId();
 		device_type = android.os.Build.MODEL;
 		
-		//����AsyncService
+		//启动 AsyncService
 		Intent startIntent = new Intent(this, AsyncService.class);  
         startService(startIntent); 
         
-        //�ύ��subject�¼���
+        //提交新subject
         bind_post_new_task();
         
-        //��ʼ��listview��Ĭ�����ͱ���sqlite�������
+        //从sqlite中读取数据，展示在listview中
         rend_default_listview();
         
-        //���������ƶ˻�ȡ��ݣ�����listview
+        //从cloudy加载数据，再刷新listview
         load_from_cloudy(1,50); 
 
 	}
