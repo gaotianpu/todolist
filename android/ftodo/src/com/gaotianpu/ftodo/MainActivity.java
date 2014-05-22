@@ -47,23 +47,29 @@ import android.support.v4.widget.SwipeRefreshLayout;
 
 public class MainActivity extends Activity implements
 		SwipeRefreshLayout.OnRefreshListener {
-
-	private EditText txtNew;
-	private ListView lvDefault;
 	
-	private ConnectivityManager cm;
+	private Context context;
 
 	private SwipeRefreshLayout swipeLayout;
-
-	private ListAdapter listAdapter;
-
-	private Context context;
+	private ListView lvDefault;
+	private EditText txtNew;
+	
+	private View moreView;
+	private TextView tv_load_more;
+	private ProgressBar pb_load_progress;  
+	
+	private List<SubjectBean> subjectList;
+	private ListAdapter listAdapter; 
+	
+	private ConnectivityManager cm;  
 
 	private String device_type; // �豸�ͺ�
 	private String deviceId; // �豸id
-	private long cust_id = 1;
-
-	private List<SubjectBean> subjectList;
+	private long cust_id = 1; 
+	
+	private int lastItem; 
+	private int page = 1;  
+    private int size = 50; 
 
 	@Override
 	public void onRefresh() {
@@ -113,6 +119,7 @@ public class MainActivity extends Activity implements
 
 	private void rend_default_listview() {
 		subjectList = SubjectDa.load(context, cust_id, 1, 50);
+		
 		listAdapter = new ListAdapter();
 		lvDefault.setAdapter(listAdapter);
 	}
@@ -150,8 +157,8 @@ public class MainActivity extends Activity implements
 								subject.setCreationDate(0);
 								subjectList.add(subject);
 
-								listAdapter = new ListAdapter();
-								lvDefault.setAdapter(listAdapter);
+//								listAdapter = new ListAdapter();
+//								lvDefault.setAdapter(listAdapter);
 							}
 
 						} catch (JSONException e) {
@@ -209,9 +216,7 @@ public class MainActivity extends Activity implements
 
 	// ///////////////////
 	
-	private int lastItem; 
-	private int page = 1;  
-    private int size = 50; 
+	
 	
 //	@Override  
 //    public void onScroll(AbsListView view, int firstVisibleItem,  
@@ -247,9 +252,7 @@ public class MainActivity extends Activity implements
 //        }  
 //    }  
 	
-	private View moreView;
-	private TextView tv_load_more;
-	private ProgressBar pb_load_progress;  
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
