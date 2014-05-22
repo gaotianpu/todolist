@@ -35,7 +35,7 @@ public class SubjectDa {
 	}
 
 	public static long insert2(Context context, long remote_id, String content,
-			int creation_date, int last_update, int last_sync) {
+			String creation_date, int last_update, int last_sync) {
 		ContentValues values = new ContentValues();
 		values.put("body", content);
 		values.put("creation_date", creation_date); //

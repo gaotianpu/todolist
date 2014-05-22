@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -35,22 +36,41 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.util.Log;
+import android.support.v4.widget.SwipeRefreshLayout;
 
 //import android.os.Build;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements
+		SwipeRefreshLayout.OnRefreshListener {
 
 	private EditText txtNew;
 	private ListView lvDefault;
-	private ListAdapter listAdapter;
 	
-	private Context context;   
+	private SwipeRefreshLayout swipeLayout;
+	
+	private ListAdapter listAdapter;
+
+	private Context context;
 
 	private String device_type; // �豸�ͺ�
 	private String deviceId; // �豸id
 	private long cust_id = 1;
 
-	private List<SubjectBean> subjectList ;
+	private List<SubjectBean> subjectList;
+	
+	private int times = 0 ;
+	@Override
+	public void onRefresh() {
+		new Handler().postDelayed(new Runnable() {
+			public void run() {
+				Log.d("Refresh", "times " + String.valueOf(times));
+				times ++ ;
+				 swipeLayout.setRefreshing(false);
+				// list.add(new SoftwareClassificationInfo(2, "ass"));
+				listAdapter.notifyDataSetChanged();
+			}
+		}, 1000);
+	}
 
 	private class ListAdapter extends BaseAdapter {
 
@@ -62,7 +82,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		public Object getItem(int position) {
-			return position;  
+			return position;
 		}
 
 		@Override
@@ -84,51 +104,53 @@ public class MainActivity extends Activity {
 	}
 
 	private void rend_default_listview() {
-		subjectList = SubjectDa.load(context, cust_id, 1, 50); 
+		subjectList = SubjectDa.load(context, cust_id, 1, 50);
 		listAdapter = new ListAdapter();
 		lvDefault.setAdapter(listAdapter);
 	}
 
-	private void load_from_cloudy(int page,int size) {
-		FTDClient.load_by_custId(cust_id, page, size, new JsonHttpResponseHandler() {
-			@Override
-			public void onSuccess(JSONObject  result) { 
-				try {
-					JSONArray  resultList = result.getJSONArray("list");
-					subjectList.clear();
-					
-					for(int i=0;i<resultList.length();i++){
-						JSONObject item = resultList.getJSONObject(i);
-						
-						SubjectBean subject = new SubjectBean();
-						
-						
-						if(!item.isNull("local_id")){
-							subject.setId(item.getLong("local_id"));
-						}else{
-							subject.setId(0);
-						}
-						subject.setRemoteId(item.getLong("pk_id"));
-						subject.setBody(item.getString("body"));
-						
-						SubjectDa.insert2(context, item.getInt("pk_id"), item.getString("body"), 1, 1, 1);
-						 
-						subject.setCreationDate(0);
-						subjectList.add(subject);
-						
-						listAdapter = new ListAdapter();
-						lvDefault.setAdapter(listAdapter); 
-					}
-					
-				} catch (JSONException e) {					 
-					Log.e("MainActivity", e.toString());
-				}
-				 
-				
-				
+	private void load_from_cloudy(int page, int size) {
+		FTDClient.load_by_custId(cust_id, page, size,
+				new JsonHttpResponseHandler() {
+					@Override
+					public void onSuccess(JSONObject result) {
+						try {
+							JSONArray resultList = result.getJSONArray("list");
+							subjectList.clear();
 
-			}
-		});
+							for (int i = 0; i < resultList.length(); i++) {
+								JSONObject item = resultList.getJSONObject(i);
+
+								SubjectBean subject = new SubjectBean();
+
+								if (!item.isNull("local_id")) {
+									subject.setId(item.getLong("local_id"));
+								} else {
+									subject.setId(0);
+								}
+								subject.setRemoteId(item.getLong("pk_id"));
+								subject.setBody(item.getString("body"));
+
+								// item.getString("created_date");
+
+								SubjectDa.insert2(context,
+										item.getInt("pk_id"),
+										item.getString("body"),
+										item.getString("created_date"), 1, 1);
+
+								subject.setCreationDate(0);
+								subjectList.add(subject);
+
+								listAdapter = new ListAdapter();
+								lvDefault.setAdapter(listAdapter);
+							}
+
+						} catch (JSONException e) {
+							Log.e("MainActivity", e.toString());
+						}
+
+					}
+				});
 	}
 
 	private void bind_post_new_task() {
@@ -142,20 +164,21 @@ public class MainActivity extends Activity {
 							.getContext().getSystemService(
 									Context.INPUT_METHOD_SERVICE);
 					if (imm.isActive()) {
-						imm.hideSoftInputFromWindow(
-								v.getApplicationWindowToken(), 0);
+						// 输入一条厚，键盘不收起，允许用户多次提交
+						// imm.hideSoftInputFromWindow(
+						// v.getApplicationWindowToken(), 0);
 
 						// insert into sqlite
 						String content = txtNew.getText().toString().trim();
 						if (content.length() > 1) {
-							Long subjectID = SubjectDa.insert(context, content );  
+							Long subjectID = SubjectDa.insert(context, content);
 
 							SubjectBean subject = new SubjectBean();
 							subject.setId(subjectID);
 							subject.setBody(txtNew.getText().toString().trim());
 							subject.setCreationDate(1);
 							subjectList.add(0, subject);
-							
+
 							// show new item in ListView
 							lvDefault.setAdapter(new ListAdapter());
 							txtNew.setText("");
@@ -182,30 +205,35 @@ public class MainActivity extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		
+		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        swipeLayout.setOnRefreshListener(this);
+        swipeLayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light,
+        android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
-		// 
+		//
 		txtNew = (EditText) findViewById(R.id.txtNew);
 		lvDefault = (ListView) findViewById(R.id.lvDefault);
-		
-		context = this;  
+
+		context = this;
 
 		// 获得设备的相关信息
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		deviceId = tm.getDeviceId();
 		device_type = android.os.Build.MODEL;
-		
-		//启动 AsyncService
-		Intent startIntent = new Intent(this, AsyncService.class);  
-        startService(startIntent); 
-        
-        //提交新subject
-        bind_post_new_task();
-        
-        //从sqlite中读取数据，展示在listview中
-        rend_default_listview();
-        
-        //从cloudy加载数据，再刷新listview
-        load_from_cloudy(1,50); 
+
+		// 启动 AsyncService
+		Intent startIntent = new Intent(this, AsyncService.class);
+		startService(startIntent);
+
+		// 提交新subject
+		bind_post_new_task();
+
+		// 从sqlite中读取数据，展示在listview中
+		rend_default_listview();
+
+		// 从cloudy加载数据，再刷新listview
+		load_from_cloudy(1, 50);
 
 	}
 
