@@ -20,6 +20,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.TelephonyManager;
@@ -48,6 +50,8 @@ public class MainActivity extends Activity implements
 
 	private EditText txtNew;
 	private ListView lvDefault;
+	
+	private ConnectivityManager cm;
 
 	private SwipeRefreshLayout swipeLayout;
 
@@ -65,7 +69,13 @@ public class MainActivity extends Activity implements
 	public void onRefresh() {
 		new Handler().postDelayed(new Runnable() {
 			public void run() {
-				load_from_cloudy(1, 50);
+				NetworkInfo info = cm.getActiveNetworkInfo();
+				if (info != null && info.isConnected()) {
+					load_from_cloudy(1, 50);
+				}else{
+					swipeLayout.setRefreshing(false);
+				} 
+				
 			}
 		}, 1000);
 	}
@@ -252,6 +262,9 @@ public class MainActivity extends Activity implements
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		
+		cm = (ConnectivityManager) this
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		
 		//下拉刷新初始化设置
 		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
