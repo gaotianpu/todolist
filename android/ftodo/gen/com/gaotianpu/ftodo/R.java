@@ -51,6 +51,7 @@ public final class R {
         public static final int hello_world=0x7f050001;
         public static final int load_more_data=0x7f050003;
         public static final int loading_data=0x7f050004;
+        public static final int newpost_hint=0x7f050006;
         public static final int no_more_data=0x7f050005;
     }
     public static final class style {

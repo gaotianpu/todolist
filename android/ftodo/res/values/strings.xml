@@ -7,5 +7,7 @@
     <string name="load_more_data">load_more_data</string>
     <string name="loading_data">loading_data</string>
     <string name="no_more_data">no_more_data</string>
+    <string name="newpost_hint">input here</string>
+    
  
 </resources>

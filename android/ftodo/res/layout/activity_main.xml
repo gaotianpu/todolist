@@ -32,7 +32,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:imeOptions="actionSend"
-            android:inputType="text" />
+            android:inputType="text" 
+            android:hint="@string/newpost_hint"/>
     </LinearLayout>
 
 </RelativeLayout>
