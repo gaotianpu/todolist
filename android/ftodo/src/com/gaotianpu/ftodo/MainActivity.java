@@ -67,9 +67,9 @@ public class MainActivity extends Activity implements
 	private String deviceId;
 	private long cust_id = 1;
 
-	private int lastItem;
-	private int page = 1;
-	private int size = 50;
+//	private int lastItem;
+//	private int page = 1;
+//	private int size = 50;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -119,9 +119,7 @@ public class MainActivity extends Activity implements
 				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
 					// loadRemnantListItem();
 
-					if (view.getLastVisiblePosition() == view.getCount() - 1) {
-						page++;
-
+					if (view.getLastVisiblePosition() == view.getCount() - 1) { 
 						// 底部翻页，区分联网状态？
 						// 下载数据的操作也放在asyncService中？
 
@@ -168,10 +166,7 @@ public class MainActivity extends Activity implements
 			public void run() {
 				NetworkInfo info = cm.getActiveNetworkInfo();
 				if (info != null && info.isConnected()) {
-					download();
-
-					// get max remote_id from sqlite
-					// load_from_clody_by_min_remote_id(last_remote_id,record_count)
+					download(); 
 				} else {
 					swipeLayout.setRefreshing(false);
 				}
