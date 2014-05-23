@@ -111,10 +111,12 @@ public class SubjectDa {
 			int page, int size) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		try {
+			
+			int offset = (page-1)*size;
 
 			SQLiteDatabase db = getDb(context);
 			Cursor cursor = db.query("subjects", null, null, null, null, null,
-					"remote_id DESC,pk_id desc");
+					"remote_id DESC,pk_id desc limit "+ String.valueOf(size) +" offset " + String.valueOf(offset) );
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast() && (cursor.getString(1) != null)) {
 				SubjectBean subject = new SubjectBean();

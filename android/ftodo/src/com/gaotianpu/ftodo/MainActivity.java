@@ -47,30 +47,125 @@ import android.support.v4.widget.SwipeRefreshLayout;
 
 public class MainActivity extends Activity implements
 		SwipeRefreshLayout.OnRefreshListener {
-	
+
 	private Context context;
 
 	private SwipeRefreshLayout swipeLayout;
 	private ListView lvDefault;
 	private EditText txtNew;
-	
+
 	private View moreView;
 	private TextView tv_load_more;
-	private ProgressBar pb_load_progress;  
-	
+	private ProgressBar pb_load_progress;
+
 	private List<SubjectBean> subjectList;
-	private ListAdapter listAdapter; 
-	
-	private ConnectivityManager cm;  
+	private ListAdapter listAdapter;
+
+	private ConnectivityManager cm;
 
 	private String device_type; // �豸�ͺ�
 	private String deviceId; // �豸id
-	private long cust_id = 1; 
-	
-	private int lastItem; 
-	private int page = 1;  
-    private int size = 50; 
+	private long cust_id = 1;
 
+	private int lastItem;
+	private int page = 1;
+	private int size = 50;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+
+		context = this;
+
+		if (savedInstanceState == null) {
+			getFragmentManager().beginTransaction()
+					.add(R.id.container, new PlaceholderFragment()).commit();
+		}
+
+		cm = (ConnectivityManager) this
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+		// 下拉刷新初始化设置
+		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+		swipeLayout.setOnRefreshListener(this);
+		swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
+				android.R.color.holo_green_light,
+				android.R.color.holo_orange_light,
+				android.R.color.holo_red_light);
+
+		//
+		lvDefault = (ListView) findViewById(R.id.lvDefault);
+		txtNew = (EditText) findViewById(R.id.txtNew);
+		
+
+		subjectList = SubjectDa.load(context, cust_id, 1, 100);
+		listAdapter = new ListAdapter();
+		lvDefault.setAdapter(listAdapter);
+
+		// 滚动翻页
+		// lvDefault.setOnScrollListener(this);
+		LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+		moreView = inflater.inflate(R.layout.footer_more, null);
+		tv_load_more = (TextView) moreView.findViewById(R.id.tv_load_more);
+		pb_load_progress = (ProgressBar) moreView
+				.findViewById(R.id.pb_load_progress);
+
+		lvDefault.setOnScrollListener(new OnScrollListener() {
+			// 添加滚动条滚到最底部，加载余下的元素
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+					// loadRemnantListItem();
+
+					if (view.getLastVisiblePosition() == view.getCount() - 1) {
+						page++;
+						// load_from_cloudy(page,size);
+
+						Log.d("scroll",
+								"onScrollStateChanged "
+										+ String.valueOf(view
+												.getLastVisiblePosition()));
+					}
+
+					tv_load_more.setText(R.string.loading_data);
+					pb_load_progress.setVisibility(View.VISIBLE);
+
+					Log.d("scroll", "onScrollStateChanged ");
+
+				}
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				//
+				Log.d("scroll", "onScroll " + String.valueOf(visibleItemCount));
+			}
+		});
+
+		// 获得设备的相关信息
+		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+		deviceId = tm.getDeviceId();
+		device_type = android.os.Build.MODEL;
+
+		// 启动 AsyncService
+		Intent startIntent = new Intent(this, AsyncService.class);
+		startService(startIntent);
+
+		// 提交新subject
+		bind_post_new_task();
+
+		// 从sqlite中读取数据，展示在listview中
+		// rend_default_listview();
+
+		// 从cloudy加载数据，再刷新listview
+		// load_from_cloudy(1, 50);
+
+	}
+	
+
+	//下拉
 	@Override
 	public void onRefresh() {
 		new Handler().postDelayed(new Runnable() {
@@ -78,10 +173,10 @@ public class MainActivity extends Activity implements
 				NetworkInfo info = cm.getActiveNetworkInfo();
 				if (info != null && info.isConnected()) {
 					load_from_cloudy(1, 50);
-				}else{
+				} else {
 					swipeLayout.setRefreshing(false);
-				} 
-				
+				}
+
 			}
 		}, 1000);
 	}
@@ -117,55 +212,23 @@ public class MainActivity extends Activity implements
 
 	}
 
-	private void rend_default_listview() {
-		subjectList = SubjectDa.load(context, cust_id, 1, 50);
-		
-		listAdapter = new ListAdapter();
-		lvDefault.setAdapter(listAdapter);
-	}
-
 	private void load_from_cloudy(int page, int size) {
 		// 判断网络状态？
 		FTDClient.load_by_custId(cust_id, page, size,
 				new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(JSONObject result) {
-						try {
-							JSONArray resultList = result.getJSONArray("list");
-							subjectList.clear();
+						//这行代码可以继续封装到 FTDClient.load_by_custId方法中去，？
+						List<SubjectBean> subjectList = FTDClient
+								.Json2SubjectList(result); 
+						
+						for (SubjectBean s : subjectList) {
+							SubjectDa.insert2(context, s.getId(), s.getBody(),
+									String.valueOf(s.getCreationDate()), 1, 1);
 
-							for (int i = 0; i < resultList.length(); i++) {
-								JSONObject item = resultList.getJSONObject(i);
-
-								SubjectBean subject = new SubjectBean();
-
-								if (!item.isNull("local_id")) {
-									subject.setId(item.getLong("local_id"));
-								} else {
-									subject.setId(0);
-								}
-								subject.setRemoteId(item.getLong("pk_id"));
-								subject.setBody(item.getString("body"));
-
-								// item.getString("created_date");
-
-								SubjectDa.insert2(context,
-										item.getInt("pk_id"),
-										item.getString("body"),
-										item.getString("created_date"), 1, 1);
-
-								subject.setCreationDate(0);
-								subjectList.add(subject);
-
-//								listAdapter = new ListAdapter();
-//								lvDefault.setAdapter(listAdapter);
-							}
-
-						} catch (JSONException e) {
-							Log.e("MainActivity", e.toString());
-						}
-
-						// 结束下拉刷新提示条
+							insert_new_item(s); 
+						} 
+						
 						swipeLayout.setRefreshing(false);
 						listAdapter.notifyDataSetChanged();
 
@@ -197,7 +260,8 @@ public class MainActivity extends Activity implements
 							subject.setId(subjectID);
 							subject.setBody(txtNew.getText().toString().trim());
 							subject.setCreationDate(1);
-							subjectList.add(0, subject);
+
+							insert_new_item(subject);
 
 							// show new item in ListView
 							lvDefault.setAdapter(new ListAdapter());
@@ -215,129 +279,57 @@ public class MainActivity extends Activity implements
 	}
 
 	// ///////////////////
-	
-	
-	
-//	@Override  
-//    public void onScroll(AbsListView view, int firstVisibleItem,  
-//            int visibleItemCount, int totalItemCount) {  
-//  
-//        lastItem = firstVisibleItem + visibleItemCount - 1;  
-//  
-//        // Log.i(TAG,  
-//        // "firstVisibleItem:"+firstVisibleItem+"visibleItemCount:"+visibleItemCount+" lastItem:"+lastItem);  
-//    }  
-//	
-//	@Override  
-//    public void onScrollStateChanged(AbsListView view, int scrollState) {  
-//  
-//        if (lastItem == listAdapter.getCount()  
-//                && scrollState == OnScrollListener.SCROLL_STATE_IDLE) {  
-//  
-//            Log.e("scroll", "load more");  
-//              
-//            startIndex += requestSize;  
-//              
-//            //loadMoreData();  
-//            Log.d("scroll", "onScrollStateChanged " + String.valueOf(scrollState));
-//            
-//            tv_load_more.setText(R.string.loading_data);  
-//            pb_load_progress.setVisibility(View.VISIBLE);  
-//            
-////            tv_load_more.setText(R.string.load_more_data);  
-////            pb_load_progress.setVisibility(View.GONE);  
-////            
-////            tv_load_more.setText(R.string.no_more_data);  
-////            pb_load_progress.setVisibility(View.GONE);  
-//        }  
-//    }  
-	
-	
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
 
-		context = this;
-
-		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+	private void insert_new_item(SubjectBean subject) {
+		// 判断是否已存在
+		// 重新排序？
+		for (SubjectBean s : subjectList) {
+			if (s.getId() == subject.getId()) {
+				// update
+				return;
+			}
 		}
-		
-		cm = (ConnectivityManager) this
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		
-		//下拉刷新初始化设置
-		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-		swipeLayout.setOnRefreshListener(this);
-		swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
-				android.R.color.holo_green_light,
-				android.R.color.holo_orange_light,
-				android.R.color.holo_red_light);
 
-		//
-		txtNew = (EditText) findViewById(R.id.txtNew);
-		lvDefault = (ListView) findViewById(R.id.lvDefault);
-		
-		//滚动翻页
-		//lvDefault.setOnScrollListener(this);
-		
-		LayoutInflater inflater = LayoutInflater.from(getApplicationContext()); 
-        moreView = inflater.inflate(R.layout.footer_more, null);  
-        tv_load_more = (TextView) moreView.findViewById(R.id.tv_load_more);  
-        pb_load_progress = (ProgressBar) moreView.findViewById(R.id.pb_load_progress);  
-		
-		lvDefault.setOnScrollListener(new OnScrollListener() {
-			// 添加滚动条滚到最底部，加载余下的元素
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-					//loadRemnantListItem();
-					
-					if(view.getLastVisiblePosition() == view.getCount() - 1){
-						page ++ ;
-						//load_from_cloudy(page,size);
-						
-						Log.d("scroll", "onScrollStateChanged " + String.valueOf(view.getLastVisiblePosition()));
-					}
-					
-		            tv_load_more.setText(R.string.loading_data);  
-		            pb_load_progress.setVisibility(View.VISIBLE); 
-		            
-		            Log.d("scroll", "onScrollStateChanged ");
-					
-				}
-			}
-
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) {
-				//
-				Log.d("scroll", "onScroll " + String.valueOf(visibleItemCount));
-			}
-		});
-
-		// 获得设备的相关信息
-		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-		deviceId = tm.getDeviceId();
-		device_type = android.os.Build.MODEL;
-
-		// 启动 AsyncService
-		Intent startIntent = new Intent(this, AsyncService.class);
-		startService(startIntent);
-
-		// 提交新subject
-		bind_post_new_task();
-
-		// 从sqlite中读取数据，展示在listview中
-		rend_default_listview();
-
-		// 从cloudy加载数据，再刷新listview
-		// load_from_cloudy(1, 50);
-
+		// insert
+		subjectList.add(subject);
 	}
+
+	// @Override
+	// public void onScroll(AbsListView view, int firstVisibleItem,
+	// int visibleItemCount, int totalItemCount) {
+	//
+	// lastItem = firstVisibleItem + visibleItemCount - 1;
+	//
+	// // Log.i(TAG,
+	// //
+	// "firstVisibleItem:"+firstVisibleItem+"visibleItemCount:"+visibleItemCount+" lastItem:"+lastItem);
+	// }
+	//
+	// @Override
+	// public void onScrollStateChanged(AbsListView view, int scrollState) {
+	//
+	// if (lastItem == listAdapter.getCount()
+	// && scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+	//
+	// Log.e("scroll", "load more");
+	//
+	// startIndex += requestSize;
+	//
+	// //loadMoreData();
+	// Log.d("scroll", "onScrollStateChanged " + String.valueOf(scrollState));
+	//
+	// tv_load_more.setText(R.string.loading_data);
+	// pb_load_progress.setVisibility(View.VISIBLE);
+	//
+	// // tv_load_more.setText(R.string.load_more_data);
+	// // pb_load_progress.setVisibility(View.GONE);
+	// //
+	// // tv_load_more.setText(R.string.no_more_data);
+	// // pb_load_progress.setVisibility(View.GONE);
+	// }
+	// }
+
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

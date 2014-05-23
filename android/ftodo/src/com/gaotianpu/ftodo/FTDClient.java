@@ -1,5 +1,14 @@
 package com.gaotianpu.ftodo;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.util.Log;
+
 import com.loopj.android.http.*;
 
 public class FTDClient {
@@ -9,14 +18,14 @@ public class FTDClient {
 
 	public static void post_new_task(long cust_id, String content,
 			String device_type, String devie_no, long local_id,
-			int creation_date, AsyncHttpResponseHandler responseHandler) { 
-		
+			int creation_date, AsyncHttpResponseHandler responseHandler) {
+
 		String url = BASE_URL + "new2";
 
 		RequestParams params = new RequestParams();
 		params.put("cust_id", String.valueOf(cust_id));
 		params.put("content", content);
-		params.put("creation_date", String.valueOf(creation_date)); // °´ÄÄ¸öÎª×¼ÄØ£¿
+		params.put("creation_date", String.valueOf(creation_date)); // ï¿½ï¿½ï¿½Ä¸ï¿½Îª×¼ï¿½Ø£ï¿½
 		params.put("device_type", device_type);
 		params.put("device_no", devie_no);
 		params.put("local_id", String.valueOf(local_id));
@@ -25,23 +34,57 @@ public class FTDClient {
 		return;
 
 		// local_uniq_id = {cust_id}_{device_no}_{sqlite_pk_id}
-		// remote_id = Ô¶³ÌµÄpk_id
+		// remote_id = Ô¶ï¿½Ìµï¿½pk_id
 
-		// »ù±¾²ÎÊý£º local_uniq_id,body,creation_date,cust_id
-		// È¨ÏÞÈÏÖ¤²ÎÊý£¿
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ local_uniq_id,body,creation_date,cust_id
+		// È¨ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½
 	}
 
 	public static void load_by_custId(long cust_id, int page_index,
-			int page_size,AsyncHttpResponseHandler responseHandler) {
+			int page_size, AsyncHttpResponseHandler responseHandler) {
 		String url = BASE_URL + "list2";
 
 		RequestParams params = new RequestParams();
-		params.put("cust_id", String.valueOf(cust_id) );
-		params.put("page", String.valueOf(page_index) );
+		params.put("cust_id", String.valueOf(cust_id));
+		params.put("page", String.valueOf(page_index));
 		params.put("size", String.valueOf(page_size));
 		client.get(url, params, responseHandler);
 		return;
 
+	}
+
+	public static List<SubjectBean> Json2SubjectList(JSONObject result) {
+		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
+
+		try {
+			JSONArray resultList = result.getJSONArray("list");
+			// subjectList.clear();
+
+			for (int i = 0; i < resultList.length(); i++) {
+				JSONObject item = resultList.getJSONObject(i);
+
+				SubjectBean subject = new SubjectBean();
+
+				if (!item.isNull("local_id")) {
+					subject.setId(item.getLong("local_id"));
+				} else {
+					subject.setId(0);
+				}
+				subject.setRemoteId(item.getLong("pk_id"));
+				subject.setBody(item.getString("body"));
+				subject.setCreationDate(0);
+
+				subjectList.add(subject);
+
+				// item.getString("created_date");
+
+			}
+
+		} catch (JSONException e) {
+			Log.e("MainActivity", e.toString());
+		}
+
+		return subjectList;
 	}
 
 }
