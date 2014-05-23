@@ -5,10 +5,12 @@ import da
 from datetime import *
 import json 
 import cron
+import api
 
 cust_id = 1  #tmp
 
 urls = (
+    '/api', api.app,
     '/list','List',
     '/list2','List2',
     '/list3','List3',
