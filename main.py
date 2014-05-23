@@ -11,6 +11,7 @@ cust_id = 1  #tmp
 urls = (
     '/list','List',
     '/list2','List2',
+    '/list3','List3',
     '/datelist','DateList',    
     '/new','New',  
     '/new2','New2',
@@ -54,6 +55,13 @@ class List2:
     def GET(self):
         i = web.input(cust_id=0,page=1,size=50)
         rows = da.subject.load_page2(i.cust_id,(int(i.page) - 1) * int(i.size),int(i.size))
+        r = {'code':1,'list':rows}
+        return json.dumps(r,cls=CJsonEncoder)
+
+class List3:
+    def GET(self):
+        i = web.input(cust_id=0,min_pk_id=1,size=50)
+        rows = da.subject.load_page3(i.cust_id,i.min_pk_id,int(i.size))
         r = {'code':1,'list':rows}
         return json.dumps(r,cls=CJsonEncoder)
 

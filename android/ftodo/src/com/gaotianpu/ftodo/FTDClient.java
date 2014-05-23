@@ -48,9 +48,24 @@ public class FTDClient {
 		params.put("cust_id", String.valueOf(cust_id));
 		params.put("page", String.valueOf(page_index));
 		params.put("size", String.valueOf(page_size));
+
 		client.get(url, params, responseHandler);
 		return;
 
+	}
+
+	public static void load_by_last_async_remote_id(long cust_id,
+			long last_remote_id, int size,
+			AsyncHttpResponseHandler responseHandler) {
+		String url = BASE_URL + "list3";
+
+		RequestParams params = new RequestParams();
+		params.put("cust_id", String.valueOf(cust_id));
+		params.put("min_pk_id", String.valueOf(last_remote_id));
+		params.put("size", String.valueOf(size));
+
+		client.get(url, params, responseHandler);
+		return;
 	}
 
 	public static List<SubjectBean> Json2SubjectList(JSONObject result) {

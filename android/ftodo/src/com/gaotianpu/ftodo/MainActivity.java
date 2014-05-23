@@ -63,8 +63,8 @@ public class MainActivity extends Activity implements
 
 	private ConnectivityManager cm;
 
-	private String device_type; // �豸�ͺ�
-	private String deviceId; // �豸id
+	private String device_type;  
+	private String deviceId;  
 	private long cust_id = 1;
 
 	private int lastItem;
@@ -123,6 +123,9 @@ public class MainActivity extends Activity implements
 					if (view.getLastVisiblePosition() == view.getCount() - 1) {
 						page++;
 						// load_from_cloudy(page,size);
+						// 底部翻页，区分联网状态？
+						// 下载数据的操作也放在asyncService中？
+						
 
 						Log.d("scroll",
 								"onScrollStateChanged "
@@ -161,7 +164,7 @@ public class MainActivity extends Activity implements
 	}
 	
 
-	//下拉
+	//下拉刷新
 	@Override
 	public void onRefresh() {
 		new Handler().postDelayed(new Runnable() {
@@ -169,6 +172,8 @@ public class MainActivity extends Activity implements
 				NetworkInfo info = cm.getActiveNetworkInfo();
 				if (info != null && info.isConnected()) {
 					load_from_cloudy(1, 50);
+					//get max remote_id from sqlite
+					//load_from_clody_by_min_remote_id(last_remote_id,record_count)
 				} else {
 					swipeLayout.setRefreshing(false);
 				}
@@ -210,7 +215,7 @@ public class MainActivity extends Activity implements
 
 	private void load_from_cloudy(int page, int size) {
 		// 判断网络状态？
-		FTDClient.load_by_custId(cust_id, page, size,
+		FTDClient.load_by_custId(cust_id, page, size,  
 				new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(JSONObject result) {
