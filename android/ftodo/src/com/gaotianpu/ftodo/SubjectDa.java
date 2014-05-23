@@ -159,4 +159,19 @@ public class SubjectDa {
 
 		// return subjectList ?;
 	}
+	
+	public static long get_max_remote_id(Context context,long cust_id){
+		long remote_id = 0;
+		
+		SQLiteDatabase db = getDb(context); 
+		 
+		Cursor cursor = db.query("subjects",new String[] {"max(remote_id) as max_remote_id"},null,null,null,null,null);
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()){
+			 remote_id = cursor.getLong(0);
+			 break;
+		}
+		
+		return remote_id;
+	}
 }

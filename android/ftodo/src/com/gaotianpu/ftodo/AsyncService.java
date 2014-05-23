@@ -46,11 +46,12 @@ public class AsyncService extends Service {
 	private String devie_no;
 	private String device_type;
 	private Context context;
+	private long cust_id = 1;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		//Log.d(TAG, "onCreate() executed");
+		// Log.d(TAG, "onCreate() executed");
 
 		// ����豸id
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -68,7 +69,7 @@ public class AsyncService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		//Log.d(TAG, "onStartCommand() executed");
+		// Log.d(TAG, "onStartCommand() executed");
 
 		// ѭ��ִ��upload����
 		mHandler.post(new Runnable() {
@@ -77,44 +78,10 @@ public class AsyncService extends Service {
 				// ����Ƿ�������
 				NetworkInfo info = cm.getActiveNetworkInfo();
 				if (info != null && info.isConnected()) {
-				//	Log.d(TAG, "isConnected times " + String.valueOf(times));
-					// ���sqlite���Ƿ���δͬ�����
-					List<SubjectBean> subjectList = SubjectDa
-							.load_not_uploaded_subjects(context);
-
-					if (subjectList.size() > 0) {
-					//	Log.d(TAG,
-					//			"has not async subjects times "
-					//					+ String.valueOf(times));
-
-						for (SubjectBean subject : subjectList) {
-							long cust_id = 1;
-
-							FTDClient.post_new_task(cust_id, subject.getBody(),
-									device_type, devie_no, subject.getId(),
-									subject.getCreationDate(),
-									new JsonHttpResponseHandler() {
-										@Override
-										public void onSuccess(JSONObject result) {
-											try {
-												JSONObject data = result
-														.getJSONObject("data");
-												
-												SubjectDa
-														.set_remoteId(
-																context,
-																data.getLong("local_id"),
-																data.getLong("pk_id"));
-											//	Log.d(TAG, "sucess");
-
-											} catch (JSONException e) {
-												Log.e(TAG, e.toString());
-											}
-										}
-									});
-						}
-					}
-
+					// Log.d(TAG, "isConnected times " + String.valueOf(times));
+					upload();
+					
+					//download();
 				}
 
 				times++;
@@ -129,7 +96,42 @@ public class AsyncService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-	//	Log.d(TAG, "onDestroy() executed");
+		// Log.d(TAG, "onDestroy() executed");
 	}
+
+	private void upload() {
+		// ���sqlite���Ƿ���δͬ�����
+		List<SubjectBean> subjectList = SubjectDa
+				.load_not_uploaded_subjects(context);
+		if (subjectList.size() == 0) {
+			return;
+		}
+
+		// Log.d(TAG, "has not async subjects times " + String.valueOf(times));
+
+		for (SubjectBean subject : subjectList) {
+
+			FTDClient.post_new_task(cust_id, subject.getBody(), device_type,
+					devie_no, subject.getId(), subject.getCreationDate(),
+					new JsonHttpResponseHandler() {
+						@Override
+						public void onSuccess(JSONObject result) {
+							try {
+								JSONObject data = result.getJSONObject("data");
+
+								SubjectDa.set_remoteId(context,
+										data.getLong("local_id"),
+										data.getLong("pk_id"));
+								// Log.d(TAG, "sucess");
+
+							} catch (JSONException e) {
+								Log.e(TAG, e.toString());
+							}
+						}
+					});
+		}
+	}
+	
+	
 
 }

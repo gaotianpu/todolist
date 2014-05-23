@@ -82,7 +82,7 @@ def load_page2(cust_id,offset,limit):
 def load_page3(cust_id,min_pk_id,limit): 
     rows = list(dbr.select(table_name,
         what="pk_id,body,created_date,local_id",
-        where="user_id=$cust_id and pk_id>=$min_pk_id", 
+        where="user_id=$cust_id and pk_id>$min_pk_id", 
         order="pk_id",
         offset=0,limit=limit,
         vars=locals()))

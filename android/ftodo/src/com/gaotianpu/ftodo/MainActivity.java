@@ -63,14 +63,14 @@ public class MainActivity extends Activity implements
 
 	private ConnectivityManager cm;
 
-	private String device_type;  
-	private String deviceId;  
+	private String device_type;
+	private String deviceId;
 	private long cust_id = 1;
 
 	private int lastItem;
 	private int page = 1;
 	private int size = 50;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -97,8 +97,7 @@ public class MainActivity extends Activity implements
 		//
 		lvDefault = (ListView) findViewById(R.id.lvDefault);
 		txtNew = (EditText) findViewById(R.id.txtNew);
-		
-		
+
 		// 从sqlite中读取数据，展示在listview中
 		subjectList = SubjectDa.load(context, cust_id, 1, 100);
 		listAdapter = new ListAdapter();
@@ -111,8 +110,8 @@ public class MainActivity extends Activity implements
 		tv_load_more = (TextView) moreView.findViewById(R.id.tv_load_more);
 		pb_load_progress = (ProgressBar) moreView
 				.findViewById(R.id.pb_load_progress);
-		
-		//向下滚动翻页
+
+		// 向下滚动翻页
 		lvDefault.setOnScrollListener(new OnScrollListener() {
 			// 添加滚动条滚到最底部，加载余下的元素
 			@Override
@@ -122,10 +121,9 @@ public class MainActivity extends Activity implements
 
 					if (view.getLastVisiblePosition() == view.getCount() - 1) {
 						page++;
-						// load_from_cloudy(page,size);
+
 						// 底部翻页，区分联网状态？
 						// 下载数据的操作也放在asyncService中？
-						
 
 						Log.d("scroll",
 								"onScrollStateChanged "
@@ -153,27 +151,27 @@ public class MainActivity extends Activity implements
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		deviceId = tm.getDeviceId();
 		device_type = android.os.Build.MODEL;
-		
+
 		// 提交新subject
-				bind_post_new_task();
+		bind_post_new_task();
 
 		// 启动 AsyncService
 		Intent startIntent = new Intent(this, AsyncService.class);
-		startService(startIntent); 
+		startService(startIntent);
 
 	}
-	
 
-	//下拉刷新
+	// 下拉刷新
 	@Override
 	public void onRefresh() {
 		new Handler().postDelayed(new Runnable() {
 			public void run() {
 				NetworkInfo info = cm.getActiveNetworkInfo();
 				if (info != null && info.isConnected()) {
-					load_from_cloudy(1, 50);
-					//get max remote_id from sqlite
-					//load_from_clody_by_min_remote_id(last_remote_id,record_count)
+					download();
+
+					// get max remote_id from sqlite
+					// load_from_clody_by_min_remote_id(last_remote_id,record_count)
 				} else {
 					swipeLayout.setRefreshing(false);
 				}
@@ -213,29 +211,29 @@ public class MainActivity extends Activity implements
 
 	}
 
-	private void load_from_cloudy(int page, int size) {
-		// 判断网络状态？
-		FTDClient.load_by_custId(cust_id, page, size,  
-				new JsonHttpResponseHandler() {
-					@Override
-					public void onSuccess(JSONObject result) {
-						//这行代码可以继续封装到 FTDClient.load_by_custId方法中去，？
-						List<SubjectBean> subjectList = FTDClient
-								.Json2SubjectList(result); 
-						
-						for (SubjectBean s : subjectList) {
-							SubjectDa.insert2(context, s.getId(), s.getBody(),
-									String.valueOf(s.getCreationDate()), 1, 1);
-
-							insert_new_item(s); 
-						} 
-						
-						swipeLayout.setRefreshing(false);
-						listAdapter.notifyDataSetChanged();
-
-					}
-				});
-	}
+	// private void load_from_cloudy(int page, int size) {
+	// // 判断网络状态？
+	// FTDClient.load_by_custId(cust_id, page, size,
+	// new JsonHttpResponseHandler() {
+	// @Override
+	// public void onSuccess(JSONObject result) {
+	// //这行代码可以继续封装到 FTDClient.load_by_custId方法中去，？
+	// List<SubjectBean> subjectList = FTDClient
+	// .Json2SubjectList(result);
+	//
+	// for (SubjectBean s : subjectList) {
+	// SubjectDa.insert2(context, s.getId(), s.getBody(),
+	// String.valueOf(s.getCreationDate()), 1, 1);
+	//
+	// insert_new_item(s,0);
+	// }
+	//
+	// swipeLayout.setRefreshing(false);
+	// listAdapter.notifyDataSetChanged();
+	//
+	// }
+	// });
+	// }
 
 	private void bind_post_new_task() {
 
@@ -262,7 +260,7 @@ public class MainActivity extends Activity implements
 							subject.setBody(txtNew.getText().toString().trim());
 							subject.setCreationDate(1);
 
-							insert_new_item(subject);
+							insert_new_item(subject, 0);
 
 							// show new item in ListView
 							lvDefault.setAdapter(new ListAdapter());
@@ -281,7 +279,40 @@ public class MainActivity extends Activity implements
 
 	// ///////////////////
 
-	private void insert_new_item(SubjectBean subject) {
+	private void download() {
+		// get max remote_id from sqlite
+		long max_remote_id_in_sqlite = SubjectDa.get_max_remote_id(context,
+				cust_id);
+
+		FTDClient.load_by_last_async_remote_id(cust_id,
+				max_remote_id_in_sqlite, 50, new JsonHttpResponseHandler() {
+					@Override
+					public void onSuccess(JSONObject result) {
+
+						// 这行代码可以继续封装到 FTDClient.load_by_custId方法中去，？
+						List<SubjectBean> subjectList = FTDClient
+								.Json2SubjectList(result);
+
+						for (SubjectBean s : subjectList) {
+							long local_id = SubjectDa.insert2(context,
+									s.getRemoteId(), s.getBody(),
+									String.valueOf(s.getCreationDate()), 1, 1);
+
+							s.setId(local_id);
+							insert_new_item(s, 0);
+						}
+
+						swipeLayout.setRefreshing(false);
+						listAdapter.notifyDataSetChanged();
+
+					}
+				});
+
+		// 何时终止？
+
+	}
+
+	private void insert_new_item(SubjectBean subject, int index) {
 		// 判断是否已存在
 		// 重新排序？
 		for (SubjectBean s : subjectList) {
@@ -292,7 +323,7 @@ public class MainActivity extends Activity implements
 		}
 
 		// insert
-		subjectList.add(subject);
+		subjectList.add(index, subject);
 	}
 
 	// @Override
@@ -329,8 +360,6 @@ public class MainActivity extends Activity implements
 	// // pb_load_progress.setVisibility(View.GONE);
 	// }
 	// }
-
-	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
