@@ -98,7 +98,8 @@ public class MainActivity extends Activity implements
 		lvDefault = (ListView) findViewById(R.id.lvDefault);
 		txtNew = (EditText) findViewById(R.id.txtNew);
 		
-
+		
+		// 从sqlite中读取数据，展示在listview中
 		subjectList = SubjectDa.load(context, cust_id, 1, 100);
 		listAdapter = new ListAdapter();
 		lvDefault.setAdapter(listAdapter);
@@ -110,7 +111,8 @@ public class MainActivity extends Activity implements
 		tv_load_more = (TextView) moreView.findViewById(R.id.tv_load_more);
 		pb_load_progress = (ProgressBar) moreView
 				.findViewById(R.id.pb_load_progress);
-
+		
+		//向下滚动翻页
 		lvDefault.setOnScrollListener(new OnScrollListener() {
 			// 添加滚动条滚到最底部，加载余下的元素
 			@Override
@@ -148,19 +150,13 @@ public class MainActivity extends Activity implements
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		deviceId = tm.getDeviceId();
 		device_type = android.os.Build.MODEL;
+		
+		// 提交新subject
+				bind_post_new_task();
 
 		// 启动 AsyncService
 		Intent startIntent = new Intent(this, AsyncService.class);
-		startService(startIntent);
-
-		// 提交新subject
-		bind_post_new_task();
-
-		// 从sqlite中读取数据，展示在listview中
-		// rend_default_listview();
-
-		// 从cloudy加载数据，再刷新listview
-		// load_from_cloudy(1, 50);
+		startService(startIntent); 
 
 	}
 	
