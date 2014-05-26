@@ -12,7 +12,7 @@ import android.util.Log;
 import com.loopj.android.http.*;
 
 public class FTDClient {
-	private static final String BASE_URL = "http://ftodo.sinaapp.com/";
+	private static final String BASE_URL = "http://ftodo.sinaapp.com/api/";
 
 	private static AsyncHttpClient client = new AsyncHttpClient();
 
@@ -40,19 +40,19 @@ public class FTDClient {
 		// Ȩ����֤����
 	}
 
-	public static void load_by_custId(long cust_id, int page_index,
-			int page_size, AsyncHttpResponseHandler responseHandler) {
-		String url = BASE_URL + "list2";
-
-		RequestParams params = new RequestParams();
-		params.put("cust_id", String.valueOf(cust_id));
-		params.put("page", String.valueOf(page_index));
-		params.put("size", String.valueOf(page_size));
-
-		client.get(url, params, responseHandler);
-		return;
-
-	}
+//	public static void load_by_custId(long cust_id, int page_index,
+//			int page_size, AsyncHttpResponseHandler responseHandler) {
+//		String url = BASE_URL + "list2";
+//
+//		RequestParams params = new RequestParams();
+//		params.put("cust_id", String.valueOf(cust_id));
+//		params.put("page", String.valueOf(page_index));
+//		params.put("size", String.valueOf(page_size));
+//
+//		client.get(url, params, responseHandler);
+//		return;
+//
+//	}
 
 	public static void load_by_last_async_remote_id(long cust_id,
 			long last_remote_id, int size,

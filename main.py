@@ -6,11 +6,15 @@ from datetime import *
 import json 
 import cron
 import api
+from config import dbw
 
 cust_id = 1  #tmp
 
+web.config.debug = False
+
 urls = (
     '/api', api.app,
+    '/login','Login',
     '/list','List',
     '/list2','List2',
     '/list3','List3',
@@ -28,6 +32,11 @@ urls = (
 
 render = web.template.render('templates/',base='layout') 
 
+app = web.application(urls, globals())
+
+store = web.session.DBStore(dbw, 'sessions')
+session = web.session.Session(app, store, initializer={'user_id': 0,'nick_name':''})  
+
 class CJsonEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime):
@@ -43,8 +52,25 @@ class Index:
 
 class Index2:
     def GET(self):
+        if not session.user_id:
+            raise web.seeother("/login")
         render = web.template.frender('templates/index2.html')
         return render() 
+
+class Login:
+    def GET(self):
+        render = web.template.frender('templates/login.html')
+        return render() 
+
+    def POST(self):
+        i = web.input(name="",password="")
+        result = da.user.login(i.name,i.password)
+        if result:             
+            session.user_id = result.pk_id
+            session.nick_name = result.nick_name
+            web.seeother('/')
+        else:
+            return json.dumps({'code':-1,'data':""})
 
 class List:
     def GET(self):
@@ -149,7 +175,7 @@ class WordList:
         r = {"code":1,"data":subjects}
         return json.dumps(r) 
 
-app = web.application(urls, globals())
+
 if __name__ == "__main__":
     # da.subject.load_page(1,10)
     app.run()
