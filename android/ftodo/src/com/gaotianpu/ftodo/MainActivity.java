@@ -40,6 +40,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.util.Log;
 import android.support.v4.widget.SwipeRefreshLayout;
 
@@ -372,7 +373,14 @@ public class MainActivity extends Activity implements
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
+			startActivity(new Intent(this, SettingsActivity.class)); 
 			return true;
+		}else if (id== R.id.current_user){
+			startActivity(new Intent(this, LoginActivity.class));  
+			return true;
+			
+		}else{
+			 
 		}
 		return super.onOptionsItemSelected(item);
 	}

@@ -3,11 +3,12 @@
 
     <string name="app_name">ftodo</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">设置</string>
     <string name="load_more_data">load_more_data</string>
     <string name="loading_data">loading_data</string>
     <string name="no_more_data">no_more_data</string>
-    <string name="newpost_hint">请在这里输入文字...</string>
+    <string name="newpost_hint">请在这里输入文字&#8230;</string>
+    <string name="current_user">未登录用户&#8230;</string>
     
  
 </resources>

@@ -29,6 +29,16 @@
 
         <service android:name="com.gaotianpu.ftodo.AsyncService" >
         </service>
+
+        <activity
+            android:name="com.gaotianpu.ftodo.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name="com.gaotianpu.ftodo.SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
     </application>
 
 </manifest>
