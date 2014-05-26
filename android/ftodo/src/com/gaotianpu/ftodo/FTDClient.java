@@ -7,18 +7,27 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.loopj.android.http.*;
 
 public class FTDClient {
-	private static final String BASE_URL = "http://ftodo.sinaapp.com/api/";
+	private final String BASE_URL = "http://ftodo.sinaapp.com/api/";
+	private AsyncHttpClient client;
+	private PersistentCookieStore myCookieStore;
 
-	private static AsyncHttpClient client = new AsyncHttpClient();
+	public FTDClient(Context context) {
+		client = new AsyncHttpClient();
+		myCookieStore = new PersistentCookieStore(context);
+		client.setCookieStore(myCookieStore);
+		
+		//单例模式？
+	}
 
-	public static void post_new_task(long cust_id, String content,
-			String device_type, String devie_no, long local_id,
-			int creation_date, AsyncHttpResponseHandler responseHandler) {
+	public void post_new_task(long cust_id, String content, String device_type,
+			String devie_no, long local_id, int creation_date,
+			AsyncHttpResponseHandler responseHandler) {
 
 		String url = BASE_URL + "new2";
 
@@ -40,23 +49,22 @@ public class FTDClient {
 		// Ȩ����֤����
 	}
 
-//	public static void load_by_custId(long cust_id, int page_index,
-//			int page_size, AsyncHttpResponseHandler responseHandler) {
-//		String url = BASE_URL + "list2";
-//
-//		RequestParams params = new RequestParams();
-//		params.put("cust_id", String.valueOf(cust_id));
-//		params.put("page", String.valueOf(page_index));
-//		params.put("size", String.valueOf(page_size));
-//
-//		client.get(url, params, responseHandler);
-//		return;
-//
-//	}
+	// public static void load_by_custId(long cust_id, int page_index,
+	// int page_size, AsyncHttpResponseHandler responseHandler) {
+	// String url = BASE_URL + "list2";
+	//
+	// RequestParams params = new RequestParams();
+	// params.put("cust_id", String.valueOf(cust_id));
+	// params.put("page", String.valueOf(page_index));
+	// params.put("size", String.valueOf(page_size));
+	//
+	// client.get(url, params, responseHandler);
+	// return;
+	//
+	// }
 
-	public static void load_by_last_async_remote_id(long cust_id,
-			long last_remote_id, int size,
-			AsyncHttpResponseHandler responseHandler) {
+	public void load_by_last_async_remote_id(long cust_id, long last_remote_id,
+			int size, AsyncHttpResponseHandler responseHandler) {
 		String url = BASE_URL + "list3";
 
 		RequestParams params = new RequestParams();

@@ -110,8 +110,9 @@ public class AsyncService extends Service {
 		// Log.d(TAG, "has not async subjects times " + String.valueOf(times));
 
 		for (SubjectBean subject : subjectList) {
-
-			FTDClient.post_new_task(cust_id, subject.getBody(), device_type,
+			
+			FTDClient ftd = new FTDClient(context);
+			ftd.post_new_task(cust_id, subject.getBody(), device_type,
 					devie_no, subject.getId(), subject.getCreationDate(),
 					new JsonHttpResponseHandler() {
 						@Override

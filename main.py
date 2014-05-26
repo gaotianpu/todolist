@@ -6,9 +6,7 @@ from datetime import *
 import json 
 import cron
 import api
-from config import dbw
-
-cust_id = 1  #tmp
+from config import dbw 
 
 web.config.debug = False
 
@@ -16,22 +14,18 @@ urls = (
     '/api', api.app,
     '/login','Login',
     '/list','List',
-    '/list2','List2',
-    '/list3','List3',
+    '/list2','List2',   
     '/datelist','DateList',    
-    '/new','New',  
-    '/new2','New2',
+    '/new','New',       
     '/details','Details',
     '/done', 'Done',  
     '/segment', 'Segment',
     '/words', 'Words',  
-    '/wordlist','WordList',
-    '/i1', 'Index',
-    '/', 'Index2',
+    '/wordlist','WordList',     
+    '/', 'Index',
 )
 
 render = web.template.render('templates/',base='layout') 
-
 app = web.application(urls, globals())
 
 store = web.session.DBStore(dbw, 'sessions')
@@ -44,13 +38,9 @@ class CJsonEncoder(json.JSONEncoder):
         elif isinstance(obj, date):
             return obj.strftime('%Y-%m-%d')
         else:
-            return json.JSONEncoder.default(self, obj)
+            return json.JSONEncoder.default(self, obj) 
 
 class Index:
-    def GET(self):         
-        return render.index()
-
-class Index2:
     def GET(self):
         if not session.user_id:
             raise web.seeother("/login")
@@ -60,8 +50,7 @@ class Index2:
 class Login:
     def GET(self):
         render = web.template.frender('templates/login.html')
-        return render() 
-
+        return render()
     def POST(self):
         i = web.input(name="",password="")
         result = da.user.login(i.name,i.password)
@@ -79,50 +68,26 @@ class List:
         r = {'code':1,'list':rows}
         return json.dumps(r,cls=CJsonEncoder)
 
-class List2:
-    def GET(self):
-        i = web.input(cust_id=0,page=1,size=50)
-        rows = da.subject.load_page2(i.cust_id,(int(i.page) - 1) * int(i.size),int(i.size))
-        r = {'code':1,'list':rows}
-        return json.dumps(r,cls=CJsonEncoder)
-
-class List3:
-    def GET(self):
-        i = web.input(cust_id=0,min_pk_id=1,size=50)
-        rows = da.subject.load_page3(i.cust_id,i.min_pk_id,int(i.size))
-        r = {'code':1,'list':rows}
-        return json.dumps(r,cls=CJsonEncoder)
+ 
 
 class DateList:
     def GET(self):
         i = web.input(date=datetime.now().strftime('%Y-%m-%d'))
-        rows = da.subject.load_by_date(cust_id,i.date)
+        rows = da.subject.load_by_date(session.user_id,i.date)
         #date format 应该放在js端处理 ?
         date = {'shortDate':i.date,'queryDate':i.date, 'strDate':i.date,'dayOfWeek':''}
         r = {'code':1,'list':rows,'date':date,'count':len(rows)}
         return json.dumps(r)
 
 class New:
-    def POST(self):
-        i = web.input(content='',cust_id=0,device_no='',local_id=0,creation_date=1)
+    def POST(self):        
+        i = web.input(content='',device_no='',local_id=0,creation_date=1)
         content = web.websafe(i.content)
-        pk_id = da.subject.insert(cust_id,content)
+        pk_id = da.subject.insert(session.user_id,content)
         task = da.subject.load_by_id(pk_id)
         cron.update_term_count(task) #remove to eda?
         r = {"code":1,"data":task}
-        return json.dumps(r,cls=CJsonEncoder) 
-
-class New2:
-    def POST(self):
-        i = web.input(cust_id=0,content='',device_type='',device_no='',local_id=0,creation_date=1)
-        content = web.websafe(i.content)
-        pk_id = da.subject.insert2(i.cust_id,i.content,i.device_type,i.device_no,i.local_id,i.creation_date) 
-
-        task = da.subject.load_by_id(pk_id)
-        task.local_id = i.local_id  #local_id必须是本次请求的id
-        #cron.update_term_count(task) #remove to eda?
-        r = {"code":1,"data":task}
-        return json.dumps(r,cls=CJsonEncoder) 
+        return json.dumps(r,cls=CJsonEncoder)  
 
 class Details:
     def GET(self):

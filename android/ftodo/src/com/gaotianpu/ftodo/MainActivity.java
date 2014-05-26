@@ -278,8 +278,9 @@ public class MainActivity extends Activity implements
 		// get max remote_id from sqlite
 		long max_remote_id_in_sqlite = SubjectDa.get_max_remote_id(context,
 				cust_id);
-
-		FTDClient.load_by_last_async_remote_id(cust_id,
+		
+		FTDClient ftd = new FTDClient(context);		
+		ftd.load_by_last_async_remote_id(cust_id,
 				max_remote_id_in_sqlite, 50, new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(JSONObject result) {
