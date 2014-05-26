@@ -32,8 +32,8 @@ def insert2(user_id,body,device_type,device_no,local_id,created_date):
             last_update=web.SQLLiteral('now()'),
             plan_start_date=web.SQLLiteral('now()'))
 
-def update(pk_id,**kv):
-    return dbw.update(table_name,last_update=web.SQLLiteral('now()'),where='pk_id=$pk_id',vars=locals(),**kv)
+def update(pk_id,user_id,**kv):
+    return dbw.update(table_name,last_update=web.SQLLiteral('now()'),where='pk_id=$pk_id and user_id=$user_id',vars=locals(),**kv)
 
 def load_by_id(pk_id):
     rows = list(dbr.select(table_name,where='pk_id=$pk_id' , vars=locals()))
@@ -59,8 +59,13 @@ def load_all(offset,limit=100):
     return list(dbr.select(table_name,order="pk_id desc",offset=offset,limit=limit))
 
 
-def load_page(offset,limit): 
-    rows = list(dbr.select(table_name,what="pk_id,body,created_date",order="pk_id desc",offset=offset,limit=limit))
+def load_page(cust_id,offset,limit): 
+    rows = list(dbr.select(table_name,
+        what="pk_id,body,created_date", 
+        where="user_id=$cust_id", 
+        order="pk_id desc",
+        offset=offset,limit=limit,
+        vars=locals()))
     r = {}  
     for row in rows:
         day = row.created_date.strftime('%Y-%m-%d')         

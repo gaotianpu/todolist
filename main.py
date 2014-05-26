@@ -14,7 +14,7 @@ urls = (
     '/api', api.app,
     '/login','Login',
     '/list','List',
-    '/list2','List2',   
+    
     '/datelist','DateList',    
     '/new','New',       
     '/details','Details',
@@ -63,12 +63,10 @@ class Login:
 
 class List:
     def GET(self):
-        i = web.input(page=1,size=50)
-        rows = da.subject.load_page((int(i.page) - 1) * int(i.size),int(i.size))
+        i = web.input(page=1,size=50)        
+        rows = da.subject.load_page(session.user_id,(int(i.page) - 1) * int(i.size),int(i.size))
         r = {'code':1,'list':rows}
-        return json.dumps(r,cls=CJsonEncoder)
-
- 
+        return json.dumps(r,cls=CJsonEncoder) 
 
 class DateList:
     def GET(self):
@@ -94,10 +92,13 @@ class Details:
         i = web.input(pk_id=0)
         detail = da.subject.load_by_id(i.pk_id)
         r = {"code":1,"data":detail}
+        if detail.user_id != session.user_id:
+            r = {"code":-1,"data":"not permid"}        
         return json.dumps(r,cls=CJsonEncoder) 
+
     def POST(self):
         i = web.input(pk_id=0,subject='',body='')
-        da.subject.update(i.pk_id,subject="",body=i.body)
+        da.subject.update(i.pk_id,session.user_id,subject="",body=i.body)
         cron.update_term_count_by_id(i.pk_id) #remove to eda?
         return  
 
