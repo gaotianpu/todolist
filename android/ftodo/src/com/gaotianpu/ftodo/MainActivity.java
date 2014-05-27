@@ -1,405 +1,228 @@
 package com.gaotianpu.ftodo;
 
 import com.gaotianpu.ftodo.R;
-import com.gaotianpu.ftodo.SubjectBean;
-import com.gaotianpu.ftodo.SQLiteHelper;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.util.Locale;
 import android.app.Activity;
-//import android.app.ActionBar;
 import android.app.Fragment;
-import android.content.ContentValues;
-import android.content.Context;
+import android.app.FragmentManager;
+import android.app.SearchManager;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
-import android.telephony.TelephonyManager;
-import android.view.KeyEvent;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnKeyListener;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.BaseAdapter;
-import android.widget.EditText;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.util.Log;
-import android.support.v4.widget.SwipeRefreshLayout;
 
-//import android.os.Build;
+public class MainActivity extends Activity {
+	private DrawerLayout mDrawerLayout;
+	private ListView mDrawerList;
+	private ActionBarDrawerToggle mDrawerToggle;
 
-public class MainActivity extends Activity implements
-		SwipeRefreshLayout.OnRefreshListener {
-
-	private Context context;
-
-	private SwipeRefreshLayout swipeLayout;
-	private ListView lvDefault;
-	private EditText txtNew;
-
-	private View moreView;
-	private TextView tv_load_more;
-	private ProgressBar pb_load_progress;
-
-	private List<SubjectBean> subjectList;
-	private ListAdapter listAdapter;
-
-	private ConnectivityManager cm;
-
-	private String device_type;
-	private String deviceId;
-	private long cust_id = 1;
-
-//	private int lastItem;
-//	private int page = 1;
-//	private int size = 50;
+	private CharSequence mDrawerTitle;
+	private CharSequence mTitle;
+	private String[] mPlanetTitles;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		context = this;
+		init_navigation_drawer();
 
 		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+			selectItem(1);
 		}
+	}
 
-		cm = (ConnectivityManager) this
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
+	private void init_navigation_drawer() {
+		mTitle = mDrawerTitle = getTitle();
+		mPlanetTitles = getResources().getStringArray(R.array.planets_array);
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-		// 下拉刷新初始化设置
-		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-		swipeLayout.setOnRefreshListener(this);
-		swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
-				android.R.color.holo_green_light,
-				android.R.color.holo_orange_light,
-				android.R.color.holo_red_light);
+		// set a custom shadow that overlays the main content when the drawer
+		// opens
+		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+				GravityCompat.START);
+		// set up the drawer's list view with items and click listener
+		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+				R.layout.drawer_list_item, mPlanetTitles));
+		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-		//
-		lvDefault = (ListView) findViewById(R.id.lvDefault);
-		txtNew = (EditText) findViewById(R.id.txtNew);
+		// enable ActionBar app icon to behave as action to toggle nav drawer
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
 
-		// 从sqlite中读取数据，展示在listview中
-		subjectList = SubjectDa.load(context, cust_id, 1, 100);
-		listAdapter = new ListAdapter();
-		lvDefault.setAdapter(listAdapter);
-
-		// 滚动翻页
-		// lvDefault.setOnScrollListener(this);
-		LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-		moreView = inflater.inflate(R.layout.footer_more, null);
-		tv_load_more = (TextView) moreView.findViewById(R.id.tv_load_more);
-		pb_load_progress = (ProgressBar) moreView
-				.findViewById(R.id.pb_load_progress);
-
-		// 向下滚动翻页
-		lvDefault.setOnScrollListener(new OnScrollListener() {
-			// 添加滚动条滚到最底部，加载余下的元素
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-					// loadRemnantListItem();
-
-					if (view.getLastVisiblePosition() == view.getCount() - 1) { 
-						// 底部翻页，区分联网状态？
-						// 下载数据的操作也放在asyncService中？
-
-						Log.d("scroll",
-								"onScrollStateChanged "
-										+ String.valueOf(view
-												.getLastVisiblePosition()));
-					}
-
-					tv_load_more.setText(R.string.loading_data);
-					pb_load_progress.setVisibility(View.VISIBLE);
-
-					Log.d("scroll", "onScrollStateChanged ");
-
-				}
+		// ActionBarDrawerToggle ties together the the proper interactions
+		// between the sliding drawer and the action bar app icon
+		mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
+		mDrawerLayout, /* DrawerLayout object */
+		R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
+		R.string.drawer_open, /* "open drawer" description for accessibility */
+		R.string.drawer_close /* "close drawer" description for accessibility */
+		) {
+			public void onDrawerClosed(View view) {
+				getActionBar().setTitle(mTitle);
+				invalidateOptionsMenu(); // creates call to
+											// onPrepareOptionsMenu()
 			}
 
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) {
-				//
-				Log.d("scroll", "onScroll " + String.valueOf(visibleItemCount));
+			public void onDrawerOpened(View drawerView) {
+				getActionBar().setTitle(mDrawerTitle);
+				invalidateOptionsMenu(); // creates call to
+											// onPrepareOptionsMenu()
 			}
-		});
-
-		// 获得设备的相关信息
-		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-		deviceId = tm.getDeviceId();
-		device_type = android.os.Build.MODEL;
-
-		// 提交新subject
-		bind_post_new_task();
-
-		// 启动 AsyncService
-		Intent startIntent = new Intent(this, AsyncService.class);
-		startService(startIntent);
+		};
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 	}
-
-	// 下拉刷新
-	@Override
-	public void onRefresh() {
-		new Handler().postDelayed(new Runnable() {
-			public void run() {
-				NetworkInfo info = cm.getActiveNetworkInfo();
-				if (info != null && info.isConnected()) {
-					download(); 
-				} else {
-					swipeLayout.setRefreshing(false);
-				}
-
-			}
-		}, 1000);
-	}
-
-	private class ListAdapter extends BaseAdapter {
-
-		@Override
-		public int getCount() {
-			// TODO Auto-generated method stub
-			return subjectList.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return position;
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			convertView = getLayoutInflater().inflate(R.layout.listview_item,
-					null);
-
-			TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
-			tv.setText("" + subjectList.get(position).getBody());
-
-			return convertView;
-		}
-
-	}
-
-	// private void load_from_cloudy(int page, int size) {
-	// // 判断网络状态？
-	// FTDClient.load_by_custId(cust_id, page, size,
-	// new JsonHttpResponseHandler() {
-	// @Override
-	// public void onSuccess(JSONObject result) {
-	// //这行代码可以继续封装到 FTDClient.load_by_custId方法中去，？
-	// List<SubjectBean> subjectList = FTDClient
-	// .Json2SubjectList(result);
-	//
-	// for (SubjectBean s : subjectList) {
-	// SubjectDa.insert2(context, s.getId(), s.getBody(),
-	// String.valueOf(s.getCreationDate()), 1, 1);
-	//
-	// insert_new_item(s,0);
-	// }
-	//
-	// swipeLayout.setRefreshing(false);
-	// listAdapter.notifyDataSetChanged();
-	//
-	// }
-	// });
-	// }
-
-	private void bind_post_new_task() {
-
-		txtNew.setOnKeyListener(new OnKeyListener() {
-			@Override
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				// TODO Auto-generated method stub
-				if (keyCode == KeyEvent.KEYCODE_ENTER) {
-					InputMethodManager imm = (InputMethodManager) v
-							.getContext().getSystemService(
-									Context.INPUT_METHOD_SERVICE);
-					if (imm.isActive()) {
-						// 输入一条厚，键盘不收起，允许用户多次提交
-						// imm.hideSoftInputFromWindow(
-						// v.getApplicationWindowToken(), 0);
-
-						// insert into sqlite
-						String content = txtNew.getText().toString().trim();
-						if (content.length() > 1) {
-							Long subjectID = SubjectDa.insert(context, content);
-
-							SubjectBean subject = new SubjectBean();
-							subject.setId(subjectID);
-							subject.setBody(txtNew.getText().toString().trim());
-							subject.setCreationDate(1);
-
-							insert_new_item(subject, 0);
-
-							// show new item in ListView
-							lvDefault.setAdapter(new ListAdapter());
-							txtNew.setText("");
-						}
-
-					}
-					return true;
-				}
-				return false;
-
-			}
-
-		});
-	}
-
-	// ///////////////////
-
-	private void download() {
-		// get max remote_id from sqlite
-		long max_remote_id_in_sqlite = SubjectDa.get_max_remote_id(context,
-				cust_id);
-		
-		FTDClient ftd = new FTDClient(context);		
-		ftd.load_by_last_async_remote_id(cust_id,
-				max_remote_id_in_sqlite, 50, new JsonHttpResponseHandler() {
-					@Override
-					public void onSuccess(JSONObject result) {
-
-						// 这行代码可以继续封装到 FTDClient.load_by_custId方法中去，？
-						List<SubjectBean> subjectList = FTDClient
-								.Json2SubjectList(result);
-
-						for (SubjectBean s : subjectList) {
-							long local_id = SubjectDa.insert2(context,
-									s.getRemoteId(), s.getBody(),
-									String.valueOf(s.getCreationDate()), 1, 1);
-
-							s.setId(local_id);
-							insert_new_item(s, 0);
-						}
-
-						swipeLayout.setRefreshing(false);
-						listAdapter.notifyDataSetChanged();
-
-					}
-				});
-
-		// 何时终止？
-
-	}
-
-	private void insert_new_item(SubjectBean subject, int index) {
-		// 判断是否已存在
-		// 重新排序？
-		for (SubjectBean s : subjectList) {
-			if (s.getId() == subject.getId()) {
-				// update
-				return;
-			}
-		}
-
-		// insert
-		subjectList.add(index, subject);
-	}
-
-	// @Override
-	// public void onScroll(AbsListView view, int firstVisibleItem,
-	// int visibleItemCount, int totalItemCount) {
-	//
-	// lastItem = firstVisibleItem + visibleItemCount - 1;
-	//
-	// // Log.i(TAG,
-	// //
-	// "firstVisibleItem:"+firstVisibleItem+"visibleItemCount:"+visibleItemCount+" lastItem:"+lastItem);
-	// }
-	//
-	// @Override
-	// public void onScrollStateChanged(AbsListView view, int scrollState) {
-	//
-	// if (lastItem == listAdapter.getCount()
-	// && scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-	//
-	// Log.e("scroll", "load more");
-	//
-	// startIndex += requestSize;
-	//
-	// //loadMoreData();
-	// Log.d("scroll", "onScrollStateChanged " + String.valueOf(scrollState));
-	//
-	// tv_load_more.setText(R.string.loading_data);
-	// pb_load_progress.setVisibility(View.VISIBLE);
-	//
-	// // tv_load_more.setText(R.string.load_more_data);
-	// // pb_load_progress.setVisibility(View.GONE);
-	// //
-	// // tv_load_more.setText(R.string.no_more_data);
-	// // pb_load_progress.setVisibility(View.GONE);
-	// }
-	// }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
 
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+	/* Called whenever we call invalidateOptionsMenu() */
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		// If the nav drawer is open, hide action items related to the content
+		// view
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+		menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			startActivity(new Intent(this, SettingsActivity.class)); 
+		// The action bar home/up action should open or close the drawer.
+		// ActionBarDrawerToggle will take care of this.
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
-		}else if (id== R.id.current_user){
-			startActivity(new Intent(this, LoginActivity.class));  
-			return true;
-			
-		}else{
-			 
 		}
-		return super.onOptionsItemSelected(item);
+
+		// Handle action buttons
+		switch (item.getItemId()) {
+		case R.id.action_websearch:
+			// create intent to perform web search for this planet
+			Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+			intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
+			// catch event that there's no activity to handle intent
+			if (intent.resolveActivity(getPackageManager()) != null) {
+				startActivity(intent);
+			} else {
+				Toast.makeText(this, R.string.app_not_available,
+						Toast.LENGTH_LONG).show();
+			}
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	/* The click listner for ListView in the navigation drawer */
+	private class DrawerItemClickListener implements
+			ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			selectItem(position);
+		}
+	}
+
+	private void selectItem(int position) {
+		// update the main content by replacing fragments
+		Fragment fragment;
+
+		switch (position) {
+		case 1:
+			fragment = new ListFragment();
+			Bundle args1 = new Bundle();
+			args1.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+			fragment.setArguments(args1);
+			break;
+		default:
+			fragment = new PlanetFragment();
+			Bundle args = new Bundle();
+			args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+			fragment.setArguments(args);
+			break;
+		}
+
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction()
+				.replace(R.id.content_frame, fragment).commit();
+
+		// update selected item and title, then close the drawer
+		mDrawerList.setItemChecked(position, true);
+		setTitle(mPlanetTitles[position]);
+		mDrawerLayout.closeDrawer(mDrawerList);
+	}
+
+	@Override
+	public void setTitle(CharSequence title) {
+		mTitle = title;
+		getActionBar().setTitle(mTitle);
 	}
 
 	/**
-	 * A placeholder fragment containing a simple view.
+	 * When using the ActionBarDrawerToggle, you must call it during
+	 * onPostCreate() and onConfigurationChanged()...
 	 */
-	public static class PlaceholderFragment extends Fragment {
 
-		public PlaceholderFragment() {
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		mDrawerToggle.syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		// Pass any configuration change to the drawer toggls
+		// mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	/**
+	 * Fragment that appears in the "content_frame", shows a planet
+	 */
+	public static class PlanetFragment extends Fragment {
+		public static final String ARG_PLANET_NUMBER = "planet_number";
+
+		public PlanetFragment() {
+			// Empty constructor required for fragment subclasses
 		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container,
-					false);
+			View rootView = inflater.inflate(R.layout.fragment_planet,
+					container, false);
+			int i = getArguments().getInt(ARG_PLANET_NUMBER);
+			String planet = getResources()
+					.getStringArray(R.array.planets_array)[i];
+
+			int imageId = getResources().getIdentifier(
+					planet.toLowerCase(Locale.getDefault()), "drawable",
+					getActivity().getPackageName());
+			((ImageView) rootView.findViewById(R.id.image))
+					.setImageResource(imageId);
+			getActivity().setTitle(planet);
 			return rootView;
 		}
 	}
-
 }

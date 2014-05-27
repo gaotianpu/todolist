@@ -14,6 +14,7 @@ import com.loopj.android.http.*;
 
 public class FTDClient {
 	private final String BASE_URL = "http://ftodo.sinaapp.com/api/";
+	
 	private AsyncHttpClient client;
 	private PersistentCookieStore myCookieStore;
 
@@ -76,6 +77,11 @@ public class FTDClient {
 		return;
 	}
 
+	
+	public static void login(String email,String passsword, AsyncHttpResponseHandler responseHandler){
+		
+	}
+	
 	public static List<SubjectBean> Json2SubjectList(JSONObject result) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 

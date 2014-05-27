@@ -9,6 +9,15 @@
     <string name="no_more_data">no_more_data</string>
     <string name="newpost_hint">请在这里输入文字&#8230;</string>
     <string name="current_user">未登录用户&#8230;</string>
+    <string name="title_activity_main">MainActivity</string>
     
- 
+    <string-array name="planets_array">
+        <item>login</item>
+        <item>list</item>
+        <item>setting</item>         
+    </string-array>
+     <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+ <string name="action_websearch">Web search</string>
+ <string name="app_not_available">Sorry, there\'s no web browser available</string>
 </resources>

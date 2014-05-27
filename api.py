@@ -6,7 +6,9 @@ import json
 from datetime import *
 
 
-urls = ("/new2", "New2",
+urls = (
+    "/login", "Login",
+    "/new2", "New2",
     "/list3","List3")
 
 #register, mobile + sms_validate_code
@@ -21,6 +23,12 @@ class CJsonEncoder(json.JSONEncoder):
             return obj.strftime('%Y-%m-%d')
         else:
             return json.JSONEncoder.default(self, obj)
+
+class Login:
+    def POST(self):
+        i = web.input(email='',password='',device_type='',device_no='')
+        r = {"code":1,"data":task}
+        return json.dumps(r)
 
 class New2:
     def POST(self):
