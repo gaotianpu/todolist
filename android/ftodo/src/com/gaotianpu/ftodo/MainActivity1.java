@@ -379,7 +379,7 @@ public class MainActivity1 extends Activity implements
 			startActivity(new Intent(this, SettingsActivity.class)); 
 			return true;
 		}else if (id== R.id.current_user){			 
-			startActivity(new Intent(this, LoginActivity.class));  
+			//startActivity(new Intent(this, LoginActivity.class));  
 			return true;
 			
 		}else{

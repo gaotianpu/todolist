@@ -148,6 +148,12 @@ public class MainActivity extends Activity {
 		Fragment fragment;
 
 		switch (position) {
+		case 0:
+			fragment = new LoginFragment();
+			Bundle args0 = new Bundle();
+			args0.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+			fragment.setArguments(args0);
+			break;
 		case 1:
 			fragment = new ListFragment();
 			Bundle args1 = new Bundle();

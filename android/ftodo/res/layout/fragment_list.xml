@@ -3,7 +3,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.gaotianpu.ftodo.MainActivity1"
+    tools:context="com.gaotianpu.ftodo.MainActivity"
     tools:ignore="MergeRootFrame" >
 
     <android.support.v4.widget.SwipeRefreshLayout
