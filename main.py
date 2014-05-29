@@ -47,23 +47,31 @@ class Index:
         render = web.template.frender('templates/index2.html')
         return render() 
 
+class Register:
+    def GET(self):
+        return 
+    def POST(self):
+        i = web.input(name='',password='',device_no='0')
+        
+        return 
+
 class Login:
     def GET(self):
         render = web.template.frender('templates/login.html')
         return render()
     def POST(self):
-        i = web.input(name='',password='',device_no='0')
-        if device_no="0":
-            result = da.user.login(i.name,i.password)
-            if result:             
-                session.user_id = result.pk_id
-                session.nick_name = result.nick_name
-                web.seeother('/')
-            else:
-                return json.dumps({'code':-1,'data':""})
-        else:
-            # app login
-            return json.dumps({'code':-1,'data':""}) 
+        i = web.input(name='',password='',device_no='',device_type='',os_type='')
+        result = da.user.login(i.name,i.password)
+        if not result:
+            return json.dumps({'code':-1,'data':"name or password is not correct"})
+
+        if i.device_no=="0": #web            
+            session.user_id = result.pk_id
+            session.nick_name = result.nick_name
+            web.seeother('/')
+        
+        token = da.user.get_access_token(result.pk_id,i.device_no,i.device_type,i.os_type)  
+        return json.dumps({'code':1,'data':token}) 
         
 
 class List:
