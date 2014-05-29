@@ -23,7 +23,7 @@ def login(name,password):
     print  result
     if not result: 
         return False
-    if cmp(result[0].password , password):
+    if not cmp(result[0].password , password):
         return False      
     return result[0] 
 
