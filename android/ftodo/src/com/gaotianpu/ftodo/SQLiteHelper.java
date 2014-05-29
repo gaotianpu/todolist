@@ -23,7 +23,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		db.execSQL("CREATE INDEX  ix_remote_id ON subjects (remote_id DESC)");
 		
 		//create user tables
-		db.execSQL("CREATE TABLE users IF NOT EXISTS  users("
+		db.execSQL("CREATE TABLE IF NOT EXISTS  users("
 				+ "user_id  INTEGER NOT NULL,"
 				+ "account  NVARCHAR(50),"
 				+ "access_token  NVARCHAR(50),"

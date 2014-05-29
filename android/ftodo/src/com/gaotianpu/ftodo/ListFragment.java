@@ -61,18 +61,15 @@ SwipeRefreshLayout.OnRefreshListener {
 	private long cust_id = 1;
 	
 	private View rootView;
-	private View listview_item;
+	private View listview_item; 
 	
+	//public ListFragment(){}
 	
-	 
-	
-	public ListFragment(){}
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {	
-			
-		super.onCreate(savedInstanceState);
-	}
+//	@Override
+//	public void onCreate(Bundle savedInstanceState) {	
+//			
+//		super.onCreate(savedInstanceState);
+//	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -168,12 +165,7 @@ SwipeRefreshLayout.OnRefreshListener {
 		device_type = android.os.Build.MODEL;
 
 		// 提交新subject
-		bind_post_new_task();
-
-		// 启动 AsyncService
-		Intent startIntent = new Intent(ctx, AsyncService.class);
-		ctx.startService(startIntent);
-		
+		bind_post_new_task(); 
 
 	}
 	

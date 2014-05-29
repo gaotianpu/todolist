@@ -2,7 +2,7 @@ package com.gaotianpu.ftodo;
 
 public class UserBean {
 
-	private long user_id;
+	private long user_id=0;
 	private long mobile;
 	private String email;
 	private String display_name;

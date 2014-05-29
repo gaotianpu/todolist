@@ -34,10 +34,25 @@ public class MainActivity extends Activity {
 	private CharSequence mTitle;
 	private String[] mPlanetTitles;
 
+	private UserBean user;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		// 获取当前用户账户
+		user = UserDa.load_current_user(this);
+		user = UserDa.load_current_user(this);
+		if (user.getUserId() == 0) {
+			// 菜单显示 未登录...
+		} else if (user.getTokenStatus() == 0) {
+			// 显示登录账号，提示需重新登录
+		}
+
+		// 启动 AsyncService
+		Intent startIntent = new Intent(this, AsyncService.class);
+		this.startService(startIntent); // service如何获得当前用户
 
 		init_navigation_drawer();
 
@@ -203,5 +218,4 @@ public class MainActivity extends Activity {
 		// mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
-	
 }

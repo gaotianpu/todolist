@@ -1,9 +1,7 @@
 package com.gaotianpu.ftodo;
 
- 
 import java.util.List;
 
- 
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,7 +37,7 @@ public class AsyncService extends Service {
 	}
 
 	public static final String TAG = "AsyncService";
-	//private int times = 0;
+	// private int times = 0;
 	private Handler mHandler;
 	private ConnectivityManager cm;
 
@@ -47,6 +45,7 @@ public class AsyncService extends Service {
 	private String device_type;
 	private Context context;
 	private long cust_id = 1;
+	private UserBean user;
 
 	@Override
 	public void onCreate() {
@@ -69,20 +68,16 @@ public class AsyncService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		// Log.d(TAG, "onStartCommand() executed");
 
-		// ѭ��ִ��upload����
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				// ����Ƿ�������
 				NetworkInfo info = cm.getActiveNetworkInfo();
-				if (info != null && info.isConnected()) {
-					// Log.d(TAG, "isConnected times " + String.valueOf(times));
-					upload();
-					
-					//download();
-				} 
+				if (info != null && info.isConnected()) {					 
+					if (has_active_user()) {
+						upload();
+					}
+				}
 
 				mHandler.postDelayed(this, 9000);
 			}
@@ -97,6 +92,22 @@ public class AsyncService extends Service {
 		// Log.d(TAG, "onDestroy() executed");
 	}
 
+	private boolean has_active_user() { 
+//		// 获取当前用户账户  
+//		user = UserDa.load_current_user(this);  //每次请求都要检查一次sqlite？
+//		if (user.getUserId() == 0) {
+//			// 菜单显示 未登录...
+//			return false;
+//		}
+//		
+//		if (user.getTokenStatus() == 0) {
+//			// 显示登录账号，提示需重新登录
+//			return false;
+//		}
+		
+		return true;
+	}
+
 	private void upload() {
 		// ���sqlite���Ƿ���δͬ�����
 		List<SubjectBean> subjectList = SubjectDa
@@ -108,7 +119,7 @@ public class AsyncService extends Service {
 		// Log.d(TAG, "has not async subjects times " + String.valueOf(times));
 
 		for (SubjectBean subject : subjectList) {
-			
+
 			FTDClient ftd = new FTDClient(context);
 			ftd.post_new_task(cust_id, subject.getBody(), device_type,
 					devie_no, subject.getId(), subject.getCreationDate(),
@@ -130,7 +141,5 @@ public class AsyncService extends Service {
 					});
 		}
 	}
-	
-	
 
 }
