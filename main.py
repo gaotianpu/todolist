@@ -8,7 +8,7 @@ import cron
 import api
 from config import dbw 
 
-web.config.debug = False
+#web.config.debug = False
 
 urls = (
     '/api', api.app,
