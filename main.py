@@ -52,14 +52,19 @@ class Login:
         render = web.template.frender('templates/login.html')
         return render()
     def POST(self):
-        i = web.input(name="",password="")
-        result = da.user.login(i.name,i.password)
-        if result:             
-            session.user_id = result.pk_id
-            session.nick_name = result.nick_name
-            web.seeother('/')
+        i = web.input(name='',password='',device_type='web',device_no='0')
+        if device_type=="web" and device_no="0":
+            result = da.user.login(i.name,i.password)
+            if result:             
+                session.user_id = result.pk_id
+                session.nick_name = result.nick_name
+                web.seeother('/')
+            else:
+                return json.dumps({'code':-1,'data':""})
         else:
-            return json.dumps({'code':-1,'data':""})
+            # app login
+            return json.dumps({'code':-1,'data':""}) 
+        
 
 class List:
     def GET(self):

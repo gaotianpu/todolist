@@ -1,9 +1,9 @@
 package com.gaotianpu.ftodo;
 
-import java.util.ArrayList;
+ 
 import java.util.List;
 
-import org.json.JSONArray;
+ 
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,7 +39,7 @@ public class AsyncService extends Service {
 	}
 
 	public static final String TAG = "AsyncService";
-	private int times = 0;
+	//private int times = 0;
 	private Handler mHandler;
 	private ConnectivityManager cm;
 
@@ -82,9 +82,7 @@ public class AsyncService extends Service {
 					upload();
 					
 					//download();
-				}
-
-				times++;
+				} 
 
 				mHandler.postDelayed(this, 9000);
 			}

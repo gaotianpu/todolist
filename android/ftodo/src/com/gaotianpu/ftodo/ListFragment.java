@@ -1,16 +1,16 @@
 package com.gaotianpu.ftodo;
 
 import java.util.List;
-import java.util.Locale;
+ 
 
 import org.json.JSONObject;
 
  
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import android.app.Activity;
+ 
 import android.app.Fragment;
-import android.app.FragmentManager;
+ 
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -29,7 +29,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
+ 
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;

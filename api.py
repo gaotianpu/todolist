@@ -15,6 +15,11 @@ urls = (
 #login, mobile + password_encryption
 #
 
+def validate_access_token(user_id,device_no,access_token):
+    # user_id+device_no+access_token 是否存在
+    # access_token 是否已过期？
+    return True
+
 class CJsonEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime):
@@ -26,15 +31,24 @@ class CJsonEncoder(json.JSONEncoder):
 
 class Login:
     def POST(self):
-        i = web.input(email='',password='',device_type='',device_no='')
-        r = {"code":1,"data":task}
+        i = web.input(name='',password='',device_type='',device_no='')
+        # name+password 是否正确 email or mobile
+        # user_id + device_no 是否已存在
+        # update access_token
+        # return new access_token
+        r = {"code":1,"data":""}
         return json.dumps(r)
 
 class New2:
     def POST(self):
-        i = web.input(cust_id=0,content='',device_type='',device_no='',local_id=0,creation_date=1)
+        i = web.input(user_id=0,access_token="",device_no='',content='',device_type='',local_id=0,creation_date=1)
+
+        valdate_result = validate_access_token(i.user_id,i.device_no,i.access_token)
+        if not valdate_result:
+            return '{"code":-1,"data":"access_token is not validate"}'
+
         content = web.websafe(i.content)
-        pk_id = da.subject.insert2(i.cust_id,i.content,i.device_type,i.device_no,i.local_id,i.creation_date) 
+        pk_id = da.subject.insert2(i.user_id,i.content,i.device_type,i.device_no,i.local_id,i.creation_date) 
 
         task = da.subject.load_by_id(pk_id)
         task.local_id = i.local_id  #local_id必须是本次请求的id
@@ -44,8 +58,13 @@ class New2:
 
 class List3:
     def GET(self):
-        i = web.input(cust_id=0,min_pk_id=1,size=50)
-        rows = da.subject.load_page3(i.cust_id,i.min_pk_id,int(i.size))
+        i = web.input(user_id=0,access_token="",device_no='',min_pk_id=1,size=50)
+
+        valdate_result = validate_access_token(i.user_id,i.device_no,i.access_token)
+        if not valdate_result:
+            return '{"code":-1,"data":"access_token is not validate"}'
+
+        rows = da.subject.load_page3(i.user_id,i.min_pk_id,int(i.size))
         r = {'code':1,'list':rows}
         return json.dumps(r,cls=CJsonEncoder)
 
@@ -55,6 +74,7 @@ def init_app():
     #app.internalerror = api_internalerror
     # app.add_processor(web.loadhook(api_loadhook))
     # app.add_processor(web.unloadhook(api_unloadhook))
+    # 如果把login剔除api，所有资源访问都可以加上user_id+device_no+access_token?
     return app
 
 app = init_app()

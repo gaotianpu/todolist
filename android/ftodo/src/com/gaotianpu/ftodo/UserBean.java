@@ -7,6 +7,8 @@ public class UserBean {
 	private String email;
 	private String display_name;
 	private String access_token;
+	private int token_status;
+	 
 
 	public long getUserId() {
 		return user_id;
@@ -46,6 +48,14 @@ public class UserBean {
 
 	public void setAccessToken(String access_token) {
 		this.access_token = access_token;
+	}
+	
+	public int getTokenStatus() {
+		return token_status;
+	}
+
+	public void setTokenStatus(int token_status) {
+		this.token_status = token_status;
 	}
 
 }
