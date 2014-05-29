@@ -52,8 +52,8 @@ class Login:
         render = web.template.frender('templates/login.html')
         return render()
     def POST(self):
-        i = web.input(name='',password='',device_type='web',device_no='0')
-        if device_type=="web" and device_no="0":
+        i = web.input(name='',password='',device_no='0')
+        if device_no="0":
             result = da.user.login(i.name,i.password)
             if result:             
                 session.user_id = result.pk_id

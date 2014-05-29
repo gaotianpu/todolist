@@ -93,8 +93,8 @@ public class AsyncService extends Service {
 	}
 
 	private boolean has_active_user() { 
-//		// 获取当前用户账户  
-//		user = UserDa.load_current_user(this);  //每次请求都要检查一次sqlite？
+		// 获取当前用户账户  
+		user = UserDa.load_current_user(context);  //每次请求都要检查一次sqlite？
 //		if (user.getUserId() == 0) {
 //			// 菜单显示 未登录...
 //			return false;

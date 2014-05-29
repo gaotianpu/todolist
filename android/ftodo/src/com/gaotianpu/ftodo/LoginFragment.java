@@ -1,19 +1,26 @@
 package com.gaotianpu.ftodo;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
- 
+
 import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceActivity.Header;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
- 
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -37,10 +44,7 @@ public class LoginFragment extends Fragment {
 	 */
 	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
 
-	/**
-	 * Keep track of the login task to ensure we can cancel it if requested.
-	 */
-	private UserLoginTask mAuthTask = null;
+	 
 
 	// Values for email and password at the time of the login attempt.
 	private String mEmail;
@@ -60,8 +64,8 @@ public class LoginFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_login, container, false);
-		
-		ctx = this.getActivity(); 
+
+		ctx = this.getActivity();
 		init();
 
 		return rootView;
@@ -69,12 +73,12 @@ public class LoginFragment extends Fragment {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);  
+		super.onCreate(savedInstanceState);
 	}
-	
-	private void init(){
-		// Set up the login form.  
-		
+
+	private void init() {
+		// Set up the login form.
+
 		mEmail = this.getActivity().getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) rootView.findViewById(R.id.email);
 		mEmailView.setText(mEmail);
@@ -95,7 +99,8 @@ public class LoginFragment extends Fragment {
 
 		mLoginFormView = rootView.findViewById(R.id.login_form);
 		mLoginStatusView = rootView.findViewById(R.id.login_status);
-		mLoginStatusMessageView = (TextView) rootView.findViewById(R.id.login_status_message);
+		mLoginStatusMessageView = (TextView) rootView
+				.findViewById(R.id.login_status_message);
 
 		rootView.findViewById(R.id.sign_in_button).setOnClickListener(
 				new View.OnClickListener() {
@@ -104,20 +109,18 @@ public class LoginFragment extends Fragment {
 						attemptLogin();
 					}
 				});
-//		
+		//
 	}
 
-	 
 	/**
 	 * Attempts to sign in or register the account specified by the login form.
 	 * If there are form errors (invalid email, missing fields, etc.), the
 	 * errors are presented and no actual login attempt is made.
 	 */
-	public void attemptLogin() {
-		if (mAuthTask != null) {
-			return;
-		}
-
+	public void attemptLogin() { 
+		//检测网络条件
+		
+		
 		// Reset errors.
 		mEmailView.setError(null);
 		mPasswordView.setError(null);
@@ -160,8 +163,38 @@ public class LoginFragment extends Fragment {
 			// perform the user login attempt.
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
-			mAuthTask = new UserLoginTask();
-			mAuthTask.execute((Void) null);
+
+			String account = "13811897509";
+			String password = "123456";
+			String device_no = "sss";
+
+			FTDClient client = new FTDClient(ctx);
+			client.login(account, password, device_no,
+					new JsonHttpResponseHandler() {
+						@Override
+						public void onSuccess(JSONObject result) {
+							try {
+								JSONObject data = result.getJSONObject("data");
+								UserDa.insert(ctx, data.getLong("user_id"),
+										data.getString("name"),
+										data.getString("access_token"));
+
+							} catch (JSONException e) {								
+								Log.e("login", e.toString());
+								login_failed();
+							}
+
+							Log.d("login", "sucess");
+						}
+						 
+						public void onFailure(int statusCode,Header headers,JSONObject result){
+							Log.d("login", "Failure");
+							login_failed();
+						}
+					});
+
+			// mAuthTask = new UserLoginTask();
+			// mAuthTask.execute((Void) null);
 		}
 	}
 
@@ -205,53 +238,13 @@ public class LoginFragment extends Fragment {
 			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
 	}
-
-	/**
-	 * Represents an asynchronous login/registration task used to authenticate
-	 * the user.
-	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-		@Override
-		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
-
-			try {
-				// Simulate network access.
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				return false;
-			}
-
-			for (String credential : DUMMY_CREDENTIALS) {
-				String[] pieces = credential.split(":");
-				if (pieces[0].equals(mEmail)) {
-					// Account exists, return true if the password matches.
-					return pieces[1].equals(mPassword);
-				}
-			}
-
-			// TODO: register the new account here.
-			return true;
-		}
-
-		@Override
-		protected void onPostExecute(final Boolean success) {
-			mAuthTask = null;
-			showProgress(false);
-
-			if (success) {
-			//	finish();
-			} else {
-				mPasswordView
-						.setError(getString(R.string.error_incorrect_password));
-				mPasswordView.requestFocus();
-			}
-		}
-
-		@Override
-		protected void onCancelled() {
-			mAuthTask = null;
-			showProgress(false);
-		}
+	
+	private void login_failed(){
+		showProgress(false);
+		
+		mPasswordView
+		.setError(getString(R.string.error_incorrect_password));
+mPasswordView.requestFocus();
 	}
+
 }

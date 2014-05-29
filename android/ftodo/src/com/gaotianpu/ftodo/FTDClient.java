@@ -13,6 +13,8 @@ import android.util.Log;
 import com.loopj.android.http.*;
 
 public class FTDClient {
+	private final String REGISTER_URL = "https://ftodo.sinaapp.com/register";
+	private final String AUTH_URL = "https://ftodo.sinaapp.com/login";
 	private final String BASE_URL = "http://ftodo.sinaapp.com/api/";
 	
 	private AsyncHttpClient client;
@@ -74,13 +76,9 @@ public class FTDClient {
 		params.put("size", String.valueOf(size));
 
 		client.get(url, params, responseHandler);
-		return;
-	}
-
-	
-	public static void login(String email,String passsword, AsyncHttpResponseHandler responseHandler){
 		
 	}
+	 
 	
 	public static List<SubjectBean> Json2SubjectList(JSONObject result) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
@@ -114,6 +112,24 @@ public class FTDClient {
 		}
 
 		return subjectList;
+	}
+	
+	
+	public  void login(String name,String password, String device_no,AsyncHttpResponseHandler responseHandler){
+		RequestParams params = new RequestParams();
+		params.put("name", name);
+		params.put("passsword", password);
+		params.put("device_no", device_no); 
+		client.post(AUTH_URL, params, responseHandler);
+	}
+	
+	public void register(String name,String password,String device_no,String device_type,AsyncHttpResponseHandler responseHandler){
+		RequestParams params = new RequestParams();
+		params.put("name", name);
+		params.put("passsword", password);
+		params.put("device_no", device_no); 
+		params.put("device_type", device_type); 
+		client.post(REGISTER_URL, params, responseHandler);
 	}
 
 }
