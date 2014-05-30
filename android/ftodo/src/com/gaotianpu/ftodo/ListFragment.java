@@ -282,7 +282,8 @@ SwipeRefreshLayout.OnRefreshListener {
 							List<SubjectBean> subjectList = FTDClient
 									.Json2SubjectList(result);
 
-							for (SubjectBean s : subjectList) {
+							for (SubjectBean s : subjectList) { 
+								
 								long local_id = SubjectDa.insert2(ctx,
 										s.getRemoteId(), s.getBody(),
 										String.valueOf(s.getCreationDate()), 1, 1);

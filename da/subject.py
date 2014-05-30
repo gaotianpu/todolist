@@ -35,6 +35,10 @@ def insert2(user_id,body,device_type,device_no,local_id,created_date):
 def update(pk_id,user_id,**kv):
     return dbw.update(table_name,last_update=web.SQLLiteral('now()'),where='pk_id=$pk_id and user_id=$user_id',vars=locals(),**kv)
 
+def update1(pk_id,**kv):
+    return dbw.update(table_name,last_update=web.SQLLiteral('now()'),where='pk_id=$pk_id ',vars=locals(),**kv)
+
+
 def load_by_id(pk_id):
     rows = list(dbr.select(table_name,where='pk_id=$pk_id' , vars=locals()))
     return rows[0] if rows else False

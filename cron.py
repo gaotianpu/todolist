@@ -37,7 +37,7 @@ def parse_term_count(str_term_count):
 def update_term_count(subject):     
     word_count_set = get_term_count(subject.body)
     str_term_count = '\n'.join(['%s %s'%(k,v) for k,v in dict(word_count_set).items()])
-    da.subject.update(subject.pk_id,terms=str_term_count)
+    da.subject.update1(subject.pk_id,terms=str_term_count)
     return [[k,v] for k,v in dict(word_count_set).items()]
 
 def update_term_count_by_id(subject_id):

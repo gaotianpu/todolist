@@ -71,7 +71,7 @@ public class FTDClient {
 		String url = BASE_URL + "list3";
 
 		RequestParams params = new RequestParams();
-		params.put("cust_id", String.valueOf(cust_id));
+		params.put("user_id", String.valueOf(cust_id));
 		params.put("min_pk_id", String.valueOf(last_remote_id));
 		params.put("size", String.valueOf(size));
 

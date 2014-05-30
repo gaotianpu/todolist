@@ -20,6 +20,7 @@ def register(name,password):
 
 def login(name,password):
     result = list(dbr.select(tname,what="pk_id,nick_name,password",where="mobile=$name or email=$name",vars=locals()))
+     
     return result[0] if result else False
 
     

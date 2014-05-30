@@ -73,11 +73,13 @@ class Login:
         render = web.template.frender('templates/login.html')
         return render()
     def POST(self):
-        i = web.input(name='',password='',device_no='',device_type='',os_type='')
+        i = web.input(name='',password='',device_no='0',device_type='',os_type='')
         result = da.user.login(i.name,i.password)
+
         if not result:
             return json.dumps({'code':-1,'data':"name is not exist"})
-        if not cmp(result.password , i.password):
+         
+        if cmp(result.password , i.password)!=0:
             return json.dumps({'code':-1,'data':"name and password is not match"})    
 
         if i.device_no=="0": #web            
