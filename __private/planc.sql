@@ -50,6 +50,21 @@ CREATE TABLE `public_terms` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `sessions`
+--
+
+DROP TABLE IF EXISTS `sessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sessions` (
+  `session_id` char(128) NOT NULL,
+  `atime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `data` text,
+  UNIQUE KEY `session_id` (`session_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `subject_participator_relation`
 --
 
@@ -126,7 +141,7 @@ CREATE TABLE `subjects` (
   PRIMARY KEY (`pk_id`),
   KEY `ix_user_id` (`user_id`) USING BTREE,
   KEY `ix_plan_start_date` (`plan_start_date`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=223 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=226 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -209,11 +224,12 @@ CREATE TABLE `user_devices` (
   `device_no` varchar(50) DEFAULT '',
   `device_type` varchar(50) DEFAULT NULL,
   `creation_date` datetime DEFAULT NULL,
-  `last_upload` datetime DEFAULT NULL,
-  `os_type` varchar(10) DEFAULT NULL,
+  `last_update` datetime DEFAULT NULL,
+  `os_type` varchar(50) DEFAULT NULL,
+  `access_token` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`pk_id`),
   UNIQUE KEY `uniq_id` (`user_id`,`device_no`) USING HASH
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -225,7 +241,7 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
   `pk_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `mobile` int(11) DEFAULT NULL,
+  `mobile` bigint(20) DEFAULT NULL,
   `email` varchar(50) DEFAULT NULL,
   `nick_name` varchar(50) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL,
@@ -235,7 +251,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`pk_id`),
   UNIQUE KEY `ix_mobile` (`mobile`),
   UNIQUE KEY `ix_email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -247,4 +263,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-05-22 15:28:23
+-- Dump completed on 2014-05-30 17:51:57

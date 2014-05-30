@@ -61,15 +61,7 @@ SwipeRefreshLayout.OnRefreshListener {
 	private long cust_id = 1;
 	
 	private View rootView;
-	private View listview_item; 
-	
-	//public ListFragment(){}
-	
-//	@Override
-//	public void onCreate(Bundle savedInstanceState) {	
-//			
-//		super.onCreate(savedInstanceState);
-//	}
+	private View listview_item;  
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

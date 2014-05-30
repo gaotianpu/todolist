@@ -50,6 +50,8 @@ def get_access_token(user_id,device_no,device_type,os_type):
         where="user_id=$user_id",vars=locals()))
     else:
         dbw.update('user_devices',
+            device_no=device_no, 
+            device_type=device_type,os_type=os_type,
             access_token=access_token,
             last_update=web.SQLLiteral('now()'),
             where="user_id=$user_id",vars=locals())

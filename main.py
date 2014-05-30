@@ -64,6 +64,7 @@ class Register:
             else:
                 user_id = result.pk_id
             token = da.user.get_access_token(user_id,i.device_no,i.device_type,i.os_type)  
+            token.name = i.name
             return json.dumps({'code':1,'data':token}) 
         except Exception,ex:
             return  json.dumps({'code':-1,'data':str(ex)}) 

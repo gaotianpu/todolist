@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
 		user = UserDa.load_current_user(this);
 		user = UserDa.load_current_user(this);
 		if (user.getUserId() == 0) {
-			// 菜单显示 未登录...
+			// 菜单显示 未登录...			
 		} else if (user.getTokenStatus() == 0) {
 			// 显示登录账号，提示需重新登录
 		}
@@ -165,21 +165,21 @@ public class MainActivity extends Activity {
 		switch (position) {
 		case 0:
 			fragment = new LoginFragment();
-			Bundle args0 = new Bundle();
-			args0.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-			fragment.setArguments(args0);
+//			Bundle args0 = new Bundle();
+//			args0.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+//			fragment.setArguments(args0);
 			break;
 		case 1:
 			fragment = new ListFragment();
-			Bundle args1 = new Bundle();
-			args1.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-			fragment.setArguments(args1);
+//			Bundle args1 = new Bundle();
+//			args1.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+//			fragment.setArguments(args1);
 			break;
 		default:
 			fragment = new PlanetFragment();
-			Bundle args = new Bundle();
-			args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-			fragment.setArguments(args);
+//			Bundle args = new Bundle();
+//			args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+//			fragment.setArguments(args);
 			break;
 		}
 
