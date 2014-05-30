@@ -59,6 +59,8 @@ class Register:
                 # name exist, but password is not match?
                 user_id = da.user.register(i.name,i.password)
                 #if exist?
+            elif not cmp(result.password , i.password):
+                return json.dumps({'code':-1,'data':"name and password is not match"})    
             else:
                 user_id = result.pk_id
             token = da.user.get_access_token(user_id,i.device_no,i.device_type,i.os_type)  
@@ -74,7 +76,9 @@ class Login:
         i = web.input(name='',password='',device_no='',device_type='',os_type='')
         result = da.user.login(i.name,i.password)
         if not result:
-            return json.dumps({'code':-1,'data':"name or password is not correct"})
+            return json.dumps({'code':-1,'data':"name is not exist"})
+        if not cmp(result.password , i.password):
+            return json.dumps({'code':-1,'data':"name and password is not match"})    
 
         if i.device_no=="0": #web            
             session.user_id = result.pk_id
