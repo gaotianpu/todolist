@@ -118,8 +118,7 @@ public class LoginFragment extends Fragment {
 	 * errors are presented and no actual login attempt is made.
 	 */
 	public void attemptLogin() { 
-		//检测网络条件
-		
+		//检测网络条件 
 		
 		// Reset errors.
 		mEmailView.setError(null);

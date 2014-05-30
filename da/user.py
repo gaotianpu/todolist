@@ -27,8 +27,9 @@ def login(name,password):
         return False      
     return result[0] 
 
-def generate_access_token():
-    return 'token'
+import uuid 
+def generate_access_token():     
+    return str(uuid.uuid1()).replace('-','')
 
 def get_access_token(user_id,device_no,device_type,os_type): 
     result = list(dbr.select('user_devices',

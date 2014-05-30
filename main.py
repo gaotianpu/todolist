@@ -12,6 +12,7 @@ from config import dbw
 
 urls = (
     '/api', api.app,
+    '/register','Register',
     '/login','Login',
     '/list','List',
     
@@ -51,9 +52,18 @@ class Register:
     def GET(self):
         return 
     def POST(self):
-        i = web.input(name='',password='',device_no='0')
-        
-        return 
+        i = web.input(name='',password='',device_no='0',device_type='',os_type='')
+        try:
+            result = da.user.login(i.name,i.password)
+            user_id = result.pk_id
+            if not result:
+                # name exist, but password is not match?
+                user_id = da.user.register(i.name,i.password)
+                #if exist?
+            token = da.user.get_access_token(user_id,i.device_no,i.device_type,i.os_type)  
+            return json.dumps({'code':1,'data':token}) 
+        except Exception,ex:
+            return  json.dumps({'code':-1,'data':ex}) 
 
 class Login:
     def GET(self):
