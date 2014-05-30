@@ -5,7 +5,7 @@ from config import dbr,dbw
 
 tname="users"
 
-def register(name,password):
+def register(name,password): 
     #,device_type,device_no,os_type
     user_id = dbw.insert(tname,email=name,password=password,
         creation_date=web.SQLLiteral('now()'),

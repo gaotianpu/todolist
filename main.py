@@ -8,7 +8,7 @@ import cron
 import api
 from config import dbw 
 
-#web.config.debug = False
+web.config.debug = False
 
 urls = (
     '/api', api.app,
@@ -54,16 +54,17 @@ class Register:
     def POST(self):
         i = web.input(name='',password='',device_no='0',device_type='',os_type='')
         try:
-            result = da.user.login(i.name,i.password)
-            user_id = result.pk_id
+            result = da.user.login(i.name,i.password)            
             if not result:
                 # name exist, but password is not match?
                 user_id = da.user.register(i.name,i.password)
                 #if exist?
+            else:
+                user_id = result.pk_id
             token = da.user.get_access_token(user_id,i.device_no,i.device_type,i.os_type)  
             return json.dumps({'code':1,'data':token}) 
         except Exception,ex:
-            return  json.dumps({'code':-1,'data':ex}) 
+            return  json.dumps({'code':-1,'data':str(ex)}) 
 
 class Login:
     def GET(self):
