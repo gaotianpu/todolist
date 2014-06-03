@@ -12,7 +12,7 @@
     <string name="title_activity_main">MainActivity</string>
     
     <string-array name="planets_array">
-        <item>login</item>
+        <item>未登录</item>
         <item>list</item>
         <item>setting</item>         
     </string-array>
