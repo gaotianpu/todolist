@@ -85,19 +85,20 @@ public class SubjectDa {
 
 	}
 
-	public static List<SubjectBean> load_not_uploaded_subjects(Context context) {
+	public static List<SubjectBean> load_not_uploaded_subjects(Context context,long user_id) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		try {
 
 			SQLiteDatabase db = getDb(context);
-			Cursor cursor = db.query("subjects", null, "is_sync=0", null, null,
+			Cursor cursor = db.query("subjects", null, "user_id=? and is_sync=0 ", new String[] { String.valueOf(user_id) }, null,
 					null, null);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast() && (cursor.getString(1) != null)) {
 				SubjectBean subject = new SubjectBean();
 				subject.setId(cursor.getLong(0));
-				subject.setBody(cursor.getString(1));
-				subject.setCreationDate(cursor.getInt(2));
+				subject.setUserId(cursor.getLong(1));
+				subject.setBody(cursor.getString(2));
+				subject.setCreationDate(cursor.getInt(3));
 				subjectList.add(subject);
 				cursor.moveToNext();
 			}
@@ -122,8 +123,9 @@ public class SubjectDa {
 			while (!cursor.isAfterLast() && (cursor.getString(1) != null)) {
 				SubjectBean subject = new SubjectBean();
 				subject.setId(cursor.getLong(0));
-				subject.setBody(cursor.getString(1));
-				subject.setCreationDate(cursor.getInt(2));
+				subject.setUserId(cursor.getLong(1)) ;
+				subject.setBody(cursor.getString(2));
+				subject.setCreationDate(cursor.getInt(3));
 				subjectList.add(subject);
 				cursor.moveToNext();
 			}

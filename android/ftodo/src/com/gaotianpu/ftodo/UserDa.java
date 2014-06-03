@@ -49,7 +49,7 @@ public class UserDa {
 			// update users set current_active=0 where user_id<>?
 			ContentValues values1 = new ContentValues();
 			values1.put("current_active", 0);
-			db.update("users", values1, "pk_id<>?",
+			db.update("users", values1, "user_id<>?",
 					new String[] { String.valueOf(user_id) });
 			
 			

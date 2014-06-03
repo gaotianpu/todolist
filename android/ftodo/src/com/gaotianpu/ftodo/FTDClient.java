@@ -15,20 +15,20 @@ import com.loopj.android.http.*;
 public class FTDClient {
 	private final String REGISTER_URL = "https://ftodo.sinaapp.com/register";
 	private final String AUTH_URL = "https://ftodo.sinaapp.com/login";
-	
+
 	private final String RES_BASE_URL = "http://ftodo.sinaapp.com/api/";
-	
+
 	private AsyncHttpClient client;
 	private PersistentCookieStore myCookieStore;
 
 	public FTDClient(Context context) {
-		client = new AsyncHttpClient();
+		client = new AsyncHttpClient(); 
 		client.setTimeout(20000);
-		
-		myCookieStore = new PersistentCookieStore(context);
-		client.setCookieStore(myCookieStore);
-		
-		//单例模式？
+
+		//myCookieStore = new PersistentCookieStore(context);
+		//client.setCookieStore(myCookieStore);
+
+		// 单例模式？
 	}
 
 	public void post_new_task(long user_id, String content, String device_type,
@@ -79,10 +79,9 @@ public class FTDClient {
 		params.put("size", String.valueOf(size));
 
 		client.get(url, params, responseHandler);
-		
+
 	}
-	 
-	
+
 	public static List<SubjectBean> Json2SubjectList(JSONObject result) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 
@@ -116,25 +115,29 @@ public class FTDClient {
 
 		return subjectList;
 	}
-	
-	
-	public  void login_or_register(String name,String password, String device_no,String device_type, String os_type, AsyncHttpResponseHandler asyncHttpResponseHandler){
+
+	public void login_or_register(String name, String password,
+			String device_no, String device_type, String os_type,
+			AsyncHttpResponseHandler asyncHttpResponseHandler) {
+		
 		RequestParams params = new RequestParams();
 		params.put("name", name);
 		params.put("password", password);
-		params.put("device_no", device_no); 
-		params.put("device_type", device_type); 
-		params.put("os_type", os_type); 
+		params.put("device_no", device_no);
+		params.put("device_type", device_type);
+		params.put("os_type", os_type);
+		
 		client.post(REGISTER_URL, params, asyncHttpResponseHandler);
 	}
-	
-//	public void register(String name,String password,String device_no,String device_type,AsyncHttpResponseHandler responseHandler){
-//		RequestParams params = new RequestParams();
-//		params.put("name", name);
-//		params.put("passsword", password);
-//		params.put("device_no", device_no); 
-//		params.put("device_type", device_type); 
-//		client.post(REGISTER_URL, params, responseHandler);
-//	}
+
+	// public void register(String name,String password,String device_no,String
+	// device_type,AsyncHttpResponseHandler responseHandler){
+	// RequestParams params = new RequestParams();
+	// params.put("name", name);
+	// params.put("passsword", password);
+	// params.put("device_no", device_no);
+	// params.put("device_type", device_type);
+	// client.post(REGISTER_URL, params, responseHandler);
+	// }
 
 }

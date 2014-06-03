@@ -17,10 +17,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		db.execSQL("CREATE TABLE IF NOT EXISTS subjects ("				
 				+ "pk_id  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
 				+ "user_id  INTEGER NOT NULL,"
-				+ "body  TEXT NOT NULL," + "creation_date  timestamp  NOT NULL,"
+				+ "body  TEXT NOT NULL," 
+				+ "creation_date  timestamp  NOT NULL,"
 				+ "last_update  timestamp  NOT NULL,"
 				+ "last_sync  timestamp  NOT NULL," + "is_del INTEGER NOT NULL,"
 				+ "is_sync  INTEGER NOT NULL," + "remote_id  INTEGER NOT NULL)");
+		
 		db.execSQL("CREATE INDEX  ix_remote_id ON subjects (remote_id DESC)");
 		
 		//create user tables

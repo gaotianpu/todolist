@@ -107,19 +107,25 @@ public class AsyncService extends Service {
 	}
 
 	private void upload() {
-		if(!has_active_user()){
+//		if(!has_active_user()){
+//			return ;
+//		} 
+		
+		
+		user = UserDa.load_current_user(context);
+		if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
 			return ;
-		} 
+		}
 		
 		//Log.d(TAG, "has_active_user " );
 		 
 		List<SubjectBean> subjectList = SubjectDa
-				.load_not_uploaded_subjects(context);
+				.load_not_uploaded_subjects(context,user.getUserId());
 		if (subjectList.size() == 0) {
 			return;
 		}
 
-		// Log.d(TAG, "has not async subjects times " + String.valueOf(times));
+		 //Log.d(TAG, "has not async subjects times " );
 
 		for (SubjectBean subject : subjectList) {
 

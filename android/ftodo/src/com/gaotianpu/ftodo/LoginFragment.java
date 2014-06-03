@@ -141,12 +141,12 @@ public class LoginFragment extends Fragment {
 			mEmailView.setError(getString(R.string.error_field_required));
 			focusView = mEmailView;
 			cancel = true;
-		} 
-//		else if (!mEmail.contains("@")) {
-//			mEmailView.setError(getString(R.string.error_invalid_email));
-//			focusView = mEmailView;
-//			cancel = true;
-//		}
+		}
+		// else if (!mEmail.contains("@")) {
+		// mEmailView.setError(getString(R.string.error_invalid_email));
+		// focusView = mEmailView;
+		// cancel = true;
+		// }
 
 		if (cancel) {
 			// There was an error; don't attempt login and focus the first
@@ -157,64 +157,67 @@ public class LoginFragment extends Fragment {
 			// perform the user login attempt.
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
-			
-			
-			TelephonyManager tm = (TelephonyManager) this.getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+
+			TelephonyManager tm = (TelephonyManager) this.getActivity()
+					.getSystemService(Context.TELEPHONY_SERVICE);
 			String deviceId = tm.getDeviceId();
-			String device_type = android.os.Build.MODEL; 			 
-			String os_type = "android."+android.os.Build.VERSION.RELEASE;
-			
+			String device_type = android.os.Build.MODEL;
+			String os_type = "android." + android.os.Build.VERSION.RELEASE;
+
 			Log.e("login", mEmail);
 			Log.e("login", mPassword);
 
 			FTDClient client = new FTDClient(ctx);
-			client.login_or_register(mEmail, mPassword, deviceId,device_type,os_type,
-					new AsyncHttpResponseHandler() {
+			client.login_or_register(mEmail, mPassword, deviceId, device_type,
+					os_type, new AsyncHttpResponseHandler() {
 						@Override
-						public void onSuccess(String result) {
-							Log.e("login", result);
-							
-//							try {
-//								int code = result.getInt("code");
-//								if(code!=1){
-//									Log.e("login", "code is not 1");
-//									login_failed();
-//									return ;
-//								}
-//								
-//								JSONObject data = result.getJSONObject("data");
-//								UserDa.login(ctx, data.getLong("user_id"),
-//										data.getString("name"),
-//										data.getString("access_token"));
-//								
-//								showProgress(false);
-//								
-//								//跳转至list activity?
-//								int position = 1;								
-//								Fragment fragment = new ListFragment();
-//								FragmentManager fragmentManager = getFragmentManager();
-//								fragmentManager.beginTransaction()
-//										.replace(R.id.content_frame, fragment).commit(); 								
-//								String[] mPlanetTitles = getResources().getStringArray(R.array.planets_array);
-//								ListView mDrawerList = (ListView) act.findViewById(R.id.left_drawer);
-//								mDrawerList.setItemChecked(position, true);
-//								act.setTitle(mPlanetTitles[position]);
-//
-//							} catch (JSONException e) {
-//								Log.e("login", e.toString());
-//								login_failed();
-//							}
+						public void onSuccess(String responseBody) {
+							try {
+								JSONObject result = new JSONObject(responseBody);
 
-							
-						} 
-						
-						 @Override  
-				         public void onFailure(Throwable e, String data){  
-				                Log.e("login", e.toString());  
-				                // TODO: error proceed  
-				            }  
-					}); 
-	 
+								int code = result.getInt("code");
+								if (code != 1) {
+									Log.e("login", "code is not 1");
+									login_failed();
+									return;
+								}
+
+								JSONObject data = result.getJSONObject("data");
+								UserDa.login(ctx, data.getLong("user_id"),
+										data.getString("name"),
+										data.getString("access_token"));
+
+								showProgress(false);
+
+								// 跳转至list activity?
+								int position = 1;
+								Fragment fragment = new ListFragment();
+								FragmentManager fragmentManager = getFragmentManager();
+								fragmentManager.beginTransaction()
+										.replace(R.id.content_frame, fragment)
+										.commit();
+								String[] mPlanetTitles = getResources()
+										.getStringArray(R.array.planets_array);
+								ListView mDrawerList = (ListView) act
+										.findViewById(R.id.left_drawer);
+								mDrawerList.setItemChecked(position, true);
+								act.setTitle(mPlanetTitles[position]);
+
+							} catch (JSONException e) {
+								Log.e("login", e.toString());
+								login_failed();
+							}
+
+						}
+
+						@Override
+						public void onFailure(Throwable e, String data) {
+							login_failed();
+							Log.e("login", e.toString());
+							// TODO: error proceed
+						}
+					});
+
 		}
 	}
 
