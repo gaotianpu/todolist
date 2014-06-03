@@ -3,6 +3,7 @@ package com.gaotianpu.ftodo;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.animation.Animator;
@@ -162,38 +163,56 @@ public class LoginFragment extends Fragment {
 			String deviceId = tm.getDeviceId();
 			String device_type = android.os.Build.MODEL; 			 
 			String os_type = "android."+android.os.Build.VERSION.RELEASE;
+			
+			Log.e("login", mEmail);
+			Log.e("login", mPassword);
 
 			FTDClient client = new FTDClient(ctx);
 			client.login_or_register(mEmail, mPassword, deviceId,device_type,os_type,
-					new JsonHttpResponseHandler() {
+					new AsyncHttpResponseHandler() {
 						@Override
-						public void onSuccess(JSONObject result) {
-							try {
-								JSONObject data = result.getJSONObject("data");
-								UserDa.insert(ctx, data.getLong("user_id"),
-										data.getString("name"),
-										data.getString("access_token"));
-								
-								showProgress(false);
-								
-								//跳转至list activity?
-								int position = 1;								
-								Fragment fragment = new ListFragment();
-								FragmentManager fragmentManager = getFragmentManager();
-								fragmentManager.beginTransaction()
-										.replace(R.id.content_frame, fragment).commit(); 								
-								String[] mPlanetTitles = getResources().getStringArray(R.array.planets_array);
-								ListView mDrawerList = (ListView) act.findViewById(R.id.left_drawer);
-								mDrawerList.setItemChecked(position, true);
-								act.setTitle(mPlanetTitles[position]);
+						public void onSuccess(String result) {
+							Log.e("login", result);
+							
+//							try {
+//								int code = result.getInt("code");
+//								if(code!=1){
+//									Log.e("login", "code is not 1");
+//									login_failed();
+//									return ;
+//								}
+//								
+//								JSONObject data = result.getJSONObject("data");
+//								UserDa.login(ctx, data.getLong("user_id"),
+//										data.getString("name"),
+//										data.getString("access_token"));
+//								
+//								showProgress(false);
+//								
+//								//跳转至list activity?
+//								int position = 1;								
+//								Fragment fragment = new ListFragment();
+//								FragmentManager fragmentManager = getFragmentManager();
+//								fragmentManager.beginTransaction()
+//										.replace(R.id.content_frame, fragment).commit(); 								
+//								String[] mPlanetTitles = getResources().getStringArray(R.array.planets_array);
+//								ListView mDrawerList = (ListView) act.findViewById(R.id.left_drawer);
+//								mDrawerList.setItemChecked(position, true);
+//								act.setTitle(mPlanetTitles[position]);
+//
+//							} catch (JSONException e) {
+//								Log.e("login", e.toString());
+//								login_failed();
+//							}
 
-							} catch (JSONException e) {
-								Log.e("login", e.toString());
-								login_failed();
-							}
-
-							Log.d("login", "sucess");
+							
 						} 
+						
+						 @Override  
+				         public void onFailure(Throwable e, String data){  
+				                Log.e("login", e.toString());  
+				                // TODO: error proceed  
+				            }  
 					}); 
 	 
 		}

@@ -59,7 +59,7 @@ class Register:
                 # name exist, but password is not match?
                 user_id = da.user.register(i.name,i.password)
                 #if exist?
-            elif not cmp(result.password , i.password):
+            elif cmp(result.password , i.password)!=0:
                 return json.dumps({'code':-1,'data':"name and password is not match"})    
             else:
                 user_id = result.pk_id

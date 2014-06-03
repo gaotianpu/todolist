@@ -44,7 +44,7 @@ public class AsyncService extends Service {
 	private String devie_no;
 	private String device_type;
 	private Context context;
-	private long cust_id = 1;
+	private long cust_id = 0;
 	private UserBean user;
 
 	@Override
@@ -74,9 +74,7 @@ public class AsyncService extends Service {
 			public void run() {
 				NetworkInfo info = cm.getActiveNetworkInfo();
 				if (info != null && info.isConnected()) {					 
-					if (has_active_user()) {
-						upload();
-					}
+					upload();
 				}
 
 				mHandler.postDelayed(this, 9000);
@@ -109,7 +107,12 @@ public class AsyncService extends Service {
 	}
 
 	private void upload() {
-		// ���sqlite���Ƿ���δͬ�����
+		if(!has_active_user()){
+			return ;
+		} 
+		
+		//Log.d(TAG, "has_active_user " );
+		 
 		List<SubjectBean> subjectList = SubjectDa
 				.load_not_uploaded_subjects(context);
 		if (subjectList.size() == 0) {
@@ -120,8 +123,8 @@ public class AsyncService extends Service {
 
 		for (SubjectBean subject : subjectList) {
 
-			FTDClient ftd = new FTDClient(context);
-			ftd.post_new_task(cust_id, subject.getBody(), device_type,
+			FTDClient ftd = new FTDClient(context);			
+			ftd.post_new_task(subject.getUserId() , subject.getBody(), device_type,
 					devie_no, subject.getId(), subject.getCreationDate(),
 					new JsonHttpResponseHandler() {
 						@Override

@@ -249,7 +249,7 @@ public class MainActivity1 extends Activity implements
 						// insert into sqlite
 						String content = txtNew.getText().toString().trim();
 						if (content.length() > 1) {
-							Long subjectID = SubjectDa.insert(context, content);
+							Long subjectID = SubjectDa.insert(context, cust_id,content);
 
 							SubjectBean subject = new SubjectBean();
 							subject.setId(subjectID);

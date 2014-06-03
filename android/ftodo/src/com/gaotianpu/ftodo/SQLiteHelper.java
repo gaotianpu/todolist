@@ -14,8 +14,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) { 
-		db.execSQL("CREATE TABLE IF NOT EXISTS subjects ("
+		db.execSQL("CREATE TABLE IF NOT EXISTS subjects ("				
 				+ "pk_id  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+				+ "user_id  INTEGER NOT NULL,"
 				+ "body  TEXT NOT NULL," + "creation_date  timestamp  NOT NULL,"
 				+ "last_update  timestamp  NOT NULL,"
 				+ "last_sync  timestamp  NOT NULL," + "is_del INTEGER NOT NULL,"

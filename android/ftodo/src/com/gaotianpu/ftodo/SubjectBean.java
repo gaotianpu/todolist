@@ -11,12 +11,22 @@ public class SubjectBean {
 	private String body;
 	private int creation_date;
 	
+	private long user_id;
+	
 	public long getId() {
 		return pk_id;
 	}
 	public void setId(long id) {
 		this.pk_id = id;
 	}
+	
+	public long getUserId() {
+		return user_id;
+	}
+	public void setUserId(long user_id) {
+		this.user_id = user_id;
+	}
+	
 	public String getBody() {
 		return body;
 	}

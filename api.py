@@ -7,7 +7,7 @@ from datetime import *
 
 
 urls = (
-    "/login", "Login",
+     
     "/new2", "New2",
     "/list3","List3")
 
@@ -29,15 +29,7 @@ class CJsonEncoder(json.JSONEncoder):
         else:
             return json.JSONEncoder.default(self, obj)
 
-class Login:
-    def POST(self):
-        i = web.input(name='',password='',device_type='',device_no='')
-        # name+password 是否正确 email or mobile
-        # user_id + device_no 是否已存在
-        # update access_token
-        # return new access_token
-        r = {"code":1,"data":""}
-        return json.dumps(r)
+ 
 
 class New2:
     def POST(self):

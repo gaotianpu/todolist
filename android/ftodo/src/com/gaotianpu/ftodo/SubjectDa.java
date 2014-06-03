@@ -17,9 +17,10 @@ public class SubjectDa {
 		return db;
 	}
 
-	public static long insert(Context context, String content) {
+	public static long insert(Context context,long user_id, String content) {
 		ContentValues values = new ContentValues();
 		values.put("body", content);
+		values.put("user_id", user_id);
 		values.put("creation_date", 1); //
 		values.put("last_update", 0);
 		values.put("last_sync", 0);

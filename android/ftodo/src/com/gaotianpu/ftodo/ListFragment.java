@@ -53,7 +53,8 @@ public class ListFragment extends Fragment implements
 
 	private String device_type;
 	private String deviceId;
-	private long cust_id = 1;
+	private long cust_id = 0;
+	private UserBean user;
 
 	private View rootView;
 	private View listview_item;
@@ -75,11 +76,16 @@ public class ListFragment extends Fragment implements
 		// getActivity().getPackageName());
 		// ((ImageView) rootView.findViewById(R.id.image))
 		// .setImageResource(imageId);
-		//
+		// 
+		
+		user = UserDa.load_current_user(ctx); 
+		cust_id = user.getUserId();
+		
+		
 		init();
 		getActivity().setTitle("ftodo");
 		return rootView;
-	}
+	} 
 
 	private void init() {
 		cm = (ConnectivityManager) ctx
@@ -227,10 +233,16 @@ public class ListFragment extends Fragment implements
 						// insert into sqlite
 						String content = txtNew.getText().toString().trim();
 						if (content.length() > 1) {
-							Long subjectID = SubjectDa.insert(ctx, content);
+							
+							user = UserDa.load_current_user(ctx); 
+							cust_id = user.getUserId();
+							Log.e("cust_id", String.valueOf(cust_id) );
+							
+							Long subjectID = SubjectDa.insert(ctx,cust_id, content);
 
 							SubjectBean subject = new SubjectBean();
 							subject.setId(subjectID);
+							subject.setUserId(cust_id);
 							subject.setBody(txtNew.getText().toString().trim());
 							subject.setCreationDate(1);
 
@@ -254,6 +266,10 @@ public class ListFragment extends Fragment implements
 	// ///////////////////
 
 	private void download() {
+		if(cust_id==0 || user.getTokenStatus() == 0){
+			return ;
+		}
+		
 		// get max remote_id from sqlite
 		long max_remote_id_in_sqlite = SubjectDa
 				.get_max_remote_id(ctx, cust_id);
