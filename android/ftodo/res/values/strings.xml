@@ -13,8 +13,7 @@
     
     <string-array name="planets_array">
         <item>未登录</item>
-        <item>list</item>
-        <item>setting</item>         
+        <item>列表</item>          
     </string-array>
      <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
