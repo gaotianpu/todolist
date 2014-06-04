@@ -162,10 +162,7 @@ public class LoginFragment extends Fragment {
 					.getSystemService(Context.TELEPHONY_SERVICE);
 			String deviceId = tm.getDeviceId();
 			String device_type = android.os.Build.MODEL;
-			String os_type = "android." + android.os.Build.VERSION.RELEASE;
-
-			Log.e("login", mEmail);
-			Log.e("login", mPassword);
+			String os_type = "android." + android.os.Build.VERSION.RELEASE; 
 
 			FTDClient client = new FTDClient(ctx);
 			client.login_or_register(mEmail, mPassword, deviceId, device_type,

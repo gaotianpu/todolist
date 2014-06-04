@@ -21,6 +21,7 @@ public class UserDa {
 				new String[] { "user_id", "account", "access_token",
 						"token_status", "current_active", "last_update" },
 				"current_active=1", null, null, null, null);
+		
 		cursor.moveToFirst();
 		if (!cursor.isAfterLast()) {
 			user.setUserId(cursor.getLong(0));

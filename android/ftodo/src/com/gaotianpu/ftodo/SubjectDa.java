@@ -17,7 +17,7 @@ public class SubjectDa {
 		return db;
 	}
 
-	public static long insert(Context context,long user_id, String content) {
+	public static long insert(Context context, long user_id, String content) {
 		ContentValues values = new ContentValues();
 		values.put("body", content);
 		values.put("user_id", user_id);
@@ -48,19 +48,20 @@ public class SubjectDa {
 
 		//
 		SQLiteDatabase db = getDb(context);
-		
-		//检查sqlite 是否有remote_id, 无	
-		Cursor cursor = db.query("subjects", new String[] {"pk_id"} , "remote_id=?", new String[] { String.valueOf(remote_id)} , null,
-				null, null);
+
+		// 检查sqlite 是否有remote_id, 无
+		Cursor cursor = db.query("subjects", new String[] { "pk_id" },
+				"remote_id=?", new String[] { String.valueOf(remote_id) },
+				null, null, null);
 		cursor.moveToFirst();
-		
-		long subjectID=0;
-		if (!cursor.isAfterLast()){
-			//has record, update
+
+		long subjectID = 0;
+		if (!cursor.isAfterLast()) {
+			// has record, update
 			subjectID = cursor.getLong(0);
-		}else{
+		} else {
 			subjectID = db.insert("subjects", "pk_id", values);
-		} 
+		}
 
 		return subjectID;
 	}
@@ -85,13 +86,15 @@ public class SubjectDa {
 
 	}
 
-	public static List<SubjectBean> load_not_uploaded_subjects(Context context,long user_id) {
+	public static List<SubjectBean> load_not_uploaded_subjects(Context context,
+			long user_id) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		try {
 
 			SQLiteDatabase db = getDb(context);
-			Cursor cursor = db.query("subjects", null, "user_id=? and is_sync=0 ", new String[] { String.valueOf(user_id) }, null,
-					null, null);
+			Cursor cursor = db.query("subjects", new String[] { "pk_id","user_id","body","creation_date" },
+					"user_id=? and is_sync=0 ",
+					new String[] { String.valueOf(user_id) }, null, null, null);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast() && (cursor.getString(1) != null)) {
 				SubjectBean subject = new SubjectBean();
@@ -113,17 +116,18 @@ public class SubjectDa {
 			int page, int size) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		try {
-			
-			int offset = (page-1)*size;
+
+			int offset = (page - 1) * size;
 
 			SQLiteDatabase db = getDb(context);
 			Cursor cursor = db.query("subjects", null, null, null, null, null,
-					"remote_id DESC,pk_id desc limit "+ String.valueOf(size) +" offset " + String.valueOf(offset) );
+					"remote_id DESC,pk_id desc limit " + String.valueOf(size)
+							+ " offset " + String.valueOf(offset));
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast() && (cursor.getString(1) != null)) {
 				SubjectBean subject = new SubjectBean();
 				subject.setId(cursor.getLong(0));
-				subject.setUserId(cursor.getLong(1)) ;
+				subject.setUserId(cursor.getLong(1));
 				subject.setBody(cursor.getString(2));
 				subject.setCreationDate(cursor.getInt(3));
 				subjectList.add(subject);
@@ -162,19 +166,21 @@ public class SubjectDa {
 
 		// return subjectList ?;
 	}
-	
-	public static long get_max_remote_id(Context context,long cust_id){
+
+	public static long get_max_remote_id(Context context, long cust_id) {
 		long remote_id = 0;
-		
-		SQLiteDatabase db = getDb(context); 
-		 
-		Cursor cursor = db.query("subjects",new String[] {"max(remote_id) as max_remote_id"},null,null,null,null,null);
+
+		SQLiteDatabase db = getDb(context);
+
+		Cursor cursor = db.query("subjects",
+				new String[] { "max(remote_id) as max_remote_id" }, null, null,
+				null, null, null);
 		cursor.moveToFirst();
-		while (!cursor.isAfterLast()){
-			 remote_id = cursor.getLong(0);
-			 break;
+		while (!cursor.isAfterLast()) {
+			remote_id = cursor.getLong(0);
+			break;
 		}
-		
+
 		return remote_id;
 	}
 }

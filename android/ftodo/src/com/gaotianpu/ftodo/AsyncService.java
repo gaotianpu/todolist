@@ -29,30 +29,24 @@ public class AsyncService extends Service {
 	}
 
 	private final IBinder asyncBinder = new AsyncBinder();
-
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
 		return asyncBinder;
 	}
 
-	public static final String TAG = "AsyncService";
-	// private int times = 0;
+	public static final String TAG = "AsyncService";	
 	private Handler mHandler;
 	private ConnectivityManager cm;
 
 	private String devie_no;
 	private String device_type;
 	private Context context;
-	private long cust_id = 0;
-	private UserBean user;
+	 
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		// Log.d(TAG, "onCreate() executed");
-
-		// ����豸id
+		 
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		devie_no = tm.getDeviceId();
 		device_type = android.os.Build.MODEL;
@@ -86,38 +80,20 @@ public class AsyncService extends Service {
 
 	@Override
 	public void onDestroy() {
-		super.onDestroy();
-		// Log.d(TAG, "onDestroy() executed");
+		super.onDestroy();		
 	}
 
-	private boolean has_active_user() { 
-		// 获取当前用户账户  
-		user = UserDa.load_current_user(context);  //每次请求都要检查一次sqlite？
-//		if (user.getUserId() == 0) {
-//			// 菜单显示 未登录...
-//			return false;
-//		}
-//		
-//		if (user.getTokenStatus() == 0) {
-//			// 显示登录账号，提示需重新登录
-//			return false;
-//		}
-		
-		return true;
-	}
+	 
 
-	private void upload() {
-//		if(!has_active_user()){
-//			return ;
-//		} 
+	private void upload() {  
+		UserBean user = UserDa.load_current_user(context);
+		Log.i(TAG, String.valueOf(user.getUserId()) + ","+String.valueOf(user.getTokenStatus()) );
 		
-		
-		user = UserDa.load_current_user(context);
 		if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
 			return ;
 		}
 		
-		//Log.d(TAG, "has_active_user " );
+		Log.i(TAG, "has_active_user " );
 		 
 		List<SubjectBean> subjectList = SubjectDa
 				.load_not_uploaded_subjects(context,user.getUserId());
@@ -125,10 +101,9 @@ public class AsyncService extends Service {
 			return;
 		}
 
-		 //Log.d(TAG, "has not async subjects times " );
+		Log.i(TAG, "has not async subjects times " );
 
 		for (SubjectBean subject : subjectList) {
-
 			FTDClient ftd = new FTDClient(context);			
 			ftd.post_new_task(subject.getUserId() , subject.getBody(), device_type,
 					devie_no, subject.getId(), subject.getCreationDate(),
