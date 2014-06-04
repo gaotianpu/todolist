@@ -102,7 +102,8 @@ public class AsyncService extends Service {
 		}
 
 		Log.i(TAG, "has not async subjects times " );
-
+		
+		//todo, 单个上传要改成批量上传
 		for (SubjectBean subject : subjectList) {
 			FTDClient ftd = new FTDClient(context);			
 			ftd.post_new_task(subject.getUserId() , subject.getBody(), device_type,

@@ -28,16 +28,17 @@ public class SubjectDa {
 		values.put("is_sync", 0);
 		values.put("remote_id", 0);
 
-		//
+		// 每次都要构造SQLiteDatabase， 对性能影响有多大？
 		SQLiteDatabase db = getDb(context);
 		long subjectID = db.insert("subjects", "pk_id", values);
 
 		return subjectID;
 	}
 
-	public static long insert2(Context context, long remote_id, String content,
+	public static long insert2(Context context, long user_id,  long remote_id, String content,
 			String creation_date, int last_update, int last_sync) {
 		ContentValues values = new ContentValues();
+		values.put("user_id", user_id);
 		values.put("body", content);
 		values.put("creation_date", creation_date); //
 		values.put("last_update", last_update);
@@ -92,7 +93,8 @@ public class SubjectDa {
 		try {
 
 			SQLiteDatabase db = getDb(context);
-			Cursor cursor = db.query("subjects", new String[] { "pk_id","user_id","body","creation_date" },
+			Cursor cursor = db.query("subjects", new String[] { "pk_id",
+					"user_id", "body", "creation_date" },
 					"user_id=? and is_sync=0 ",
 					new String[] { String.valueOf(user_id) }, null, null, null);
 			cursor.moveToFirst();
@@ -112,7 +114,7 @@ public class SubjectDa {
 		return subjectList;
 	}
 
-	public static List<SubjectBean> load(Context context, long cust_id,
+	public static List<SubjectBean> load(Context context, long user_id,
 			int page, int size) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		try {
@@ -120,7 +122,9 @@ public class SubjectDa {
 			int offset = (page - 1) * size;
 
 			SQLiteDatabase db = getDb(context);
-			Cursor cursor = db.query("subjects", null, null, null, null, null,
+			Cursor cursor = db.query("subjects", new String[] { "pk_id",
+					"user_id", "body", "creation_date" }, "user_id=?",
+					new String[] { String.valueOf(user_id) }, null, null,
 					"remote_id DESC,pk_id desc limit " + String.valueOf(size)
 							+ " offset " + String.valueOf(offset));
 			cursor.moveToFirst();

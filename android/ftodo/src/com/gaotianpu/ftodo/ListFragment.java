@@ -35,6 +35,8 @@ import android.widget.AbsListView.OnScrollListener;
 public class ListFragment extends Fragment implements
 		SwipeRefreshLayout.OnRefreshListener {
 	public static final String ARG_PLANET_NUMBER = "planet_number";
+	
+	public static final String TAG = "ListFragment";
 
 	private Context ctx;
 
@@ -58,6 +60,7 @@ public class ListFragment extends Fragment implements
 
 	private View rootView;
 	private View listview_item;
+	  
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,6 +80,8 @@ public class ListFragment extends Fragment implements
 		// ((ImageView) rootView.findViewById(R.id.image))
 		// .setImageResource(imageId);
 		// 
+		
+		Log.i(TAG,"onCreateView");
 		
 		user = UserDa.load_current_user(ctx); 
 		cust_id = user.getUserId();
@@ -266,13 +271,21 @@ public class ListFragment extends Fragment implements
 	// ///////////////////
 
 	private void download() {
+//		Log.i(TAG,"download");
+		
 		if(cust_id==0 || user.getTokenStatus() == 0){
 			return ;
 		}
 		
+//		Log.i(TAG,"cust_id & token status is ok");
+		
 		// get max remote_id from sqlite
 		long max_remote_id_in_sqlite = SubjectDa
 				.get_max_remote_id(ctx, cust_id);
+		
+//		Log.i(TAG,"max_remote_id_in_sqlite " + String.valueOf(max_remote_id_in_sqlite));
+		
+//		max_remote_id_in_sqlite = 500;
 
 		FTDClient ftd = new FTDClient(ctx);
 		ftd.load_by_last_async_remote_id(cust_id, max_remote_id_in_sqlite, 50,
@@ -283,10 +296,13 @@ public class ListFragment extends Fragment implements
 						// 这行代码可以继续封装到 FTDClient.load_by_custId方法中去，？
 						List<SubjectBean> subjectList = FTDClient
 								.Json2SubjectList(result);
+						
+						Log.i(TAG,"subject count " + String.valueOf( subjectList.size()   )  );
 
 						for (SubjectBean s : subjectList) {
 
 							long local_id = SubjectDa.insert2(ctx,
+									s.getUserId(),
 									s.getRemoteId(), s.getBody(),
 									String.valueOf(s.getCreationDate()), 1, 1);
 

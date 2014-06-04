@@ -289,9 +289,11 @@ public class MainActivity1 extends Activity implements
 						// 这行代码可以继续封装到 FTDClient.load_by_custId方法中去，？
 						List<SubjectBean> subjectList = FTDClient
 								.Json2SubjectList(result);
-
+							
+						long user_id =1;
 						for (SubjectBean s : subjectList) {
 							long local_id = SubjectDa.insert2(context,
+									user_id,
 									s.getRemoteId(), s.getBody(),
 									String.valueOf(s.getCreationDate()), 1, 1);
 

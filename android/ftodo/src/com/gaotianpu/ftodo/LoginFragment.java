@@ -199,7 +199,12 @@ public class LoginFragment extends Fragment {
 										.findViewById(R.id.left_drawer);
 								mDrawerList.setItemChecked(position, true);
 								act.setTitle(mPlanetTitles[position]);
-
+								
+								//ListView lvDefault = (ListView) act.findViewById(R.id.lvDefault);
+							
+								
+				
+								
 							} catch (JSONException e) {
 								Log.e("login", e.toString());
 								login_failed();
