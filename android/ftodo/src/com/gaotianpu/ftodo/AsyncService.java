@@ -41,11 +41,15 @@ public class AsyncService extends Service {
 	private String devie_no;
 	private String device_type;
 	private Context context;
+	
+	private MyApplication app;
 	 
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
+		app = (MyApplication)getApplicationContext();
 		 
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		devie_no = tm.getDeviceId();
@@ -86,14 +90,14 @@ public class AsyncService extends Service {
 	 
 
 	private void upload() {  
-		UserBean user = UserDa.load_current_user(context);
-		Log.i(TAG, String.valueOf(user.getUserId()) + ","+String.valueOf(user.getTokenStatus()) );
+		UserBean user = app.getUser();
+		//Log.i(TAG, String.valueOf(user.getUserId()) + ","+String.valueOf(user.getTokenStatus()) );
 		
 		if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
 			return ;
 		}
 		
-		Log.i(TAG, "has_active_user " );
+		//Log.i(TAG, "has_active_user " );
 		 
 		List<SubjectBean> subjectList = SubjectDa
 				.load_not_uploaded_subjects(context,user.getUserId());

@@ -14,12 +14,12 @@ import com.loopj.android.http.*;
 
 public class FTDClient {
 	private final String REGISTER_URL = "https://ftodo.sinaapp.com/register";
-	private final String AUTH_URL = "https://ftodo.sinaapp.com/login";
+	//private final String AUTH_URL = "https://ftodo.sinaapp.com/login";
 
 	private final String RES_BASE_URL = "http://ftodo.sinaapp.com/api/";
 
 	private AsyncHttpClient client;
-	private PersistentCookieStore myCookieStore;
+	//private PersistentCookieStore myCookieStore;
 
 	public FTDClient(Context context) {
 		client = new AsyncHttpClient(); 

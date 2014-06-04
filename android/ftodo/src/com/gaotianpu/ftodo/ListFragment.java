@@ -59,8 +59,8 @@ public class ListFragment extends Fragment implements
 	private UserBean user;
 
 	private View rootView;
-	private View listview_item;
-	  
+	 
+	private MyApplication app;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,7 +68,10 @@ public class ListFragment extends Fragment implements
 		rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
 		ctx = this.getActivity();
-		// listview_item = inflater.inflate(R.layout.listview_item,null);
+		
+		app = (MyApplication)ctx.getApplicationContext();
+		
+		 
 
 		// int i = getArguments().getInt(ARG_PLANET_NUMBER);
 		// String planet =
@@ -81,9 +84,9 @@ public class ListFragment extends Fragment implements
 		// .setImageResource(imageId);
 		// 
 		
-		Log.i(TAG,"onCreateView");
+		Log.i(TAG,"onCreateView"); 
 		
-		user = UserDa.load_current_user(ctx); 
+		user = app.getUser();  // UserDa.load_current_user(ctx); 
 		cust_id = user.getUserId();
 		
 		

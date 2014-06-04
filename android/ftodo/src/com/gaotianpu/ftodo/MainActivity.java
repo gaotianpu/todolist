@@ -36,11 +36,14 @@ public class MainActivity extends Activity {
 
 	private UserBean user;
 	private ArrayAdapter adapter;
+	private MyApplication app;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		app = (MyApplication)getApplicationContext();
 
 		// 启动 AsyncService
 		Intent startIntent = new Intent(this, AsyncService.class);
@@ -52,22 +55,9 @@ public class MainActivity extends Activity {
 			selectItem(1);
 		}
 	}
-	
-//	@Override  
-//    protected void onStart() {  
-//        // TODO Auto-generated method stub  
-//		// 获取当前用户账户
-//				user = UserDa.load_current_user(this);
-//				if (user.getUserId() != 0) {
-//					// 菜单显示 未登录...
-//					mPlanetTitles[0] = user.getEmail();			
-//					adapter.notifyDataSetChanged();
-//				} 
-//        super.onStart();  
-//    } 
-//	
+ 
 	private void updateMenu(){
-		user = UserDa.load_current_user(this);
+		user = app.getUser(); //UserDa.load_current_user(this);
 		if (user.getUserId() != 0) {
 			// 菜单显示 未登录...
 			mPlanetTitles[0] = user.getEmail();			

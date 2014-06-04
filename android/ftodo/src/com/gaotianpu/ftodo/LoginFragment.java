@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.JsonHttpResponseHandler;
+ 
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -14,10 +14,10 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.os.AsyncTask;
+ 
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceActivity.Header;
+ 
 
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -58,6 +58,7 @@ public class LoginFragment extends Fragment {
 	private Context ctx;
 	private View rootView;
 	private Activity act;
+	private MyApplication app;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,6 +66,8 @@ public class LoginFragment extends Fragment {
 		rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
 		ctx = this.getActivity();
+		app = (MyApplication)ctx.getApplicationContext();
+		
 		act = this.getActivity();
 		init();
 
@@ -181,9 +184,11 @@ public class LoginFragment extends Fragment {
 								}
 
 								JSONObject data = result.getJSONObject("data");
-								UserDa.login(ctx, data.getLong("user_id"),
+								
+								app.login(data.getLong("user_id"),
 										data.getString("name"),
 										data.getString("access_token"));
+								
 
 								showProgress(false);
 
@@ -200,7 +205,7 @@ public class LoginFragment extends Fragment {
 										.findViewById(R.id.left_drawer);
 								
 								mPlanetTitles[0] = data.getString("name");
-								ArrayAdapter adapter = new ArrayAdapter<String>(act,
+								ArrayAdapter<String> adapter = new ArrayAdapter<String>(act,
 										R.layout.drawer_list_item, mPlanetTitles);
 								mDrawerList.setAdapter(adapter);
 								
