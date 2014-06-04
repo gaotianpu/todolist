@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -197,7 +198,18 @@ public class LoginFragment extends Fragment {
 										.getStringArray(R.array.planets_array);
 								ListView mDrawerList = (ListView) act
 										.findViewById(R.id.left_drawer);
+								
+								mPlanetTitles[0] = data.getString("name");
+								ArrayAdapter adapter = new ArrayAdapter<String>(act,
+										R.layout.drawer_list_item, mPlanetTitles);
+								mDrawerList.setAdapter(adapter);
+								
 								mDrawerList.setItemChecked(position, true);
+								
+								//登录后立刻改变左侧菜单的选项？
+								//mDrawerList.getItemAtPosition(0);
+								//mDrawerList.getAdapter().notifyDataSetChanged();
+								
 								act.setTitle(mPlanetTitles[position]);
 								
 								//ListView lvDefault = (ListView) act.findViewById(R.id.lvDefault);
