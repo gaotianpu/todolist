@@ -204,22 +204,21 @@ public class SubjectDa {
 
 	public static void save_download_records(Context context, long user_id,
 			long total) {
-		long local_page_count = 0; //max_offset/100
-		
 		
 		int page_size = 100;
-		long page_count = total / page_size;
 		
+		//local
+		long local_max_offset = SubjectDa.get_local_max_offset(context, user_id);		
+		long local_page_count = local_max_offset/page_size; //local_max_offset/page_size 	
 		
-		
-		long increase_page_count = page_count - local_page_count;
-				
+		//cloud
+		long page_count = total / page_size;  				
 
 		SQLiteDatabase db = getDb(context);
 		db.beginTransaction(); // 手动设置开始事务
 		try {
-			for (long i = 0; i <= increase_page_count; i++) {
-				long offset = i * page_size;
+			for (long i = local_page_count; i <= page_count; i++) {
+				long offset = (i + 1) * page_size;
 
 				ContentValues values = new ContentValues();
 				values.put("user_id", user_id);

@@ -149,14 +149,8 @@ public class AsyncService extends Service {
 							long total = result.getLong("total");
 							long user_id = result.getLong("user_id");
 							
-							long local_max_offset = SubjectDa.get_local_max_offset(context, user_id);
-							long page_size = 100;
-							
-							if ( (total - local_max_offset)/page_size>0){
-								//??????
-								SubjectDa.save_download_records(context, user_id,
-										total); // 每次都要全部写入？
-							} 
+							SubjectDa.save_download_records(context, user_id,
+									total); // 每次都要全部写入？
 							
 
 						} catch (JSONException e) {
