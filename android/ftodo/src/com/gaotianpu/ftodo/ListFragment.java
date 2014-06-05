@@ -70,27 +70,14 @@ public class ListFragment extends Fragment implements
 		ctx = this.getActivity();
 		
 		app = (MyApplication)ctx.getApplicationContext();
-		
-		 
-
-		// int i = getArguments().getInt(ARG_PLANET_NUMBER);
-		// String planet =
-		// getResources().getStringArray(R.array.planets_array)[i];
-		//
-		// int imageId = getResources().getIdentifier(
-		// planet.toLowerCase(Locale.getDefault()), "drawable",
-		// getActivity().getPackageName());
-		// ((ImageView) rootView.findViewById(R.id.image))
-		// .setImageResource(imageId);
-		// 
-		
 		Log.i(TAG,"onCreateView"); 
 		
-		user = app.getUser();  // UserDa.load_current_user(ctx); 
-		cust_id = user.getUserId();
+		user = app.getUser();  
+		cust_id = user.getUserId();		
+		
+		init(); 
 		
 		
-		init();
 		getActivity().setTitle("ftodo");
 		return rootView;
 	} 

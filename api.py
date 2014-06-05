@@ -6,10 +6,10 @@ import json
 from datetime import *
 
 
-urls = (
-     
+urls = (     
     "/new2", "New2",
-    "/list3","List3")
+    "/list3","List3",
+    "/total","Total")
 
 #register, mobile + sms_validate_code
 #login, mobile + password_encryption
@@ -60,13 +60,35 @@ class List3:
         r = {'code':1,'list':rows}
         return json.dumps(r,cls=CJsonEncoder)
 
+class Total:
+    def GET(self):
+        i = web.input(user_id=0,access_token="",device_no='')
+        valdate_result = validate_access_token(i.user_id,i.device_no,i.access_token)
+        if not valdate_result:
+            return '{"code":-1,"data":"access_token is not validate"}'
+
+        count = da.subject.load_count(i.user_id)
+        r = {'code':1,'total':count}
+        return json.dumps(r)
+
+def api_loadhook():
+    # 如果把login剔除api，所有资源访问都可以加上user_id+device_no+access_token?
+    web.header('Content-Type', 'application/json; charset=utf-8')
+    # i = web.input(user_id=0,access_token="")
+    # valdate_result = False # validate_access_token(i.user_id,i.device_no,i.access_token)
+    # if not valdate_result:
+    #     return '{"code":-1,"data":"access_token is not validate"}' 
+    
+
+def api_unloadhook():
+    pass 
+
 def init_app():
     app = web.application(urls, globals())
     #app.notfound = api_notfound
     #app.internalerror = api_internalerror
-    # app.add_processor(web.loadhook(api_loadhook))
-    # app.add_processor(web.unloadhook(api_unloadhook))
-    # 如果把login剔除api，所有资源访问都可以加上user_id+device_no+access_token?
+    app.add_processor(web.loadhook(api_loadhook))
+    app.add_processor(web.unloadhook(api_unloadhook))    
     return app
 
 app = init_app()

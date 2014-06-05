@@ -81,6 +81,16 @@ public class FTDClient {
 		client.get(url, params, responseHandler);
 
 	}
+	
+	public void load_total(long user_id,String access_token,AsyncHttpResponseHandler responseHandler){
+		String url = RES_BASE_URL + "total";
+		
+		RequestParams params = new RequestParams();
+		params.put("user_id", String.valueOf(user_id));
+		params.put("access_token", access_token); 
+
+		client.get(url, params, responseHandler);
+	}
 
 	public static List<SubjectBean> Json2SubjectList(JSONObject result) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();

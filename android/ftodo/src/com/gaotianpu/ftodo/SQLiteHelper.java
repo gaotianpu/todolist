@@ -35,6 +35,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "last_update  timestamp,"
 				+ "PRIMARY KEY (user_id)"
 				+ ");");  
+		
+		db.execSQL("CREATE TABLE download_records ("
+				+ "user_id  INTEGER NOT NULL,"
+				+ "offset  INTEGER NOT NULL,"
+				+ "has_download  INTEGER NOT NULL DEFAULT 0 "
+				+ ");");
 	}
 
 	@Override

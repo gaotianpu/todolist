@@ -48,18 +48,23 @@ class Index:
         render = web.template.frender('templates/index2.html')
         return render() 
 
+import hashlib
+def encrypt_password(name,password): 
+    return hashlib.sha1(name + password).hexdigest()
+
 class Register:
     def GET(self):
         return 
     def POST(self):
         i = web.input(name='',password='',device_no='0',device_type='',os_type='')
+        encPass = encrypt_password(i.name,i.password)
         try:
-            result = da.user.login(i.name,i.password)            
+            result = da.user.load_by_name(i.name)            
             if not result:
                 # name exist, but password is not match?
-                user_id = da.user.register(i.name,i.password)
+                user_id = da.user.register(i.name,encPass)
                 #if exist?
-            elif cmp(result.password , i.password)!=0:
+            elif cmp(result.password , encPass)!=0:
                 return json.dumps({'code':-1,'data':"name and password is not match"})    
             else:
                 user_id = result.pk_id
@@ -73,14 +78,18 @@ class Login:
     def GET(self):
         render = web.template.frender('templates/login.html')
         return render()
+
     def POST(self):
         i = web.input(name='',password='',device_no='0',device_type='',os_type='')
-        result = da.user.login(i.name,i.password)
+        encPass = encrypt_password(i.name,i.password)
+        print 'encPass:', encPass  
+
+        result = da.user.load_by_name(i.name)
 
         if not result:
             return json.dumps({'code':-1,'data':"name is not exist"})
          
-        if cmp(result.password , i.password)!=0:
+        if cmp(result.password , encPass)!=0:
             return json.dumps({'code':-1,'data':"name and password is not match"})    
 
         if i.device_no=="0": #web            

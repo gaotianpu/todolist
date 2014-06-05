@@ -187,4 +187,22 @@ public class SubjectDa {
 
 		return remote_id;
 	}
+	
+	
+	public static void save_download_records(Context context, long user_id, long total){
+		int size = 100;
+		long count = total/size;
+		for(long i=0;i<count;i++){
+			long offset = i*size;
+		}
+		
+		ContentValues values = new ContentValues();
+		values.put("user_id", user_id);
+		values.put("offset", value)
+		
+		
+		SQLiteDatabase db = getDb(context);
+		
+		db.replace("", null, values)
+	}
 }

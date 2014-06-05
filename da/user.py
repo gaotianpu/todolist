@@ -7,7 +7,14 @@ tname="users"
 
 def register(name,password): 
     #,device_type,device_no,os_type
-    user_id = dbw.insert(tname,email=name,password=password,
+    # mobile = 0
+    # email =''    
+    # if '@' in name:
+    #     email = name
+    # else:
+    #     mobile = name 
+    #email=email, 
+    user_id = dbw.insert(tname,mobile=name,password=password,
         creation_date=web.SQLLiteral('now()'),
         last_update=web.SQLLiteral('now()'),
         last_login=web.SQLLiteral('now()'))  
@@ -18,15 +25,10 @@ def register(name,password):
     #     last_update=web.SQLLiteral('now()'))
     # return get_access_token(user_id,device_no)
 
-def login(name,password):
-    result = list(dbr.select(tname,what="pk_id,nick_name,password",where="mobile=$name or email=$name",vars=locals()))
-     
+def load_by_name(name):
+    result = list(dbr.select(tname,what="pk_id,nick_name,password",where="mobile=$name or email=$name",vars=locals()))     
     return result[0] if result else False
-
-    
-    if not cmp(result[0].password , password):
-        return False      
-    return result[0] 
+ 
 
 import uuid 
 def generate_access_token():     
@@ -69,3 +71,7 @@ def auth(name,password,deive_no,device_type):
             #是否存在，
             #如果存在，accesss_token是否过期
     return False 
+
+
+if __name__ == "__main__":
+    register('gao@g.com','1222')
