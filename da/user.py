@@ -30,9 +30,10 @@ def load_by_name(name):
     return result[0] if result else False
  
 
-import uuid 
-def generate_access_token():     
-    return str(uuid.uuid1()).replace('-','')
+import uuid,hashlib 
+def generate_access_token():
+    return hashlib.md5(str(uuid.uuid1())).hexdigest() 
+     
 
 def get_access_token(user_id,device_no,device_type,os_type): 
     result = list(dbr.select('user_devices',
