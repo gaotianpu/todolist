@@ -41,6 +41,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "offset  INTEGER NOT NULL,"
 				+ "has_download  INTEGER NOT NULL DEFAULT 0 "
 				+ ");");
+		db.execSQL("CREATE UNIQUE INDEX uniq_ix ON download_records (user_id, offset);");
 	}
 
 	@Override

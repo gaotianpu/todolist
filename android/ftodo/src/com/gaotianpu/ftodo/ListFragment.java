@@ -35,7 +35,7 @@ import android.widget.AbsListView.OnScrollListener;
 public class ListFragment extends Fragment implements
 		SwipeRefreshLayout.OnRefreshListener {
 	public static final String ARG_PLANET_NUMBER = "planet_number";
-	
+
 	public static final String TAG = "ListFragment";
 
 	private Context ctx;
@@ -59,7 +59,7 @@ public class ListFragment extends Fragment implements
 	private UserBean user;
 
 	private View rootView;
-	 
+
 	private MyApplication app;
 
 	@Override
@@ -68,19 +68,18 @@ public class ListFragment extends Fragment implements
 		rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
 		ctx = this.getActivity();
-		
-		app = (MyApplication)ctx.getApplicationContext();
-		Log.i(TAG,"onCreateView"); 
-		
-		user = app.getUser();  
-		cust_id = user.getUserId();		
-		
-		init(); 
-		
-		
+
+		app = (MyApplication) ctx.getApplicationContext();
+		Log.i(TAG, "onCreateView");
+
+		user = app.getUser();
+		cust_id = user.getUserId();
+
+		init();
+
 		getActivity().setTitle("ftodo");
 		return rootView;
-	} 
+	}
 
 	private void init() {
 		cm = (ConnectivityManager) ctx
@@ -228,12 +227,13 @@ public class ListFragment extends Fragment implements
 						// insert into sqlite
 						String content = txtNew.getText().toString().trim();
 						if (content.length() > 1) {
-							
-							user = UserDa.load_current_user(ctx); 
+
+							user = UserDa.load_current_user(ctx);
 							cust_id = user.getUserId();
-							Log.e("cust_id", String.valueOf(cust_id) );
-							
-							Long subjectID = SubjectDa.insert(ctx,cust_id, content);
+							Log.e("cust_id", String.valueOf(cust_id));
+
+							Long subjectID = SubjectDa.insert(ctx, cust_id,
+									content);
 
 							SubjectBean subject = new SubjectBean();
 							subject.setId(subjectID);
@@ -261,21 +261,22 @@ public class ListFragment extends Fragment implements
 	// ///////////////////
 
 	private void download() {
-//		Log.i(TAG,"download");
-		
-		if(cust_id==0 || user.getTokenStatus() == 0){
-			return ;
+		// Log.i(TAG,"download");
+
+		if (cust_id == 0 || user.getTokenStatus() == 0) {
+			return;
 		}
-		
-//		Log.i(TAG,"cust_id & token status is ok");
-		
+
+		// Log.i(TAG,"cust_id & token status is ok");
+
 		// get max remote_id from sqlite
 		long max_remote_id_in_sqlite = SubjectDa
 				.get_max_remote_id(ctx, cust_id);
-		
-//		Log.i(TAG,"max_remote_id_in_sqlite " + String.valueOf(max_remote_id_in_sqlite));
-		
-//		max_remote_id_in_sqlite = 500;
+
+		// Log.i(TAG,"max_remote_id_in_sqlite " +
+		// String.valueOf(max_remote_id_in_sqlite));
+
+		// max_remote_id_in_sqlite = 500;
 
 		FTDClient ftd = new FTDClient(ctx);
 		ftd.load_by_last_async_remote_id(cust_id, max_remote_id_in_sqlite, 50,
@@ -283,25 +284,40 @@ public class ListFragment extends Fragment implements
 					@Override
 					public void onSuccess(JSONObject result) {
 
-						// 这行代码可以继续封装到 FTDClient.load_by_custId方法中去，？
-						List<SubjectBean> subjectList = FTDClient
-								.Json2SubjectList(result);
-						
-						Log.i(TAG,"subject count " + String.valueOf( subjectList.size()   )  );
+						try {
 
-						for (SubjectBean s : subjectList) {
+							// 这行代码可以继续封装到 FTDClient.load_by_custId方法中去，？
+							List<SubjectBean> subjectList = FTDClient
+									.Json2SubjectList(result);
+							
+							//get user's total count
+							long total = result.getLong("total");
+							long user_id = result.getLong("user_id");
+							SubjectDa
+									.save_download_records(ctx, user_id, total); // 每次都要全部写入？
 
-							long local_id = SubjectDa.insert2(ctx,
-									s.getUserId(),
-									s.getRemoteId(), s.getBody(),
-									String.valueOf(s.getCreationDate()), 1, 1);
+							Log.i(TAG,
+									"subject count "
+											+ String.valueOf(subjectList.size()));
 
-							s.setId(local_id);
-							insert_new_item(s, 0);
+							for (SubjectBean s : subjectList) {
+
+								long local_id = SubjectDa.insert2(ctx,
+										s.getUserId(), s.getRemoteId(),
+										s.getBody(),
+										String.valueOf(s.getCreationDate()), 1,
+										1);
+
+								s.setId(local_id);
+								insert_new_item(s, 0);
+							}
+
+							swipeLayout.setRefreshing(false);
+							listAdapter.notifyDataSetChanged();
+						} catch (Exception e) {
+							Log.e("sqlite", e.toString());
+
 						}
-
-						swipeLayout.setRefreshing(false);
-						listAdapter.notifyDataSetChanged();
 
 					}
 				});

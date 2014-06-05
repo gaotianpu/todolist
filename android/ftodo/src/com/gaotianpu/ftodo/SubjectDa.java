@@ -187,16 +187,17 @@ public class SubjectDa {
 
 		return remote_id;
 	}
-	
-	public static long get_local_max_offset(Context context, long user_id){
+
+	public static long get_local_max_offset(Context context, long user_id) {
+		long max_offset = 0;
+
 		SQLiteDatabase db = getDb(context);
-		Cursor cursor = db.query("download_records", new String[] { "max(offset) as max_offset"}, "user_id=?",
+		Cursor cursor = db.query("download_records",
+				new String[] { "max(offset) as max_offset" }, "user_id=?",
 				new String[] { String.valueOf(user_id) }, null, null, null);
 		cursor.moveToFirst();
-		
-		long max_offset=0;		 
 		while (!cursor.isAfterLast()) {
-			max_offset = cursor.getLong(1);
+			max_offset = cursor.getLong(0);
 			break;
 		}
 		return max_offset;
@@ -204,21 +205,22 @@ public class SubjectDa {
 
 	public static void save_download_records(Context context, long user_id,
 			long total) {
-		
+
 		int page_size = 100;
-		
-		//local
-		long local_max_offset = SubjectDa.get_local_max_offset(context, user_id);		
-		long local_page_count = local_max_offset/page_size; //local_max_offset/page_size 	
-		
-		//cloud
-		long page_count = total / page_size;  				
+
+		// cloud
+		long cloud_page_count = total / page_size;
+
+		// local
+		long local_max_offset = SubjectDa
+				.get_local_max_offset(context, user_id);
+		long local_page_count = local_max_offset / page_size; // local_max_offset/page_size
 
 		SQLiteDatabase db = getDb(context);
 		db.beginTransaction(); // 手动设置开始事务
 		try {
-			for (long i = local_page_count; i <= page_count; i++) {
-				long offset = (i + 1) * page_size;
+			for (long i = local_page_count; i <= cloud_page_count; i++) {
+				long offset = i * page_size;
 
 				ContentValues values = new ContentValues();
 				values.put("user_id", user_id);
@@ -240,13 +242,17 @@ public class SubjectDa {
 		// and has_download=0
 		SQLiteDatabase db = getDb(context);
 		Cursor cursor = db.query("download_records", new String[] { "user_id",
-				"offset", "has_download" }, "user_id=? and has_download=0",
+				"offset", "has_download" }, "user_id=? and has_download=0", //
 				new String[] { String.valueOf(user_id) }, null, null, "offset");
 		cursor.moveToFirst();
 
-		List<Long> offset_list = new ArrayList();
+		List<Long> offset_list =new ArrayList<Long>();
+		//Log.i("dowload_records","------------");
 		while (!cursor.isAfterLast()) {
-			offset_list.add(cursor.getLong(1));
+			long offset = cursor.getLong(1);
+			//Log.i("dowload_records", String.valueOf(offset));  
+			offset_list.add(offset);
+			cursor.moveToNext();
 		}
 
 		return offset_list;
@@ -260,7 +266,7 @@ public class SubjectDa {
 		SQLiteDatabase db = getDb(context);
 
 		ContentValues values = new ContentValues();
-		values.put("has_download", 0);
+		values.put("has_download", 1 );
 
 		db.update(
 				"download_records",

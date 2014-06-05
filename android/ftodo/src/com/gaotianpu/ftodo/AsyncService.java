@@ -75,6 +75,8 @@ public class AsyncService extends Service {
 				NetworkInfo info = cm.getActiveNetworkInfo();
 				if (info != null && info.isConnected()) {
 					upload();
+					
+					download();
 				}
 
 				mHandler.postDelayed(this, 9000);
@@ -141,32 +143,37 @@ public class AsyncService extends Service {
 		}
 		
 		//获得total count, 这个步骤适合放在用户下拉刷新的时候触发		 
-		ftd.load_total(user.getUserId(), user.getAccessToken(),
-				new JsonHttpResponseHandler() {
-					@Override
-					public void onSuccess(JSONObject result) {
-						try {
-							long total = result.getLong("total");
-							long user_id = result.getLong("user_id");
-							
-							SubjectDa.save_download_records(context, user_id,
-									total); // 每次都要全部写入？
-							
-
-						} catch (JSONException e) {
-							Log.e(TAG, e.toString());
-						}
-
-					}
-				});
-		
+//		ftd.load_total(user.getUserId(), user.getAccessToken(),
+//				new JsonHttpResponseHandler() {
+//					@Override
+//					public void onSuccess(JSONObject result) {
+//						try {
+//							long total = result.getLong("total");
+//							long user_id = result.getLong("user_id");
+//							
+//							SubjectDa.save_download_records(context, user_id,
+//									total); // 每次都要全部写入？
+//							
+//
+//						} catch (JSONException e) {
+//							Log.e(TAG, e.toString());
+//						}
+//
+//					}
+//				}); 
 
 		// download and insert into subjects
 		int page_size = 100;
 		List<Long> offset_list = SubjectDa.load_not_download(context,
 				user.getUserId());
-		for (Long offset : offset_list) {			
-			ftd.load_by_custId(user.getUserId(), offset, page_size,
+		Log.i(TAG, String.valueOf( offset_list.size() ) );
+		
+		if(offset_list.size()==0){
+			return ;
+		}  
+		
+		//for (Long offset : offset_list) {			
+			ftd.load_by_custId(user.getUserId(), offset_list.get(0), page_size,
 					new JsonHttpResponseHandler() {
 						@Override
 						public void onSuccess(JSONObject result) {
@@ -198,8 +205,8 @@ public class AsyncService extends Service {
 							}
 
 						}
-					});
-		}
+					}); 
+		//}
 
 	}
 }

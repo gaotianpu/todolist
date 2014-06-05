@@ -8,6 +8,7 @@ from datetime import *
 
 urls = (     
     "/new2", "New2",
+    "/list2","List2",
     "/list3","List3",
     "/total","Total")
 
@@ -46,6 +47,20 @@ class New2:
         r = {"code":1,"data":task}
         return json.dumps(r,cls=CJsonEncoder) 
 
+class List2:
+    def GET(self):
+        i = web.input(user_id=0,access_token="",device_no='',offset=0,size=100)
+
+        valdate_result = validate_access_token(i.user_id,i.device_no,i.access_token)
+        if not valdate_result:
+            return '{"code":-1,"data":"access_token is not validate"}'
+
+        rows = da.subject.load_page2(i.user_id,i.offset,i.size)   
+        #total_count = da.subject.load_count(i.user_id)
+
+        r = {'code':1,'list':rows,'user_id':i.user_id,'offset':i.offset}
+        return json.dumps(r,cls=CJsonEncoder)
+
 class List3:
     def GET(self):
         i = web.input(user_id=0,access_token="",device_no='',min_pk_id=1,size=50)
@@ -55,7 +70,9 @@ class List3:
             return '{"code":-1,"data":"access_token is not validate"}'
 
         rows = da.subject.load_page3(i.user_id,i.min_pk_id,int(i.size))
-        r = {'code':1,'list':rows}
+        total_count = da.subject.load_count(i.user_id)
+
+        r = {'code':1,'list':rows,'total':total_count,'user_id':i.user_id}
         return json.dumps(r,cls=CJsonEncoder)
 
 class Total:
