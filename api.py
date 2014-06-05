@@ -27,9 +27,7 @@ class CJsonEncoder(json.JSONEncoder):
         elif isinstance(obj, date):
             return obj.strftime('%Y-%m-%d')
         else:
-            return json.JSONEncoder.default(self, obj)
-
- 
+            return json.JSONEncoder.default(self, obj) 
 
 class New2:
     def POST(self):
@@ -68,7 +66,7 @@ class Total:
             return '{"code":-1,"data":"access_token is not validate"}'
 
         count = da.subject.load_count(i.user_id)
-        r = {'code':1,'total':count}
+        r = {'code':1,'total':count,'user_id':i.user_id}
         return json.dumps(r)
 
 def api_loadhook():

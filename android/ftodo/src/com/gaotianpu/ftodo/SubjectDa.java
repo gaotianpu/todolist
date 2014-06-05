@@ -35,8 +35,8 @@ public class SubjectDa {
 		return subjectID;
 	}
 
-	public static long insert2(Context context, long user_id,  long remote_id, String content,
-			String creation_date, int last_update, int last_sync) {
+	public static long insert2(Context context, long user_id, long remote_id,
+			String content, String creation_date, int last_update, int last_sync) {
 		ContentValues values = new ContentValues();
 		values.put("user_id", user_id);
 		values.put("body", content);
@@ -188,21 +188,86 @@ public class SubjectDa {
 		return remote_id;
 	}
 	
-	
-	public static void save_download_records(Context context, long user_id, long total){
-		int size = 100;
-		long count = total/size;
-		for(long i=0;i<count;i++){
-			long offset = i*size;
-		}
-		
-		ContentValues values = new ContentValues();
-		values.put("user_id", user_id);
-		values.put("offset", value)
-		
-		
+	public static long get_local_max_offset(Context context, long user_id){
 		SQLiteDatabase db = getDb(context);
+		Cursor cursor = db.query("download_records", new String[] { "max(offset) as max_offset"}, "user_id=?",
+				new String[] { String.valueOf(user_id) }, null, null, null);
+		cursor.moveToFirst();
 		
-		db.replace("", null, values)
+		long max_offset=0;		 
+		while (!cursor.isAfterLast()) {
+			max_offset = cursor.getLong(1);
+			break;
+		}
+		return max_offset;
+	}
+
+	public static void save_download_records(Context context, long user_id,
+			long total) {
+		long local_page_count = 0; //max_offset/100
+		
+		
+		int page_size = 100;
+		long page_count = total / page_size;
+		
+		
+		
+		long increase_page_count = page_count - local_page_count;
+				
+
+		SQLiteDatabase db = getDb(context);
+		db.beginTransaction(); // 手动设置开始事务
+		try {
+			for (long i = 0; i <= increase_page_count; i++) {
+				long offset = i * page_size;
+
+				ContentValues values = new ContentValues();
+				values.put("user_id", user_id);
+				values.put("offset", offset);
+				db.replace("download_records", null, values);
+
+			}
+			db.setTransactionSuccessful();
+		} catch (Exception e) {
+			Log.e("sqlite", e.toString());
+
+		} finally {
+			db.endTransaction(); // 处理完成
+		}
+	}
+
+	public static List<Long> load_not_download(Context context, long user_id) {
+		// select user_id,offset,has_download download_record where user_id=?
+		// and has_download=0
+		SQLiteDatabase db = getDb(context);
+		Cursor cursor = db.query("download_records", new String[] { "user_id",
+				"offset", "has_download" }, "user_id=? and has_download=0",
+				new String[] { String.valueOf(user_id) }, null, null, "offset");
+		cursor.moveToFirst();
+
+		List<Long> offset_list = new ArrayList();
+		while (!cursor.isAfterLast()) {
+			offset_list.add(cursor.getLong(1));
+		}
+
+		return offset_list;
+
+	}
+
+	public static void update_download_records(Context context, long user_id,
+			long offset) {
+		// update download_records set has_download=0 where user_id=? and
+		// offset=?
+		SQLiteDatabase db = getDb(context);
+
+		ContentValues values = new ContentValues();
+		values.put("has_download", 0);
+
+		db.update(
+				"download_records",
+				values,
+				"user_id=? and offset=?",
+				new String[] { String.valueOf(user_id), String.valueOf(offset) });
+
 	}
 }

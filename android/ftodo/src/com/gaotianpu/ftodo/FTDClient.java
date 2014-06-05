@@ -14,19 +14,20 @@ import com.loopj.android.http.*;
 
 public class FTDClient {
 	private final String REGISTER_URL = "https://ftodo.sinaapp.com/register";
-	//private final String AUTH_URL = "https://ftodo.sinaapp.com/login";
+	// private final String AUTH_URL = "https://ftodo.sinaapp.com/login";
 
 	private final String RES_BASE_URL = "http://ftodo.sinaapp.com/api/";
 
 	private AsyncHttpClient client;
-	//private PersistentCookieStore myCookieStore;
+
+	// private PersistentCookieStore myCookieStore;
 
 	public FTDClient(Context context) {
-		client = new AsyncHttpClient(); 
+		client = new AsyncHttpClient();
 		client.setTimeout(20000);
 
-		//myCookieStore = new PersistentCookieStore(context);
-		//client.setCookieStore(myCookieStore);
+		// myCookieStore = new PersistentCookieStore(context);
+		// client.setCookieStore(myCookieStore);
 
 		// 单例模式？
 	}
@@ -55,19 +56,19 @@ public class FTDClient {
 		// Ȩ����֤����
 	}
 
-	// public static void load_by_custId(long cust_id, int page_index,
-	// int page_size, AsyncHttpResponseHandler responseHandler) {
-	// String url = BASE_URL + "list2";
-	//
-	// RequestParams params = new RequestParams();
-	// params.put("cust_id", String.valueOf(cust_id));
-	// params.put("page", String.valueOf(page_index));
-	// params.put("size", String.valueOf(page_size));
-	//
-	// client.get(url, params, responseHandler);
-	// return;
-	//
-	// }
+	public void load_by_custId(long cust_id, long offset, int page_size, 
+			AsyncHttpResponseHandler responseHandler) {
+		String url = RES_BASE_URL + "list2";
+
+		RequestParams params = new RequestParams();
+		params.put("cust_id", String.valueOf(cust_id));
+		params.put("offset", String.valueOf(offset));
+		params.put("size", String.valueOf(page_size));
+
+		client.get(url, params, responseHandler);
+		return;
+
+	}
 
 	public void load_by_last_async_remote_id(long user_id, long last_remote_id,
 			int size, AsyncHttpResponseHandler responseHandler) {
@@ -81,13 +82,14 @@ public class FTDClient {
 		client.get(url, params, responseHandler);
 
 	}
-	
-	public void load_total(long user_id,String access_token,AsyncHttpResponseHandler responseHandler){
+
+	public void load_total(long user_id, String access_token,
+			AsyncHttpResponseHandler responseHandler) {
 		String url = RES_BASE_URL + "total";
-		
+
 		RequestParams params = new RequestParams();
 		params.put("user_id", String.valueOf(user_id));
-		params.put("access_token", access_token); 
+		params.put("access_token", access_token);
 
 		client.get(url, params, responseHandler);
 	}
@@ -130,14 +132,14 @@ public class FTDClient {
 	public void login_or_register(String name, String password,
 			String device_no, String device_type, String os_type,
 			AsyncHttpResponseHandler asyncHttpResponseHandler) {
-		
+
 		RequestParams params = new RequestParams();
 		params.put("name", name);
 		params.put("password", password);
 		params.put("device_no", device_no);
 		params.put("device_type", device_type);
 		params.put("os_type", os_type);
-		
+
 		client.post(REGISTER_URL, params, asyncHttpResponseHandler);
 	}
 
