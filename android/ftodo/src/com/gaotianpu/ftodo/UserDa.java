@@ -29,6 +29,8 @@ public class UserDa {
 			user.setAccessToken(cursor.getString(2));
 			user.setTokenStatus(cursor.getInt(3));
 		}
+		
+		db.close();
 
 		return user;
 	}
@@ -59,6 +61,7 @@ public class UserDa {
 			Log.e("sqlite", e.toString());			
 		} finally {
 			 db.endTransaction(); //处理完成
+			 db.close();
 		}
 
 	}

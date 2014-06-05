@@ -166,7 +166,7 @@ public class AsyncService extends Service {
 		int page_size = 100;
 		List<Long> offset_list = SubjectDa.load_not_download(context,
 				user.getUserId());
-		Log.i(TAG, String.valueOf( offset_list.size() ) );
+		//Log.i(TAG, String.valueOf( offset_list.size() ) );
 		
 		if(offset_list.size()==0){
 			return ;
@@ -186,14 +186,13 @@ public class AsyncService extends Service {
 
 								for (SubjectBean s : subjectList) {
 									uid = s.getUserId();
-
-									SubjectDa.insert2(
-											context,
-											s.getUserId(),
-											s.getId(),
+									
+									long local_id = SubjectDa.insert2(context,
+											s.getUserId(), s.getRemoteId(),
 											s.getBody(),
-											String.valueOf(s.getCreationDate()),
-											1, 1);
+											String.valueOf(s.getCreationDate()), 1,
+											1); 
+									 
 								}
 								
 								//then,update the download records

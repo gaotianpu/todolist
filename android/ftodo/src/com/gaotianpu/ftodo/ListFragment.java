@@ -273,8 +273,8 @@ public class ListFragment extends Fragment implements
 		long max_remote_id_in_sqlite = SubjectDa
 				.get_max_remote_id(ctx, cust_id);
 
-		// Log.i(TAG,"max_remote_id_in_sqlite " +
-		// String.valueOf(max_remote_id_in_sqlite));
+		 Log.i("max_remote_id_in_sqlite","max_remote_id_in_sqlite " +
+		 String.valueOf(max_remote_id_in_sqlite));
 
 		// max_remote_id_in_sqlite = 500;
 
@@ -315,7 +315,7 @@ public class ListFragment extends Fragment implements
 							swipeLayout.setRefreshing(false);
 							listAdapter.notifyDataSetChanged();
 						} catch (Exception e) {
-							Log.e("sqlite", e.toString());
+							Log.e("load_by_last_async_remote_id", e.toString());
 
 						}
 

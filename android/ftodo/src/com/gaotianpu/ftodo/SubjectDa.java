@@ -31,6 +31,7 @@ public class SubjectDa {
 		// 每次都要构造SQLiteDatabase， 对性能影响有多大？
 		SQLiteDatabase db = getDb(context);
 		long subjectID = db.insert("subjects", "pk_id", values);
+		db.close();
 
 		return subjectID;
 	}
@@ -63,6 +64,7 @@ public class SubjectDa {
 		} else {
 			subjectID = db.insert("subjects", "pk_id", values);
 		}
+		db.close();
 
 		return subjectID;
 	}
@@ -80,6 +82,7 @@ public class SubjectDa {
 		SQLiteDatabase db = getDb(context);
 		db.update("subjects", values, "pk_id=?",
 				new String[] { String.valueOf(local_id) });
+		db.close();
 
 	}
 
@@ -90,9 +93,8 @@ public class SubjectDa {
 	public static List<SubjectBean> load_not_uploaded_subjects(Context context,
 			long user_id) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
+		SQLiteDatabase db = getDb(context);
 		try {
-
-			SQLiteDatabase db = getDb(context);
 			Cursor cursor = db.query("subjects", new String[] { "pk_id",
 					"user_id", "body", "creation_date" },
 					"user_id=? and is_sync=0 ",
@@ -109,6 +111,8 @@ public class SubjectDa {
 			}
 		} catch (IllegalArgumentException e) {
 			Log.e("SQLiteOp", e.toString());
+		} finally {
+			db.close();
 		}
 
 		return subjectList;
@@ -117,11 +121,11 @@ public class SubjectDa {
 	public static List<SubjectBean> load(Context context, long user_id,
 			int page, int size) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
+		SQLiteDatabase db = getDb(context);
 		try {
 
 			int offset = (page - 1) * size;
 
-			SQLiteDatabase db = getDb(context);
 			Cursor cursor = db.query("subjects", new String[] { "pk_id",
 					"user_id", "body", "creation_date" }, "user_id=?",
 					new String[] { String.valueOf(user_id) }, null, null,
@@ -139,6 +143,8 @@ public class SubjectDa {
 			}
 		} catch (IllegalArgumentException e) {
 			Log.e("SQLiteOp", e.toString());
+		} finally {
+			db.close();
 		}
 
 		return subjectList;
@@ -147,9 +153,9 @@ public class SubjectDa {
 	public static void load_ids(Context context, long min_remote_id,
 			long max_remote_id) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
+		SQLiteDatabase db = getDb(context);
 		try {
 
-			SQLiteDatabase db = getDb(context);
 			Cursor cursor = db.query(
 					"subjects",
 					new String[] { "pk_id", "remote_id" },
@@ -166,24 +172,28 @@ public class SubjectDa {
 			}
 		} catch (IllegalArgumentException e) {
 			Log.e("SQLiteOp", e.toString());
+		} finally {
+			db.close();
 		}
 
 		// return subjectList ?;
 	}
 
-	public static long get_max_remote_id(Context context, long cust_id) {
+	public static long get_max_remote_id(Context context, long user_id) {
 		long remote_id = 0;
 
 		SQLiteDatabase db = getDb(context);
 
 		Cursor cursor = db.query("subjects",
-				new String[] { "max(remote_id) as max_remote_id" }, null, null,
-				null, null, null);
+				new String[] { "max(remote_id) as max_remote_id" },
+				"user_id=?", new String[] { String.valueOf(user_id) }, null,
+				null, null);
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			remote_id = cursor.getLong(0);
 			break;
 		}
+		db.close();
 
 		return remote_id;
 	}
@@ -200,6 +210,11 @@ public class SubjectDa {
 			max_offset = cursor.getLong(0);
 			break;
 		}
+
+		// finally{
+		db.close();
+		// }
+
 		return max_offset;
 	}
 
@@ -234,6 +249,9 @@ public class SubjectDa {
 
 		} finally {
 			db.endTransaction(); // 处理完成
+
+			db.close();
+
 		}
 	}
 
@@ -246,15 +264,17 @@ public class SubjectDa {
 				new String[] { String.valueOf(user_id) }, null, null, "offset");
 		cursor.moveToFirst();
 
-		List<Long> offset_list =new ArrayList<Long>();
-		//Log.i("dowload_records","------------");
+		List<Long> offset_list = new ArrayList<Long>();
+		// Log.i("dowload_records","------------");
 		while (!cursor.isAfterLast()) {
 			long offset = cursor.getLong(1);
-			//Log.i("dowload_records", String.valueOf(offset));  
+			// Log.i("dowload_records", String.valueOf(offset));
 			offset_list.add(offset);
 			cursor.moveToNext();
 		}
-
+		// finally{
+		db.close();
+		// }
 		return offset_list;
 
 	}
@@ -266,13 +286,17 @@ public class SubjectDa {
 		SQLiteDatabase db = getDb(context);
 
 		ContentValues values = new ContentValues();
-		values.put("has_download", 1 );
+		values.put("has_download", 1);
 
 		db.update(
 				"download_records",
 				values,
 				"user_id=? and offset=?",
 				new String[] { String.valueOf(user_id), String.valueOf(offset) });
+
+		// finally{
+		db.close();
+		// }
 
 	}
 }

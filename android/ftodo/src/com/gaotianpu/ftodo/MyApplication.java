@@ -12,7 +12,7 @@ public class MyApplication extends Application {
 
 	public UserBean getUser() {
 		if (this.user != null) {
-			Log.i(TAG, "getUser");
+			//Log.i(TAG, "getUser");
 			return this.user;
 		}
 
@@ -20,7 +20,7 @@ public class MyApplication extends Application {
 	}
 
 	public UserBean changeUser() {
-		Log.i(TAG, "changeUser");
+		//Log.i(TAG, "changeUser");
 		user = UserDa.load_current_user(this);
 		return user;
 	}

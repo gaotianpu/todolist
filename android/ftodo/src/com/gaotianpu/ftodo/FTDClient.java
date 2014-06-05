@@ -111,7 +111,7 @@ public class FTDClient {
 				} else {
 					subject.setId(0);
 				}
-				subject.setUserId(item.getLong("user_id"));
+				subject.setUserId(item.getLong("user_id")); //user_id
 				subject.setRemoteId(item.getLong("pk_id"));
 				subject.setBody(item.getString("body"));
 				subject.setCreationDate(0);
@@ -123,7 +123,7 @@ public class FTDClient {
 			}
 
 		} catch (JSONException e) {
-			Log.e("MainActivity", e.toString());
+			Log.e("Json2SubjectList", e.toString());
 		}
 
 		return subjectList;
