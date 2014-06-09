@@ -33,9 +33,8 @@ import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 
 public class ListFragment extends Fragment implements
-		SwipeRefreshLayout.OnRefreshListener {
-	public static final String ARG_PLANET_NUMBER = "planet_number";
-
+		SwipeRefreshLayout.OnRefreshListener { 
+	
 	public static final String TAG = "ListFragment";
 
 	private Context ctx;
@@ -110,40 +109,9 @@ public class ListFragment extends Fragment implements
 		tv_load_more = (TextView) moreView.findViewById(R.id.tv_load_more);
 		pb_load_progress = (ProgressBar) moreView
 				.findViewById(R.id.pb_load_progress);
+		lvDefault.addFooterView(moreView);   //设置列表底部视图  
 
-		// 向下滚动翻页
-		lvDefault.setOnScrollListener(new OnScrollListener() {
-			// 添加滚动条滚到最底部，加载余下的元素
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-					// loadRemnantListItem();
-
-					if (view.getLastVisiblePosition() == view.getCount() - 1) {
-						// 底部翻页，区分联网状态？
-						// 下载数据的操作也放在asyncService中？
-
-						Log.d("scroll",
-								"onScrollStateChanged "
-										+ String.valueOf(view
-												.getLastVisiblePosition()));
-					}
-
-					tv_load_more.setText(R.string.loading_data);
-					pb_load_progress.setVisibility(View.VISIBLE);
-
-					Log.d("scroll", "onScrollStateChanged ");
-
-				}
-			}
-
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) {
-				//
-				Log.d("scroll", "onScroll " + String.valueOf(visibleItemCount));
-			}
-		});
+		load_more_data_binding();
 
 		// 获得设备的相关信息
 		TelephonyManager tm = (TelephonyManager) ctx
@@ -154,6 +122,34 @@ public class ListFragment extends Fragment implements
 		// 提交新subject
 		bind_post_new_task();
 
+	} 
+
+	private void load_more_data_binding() {
+		// 向下滚动翻页
+		lvDefault.setOnScrollListener(new OnScrollListener() {
+			// 添加滚动条滚到最底部，加载余下的元素
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {  
+				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE
+						&& view.getLastVisiblePosition() == view.getCount() - 1) {
+					pb_load_progress.setVisibility(View.VISIBLE);
+					tv_load_more.setText(R.string.loading_data);
+					Log.i("onScroll", "loading..."+ String.valueOf(view.getLastVisiblePosition()) +","+ String.valueOf(view.getCount()) );
+					 
+				} 
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) { 
+//				Log.i("onScroll",
+//						"firstVisibleItem:" + String.valueOf(firstVisibleItem)
+//								+ ",visibleItemCount:"
+//								+ String.valueOf(visibleItemCount)
+//								+ ",totalItemCount:"
+//								+ String.valueOf(totalItemCount));
+			}
+		});
 	}
 
 	// 下拉刷新
@@ -273,8 +269,9 @@ public class ListFragment extends Fragment implements
 		long max_remote_id_in_sqlite = SubjectDa
 				.get_max_remote_id(ctx, cust_id);
 
-		 Log.i("max_remote_id_in_sqlite","max_remote_id_in_sqlite " +
-		 String.valueOf(max_remote_id_in_sqlite));
+		Log.i("max_remote_id_in_sqlite",
+				"max_remote_id_in_sqlite "
+						+ String.valueOf(max_remote_id_in_sqlite));
 
 		// max_remote_id_in_sqlite = 500;
 
@@ -289,8 +286,8 @@ public class ListFragment extends Fragment implements
 							// 这行代码可以继续封装到 FTDClient.load_by_custId方法中去，？
 							List<SubjectBean> subjectList = FTDClient
 									.Json2SubjectList(result);
-							
-							//get user's total count
+
+							// get user's total count
 							long total = result.getLong("total");
 							long user_id = result.getLong("user_id");
 							SubjectDa
