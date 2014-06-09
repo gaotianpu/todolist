@@ -180,11 +180,8 @@ public class MainActivity extends Activity {
 			// args1.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
 			// fragment.setArguments(args1);
 			break;
-		default:
-			fragment = new PlanetFragment();
-			// Bundle args = new Bundle();
-			// args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-			// fragment.setArguments(args);
+		default:	
+			fragment = new ListFragment();
 			break;
 		}
 
