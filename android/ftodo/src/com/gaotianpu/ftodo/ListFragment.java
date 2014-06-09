@@ -69,7 +69,7 @@ public class ListFragment extends Fragment implements
 		ctx = this.getActivity();
 
 		app = (MyApplication) ctx.getApplicationContext();
-		Log.i(TAG, "onCreateView");
+	//	Log.i(TAG, "onCreateView");
 
 		user = app.getUser();
 		cust_id = user.getUserId();
@@ -78,6 +78,14 @@ public class ListFragment extends Fragment implements
 
 		getActivity().setTitle("ftodo");
 		return rootView;
+	}
+	
+	private void add_data(int offset,int limit){
+		List<SubjectBean> list = SubjectDa.load(ctx, cust_id, offset, limit);
+		for(SubjectBean s : list){
+			subjectList.add(s);
+		}
+		listAdapter.notifyDataSetChanged(); //数据集变化后,通知adapter  
 	}
 
 	private void init() {
@@ -98,7 +106,7 @@ public class ListFragment extends Fragment implements
 		txtNew = (EditText) rootView.findViewById(R.id.txtNew);
 
 		// 从sqlite中读取数据，展示在listview中
-		subjectList = SubjectDa.load(ctx, cust_id, 1, 100);
+		subjectList = SubjectDa.load(ctx, cust_id, 0, 100);
 		listAdapter = new ListAdapter(ctx);
 		lvDefault.setAdapter(listAdapter);
 
@@ -134,7 +142,10 @@ public class ListFragment extends Fragment implements
 						&& view.getLastVisiblePosition() == view.getCount() - 1) {
 					pb_load_progress.setVisibility(View.VISIBLE);
 					tv_load_more.setText(R.string.loading_data);
-					Log.i("onScroll", "loading..."+ String.valueOf(view.getLastVisiblePosition()) +","+ String.valueOf(view.getCount()) );
+					
+					add_data(view.getCount(),100);
+					
+					//Log.i("onScroll", "loading..."+ String.valueOf(view.getLastVisiblePosition()) +","+ String.valueOf(view.getCount()) );
 					 
 				} 
 			}
@@ -202,6 +213,8 @@ public class ListFragment extends Fragment implements
 			return convertView;
 
 		}
+		
+		 
 
 	}
 

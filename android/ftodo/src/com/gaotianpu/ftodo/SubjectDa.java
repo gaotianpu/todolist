@@ -119,12 +119,12 @@ public class SubjectDa {
 	}
 
 	public static List<SubjectBean> load(Context context, long user_id,
-			int page, int size) {
+			int offset, int size) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		SQLiteDatabase db = getDb(context);
 		try {
 
-			int offset = (page - 1) * size;
+			//int offset = (page - 1) * size;
 
 			Cursor cursor = db.query("subjects", new String[] { "pk_id",
 					"user_id", "body", "creation_date" }, "user_id=?",
