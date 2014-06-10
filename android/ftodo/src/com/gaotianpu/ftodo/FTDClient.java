@@ -1,5 +1,12 @@
 package com.gaotianpu.ftodo;
 
+/**
+ * 基于android-async-http实现http访问
+ * https://github.com/loopj/android-async-http
+ * 
+ *
+ **/
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,8 +105,7 @@ public class FTDClient {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 
 		try {
-			JSONArray resultList = result.getJSONArray("list");
-			// subjectList.clear();
+			JSONArray resultList = result.getJSONArray("list"); 
 
 			for (int i = 0; i < resultList.length(); i++) {
 				JSONObject item = resultList.getJSONObject(i);
@@ -131,7 +137,7 @@ public class FTDClient {
 
 	public void login_or_register(String name, String password,
 			String device_no, String device_type, String os_type,
-			AsyncHttpResponseHandler asyncHttpResponseHandler) {
+			AsyncHttpResponseHandler responseHandler) {
 
 		RequestParams params = new RequestParams();
 		params.put("name", name);
@@ -140,7 +146,7 @@ public class FTDClient {
 		params.put("device_type", device_type);
 		params.put("os_type", os_type);
 
-		client.post(AUTH_URL, params, asyncHttpResponseHandler);
+		client.post(AUTH_URL, params, responseHandler);
 	} 
 
 }

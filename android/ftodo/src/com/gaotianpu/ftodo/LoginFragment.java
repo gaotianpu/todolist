@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
  
 
 import android.animation.Animator;
@@ -170,12 +171,10 @@ public class LoginFragment extends Fragment {
 
 			FTDClient client = new FTDClient(ctx);
 			client.login_or_register(mEmail, mPassword, deviceId, device_type,
-					os_type, new AsyncHttpResponseHandler() {
+					os_type, new JsonHttpResponseHandler() {
 						@Override
-						public void onSuccess(String responseBody) {
-							try {
-								JSONObject result = new JSONObject(responseBody);
-
+						public void onSuccess(JSONObject result) { 
+							try { 
 								int code = result.getInt("code");
 								if (code != 1) {
 									Log.e("login", "code is not 1");
@@ -228,13 +227,15 @@ public class LoginFragment extends Fragment {
 							}
 
 						}
-
+						
 						@Override
-						public void onFailure(Throwable e, String data) {
+						public void onFailure(int statusCode, Throwable e, JSONObject errorResponse){
 							login_failed();
 							Log.e("login", e.toString());
-							// TODO: error proceed
-						}
+							
+						} 
+
+						 
 					});
 
 		}

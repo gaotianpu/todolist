@@ -111,6 +111,7 @@ public class AsyncService extends Service {
 
 		// todo, 单个上传要改成批量上传
 		for (SubjectBean subject : subjectList) {
+			//Log.i("getAccessToken", user.getAccessToken());
 
 			ftd.post_new_task(subject.getUserId(),user.getAccessToken(), subject.getBody(),
 					device_type, devie_no, subject.getId(),
@@ -129,6 +130,14 @@ public class AsyncService extends Service {
 								Log.e(TAG, e.toString());
 							}
 						}
+						
+						@Override
+						public void onFailure(int statusCode, Throwable e, JSONObject errorResponse){
+							if(statusCode==401){
+								//add code here
+							} 
+							
+						} 
 					});
 		}
 	}
@@ -194,8 +203,14 @@ public class AsyncService extends Service {
 							} catch (JSONException e) {
 								Log.e(TAG, e.toString());
 							}
-
 						}
+						
+						@Override
+						public void onFailure(int statusCode, Throwable e, JSONObject errorResponse){
+							if(statusCode==401){
+								//add code here
+							} 
+						} 
 					}); 
 		//}
 
