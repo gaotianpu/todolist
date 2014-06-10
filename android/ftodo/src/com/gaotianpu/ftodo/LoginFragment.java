@@ -216,9 +216,7 @@ public class LoginFragment extends Fragment {
 								
 								act.setTitle(mPlanetTitles[position]);
 								
-								//ListView lvDefault = (ListView) act.findViewById(R.id.lvDefault);
-							
-								
+								//ListView lvDefault = (ListView) act.findViewById(R.id.lvDefault); 
 				
 								
 							} catch (JSONException e) {

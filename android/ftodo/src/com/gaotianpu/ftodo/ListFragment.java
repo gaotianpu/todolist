@@ -322,14 +322,29 @@ public class ListFragment extends Fragment implements
 								insert_new_item(s, 0);
 							}
 
-							swipeLayout.setRefreshing(false);
-							listAdapter.notifyDataSetChanged();
+							
 						} catch (Exception e) {
 							Log.e("load_by_last_async_remote_id", e.toString());
 
+						}finally{
+							swipeLayout.setRefreshing(false);
+							listAdapter.notifyDataSetChanged();
 						}
 
 					}
+					
+					@Override
+					public void onFailure(int statusCode, Throwable e, JSONObject errorResponse){
+						if(statusCode==401){
+							//add code here
+						} 
+						
+						swipeLayout.setRefreshing(false);
+						listAdapter.notifyDataSetChanged();
+						
+					} 
+					
+					
 				});
 
 		// 何时终止？
