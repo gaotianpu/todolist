@@ -37,7 +37,7 @@ public class FTDClient {
 	}
 
 	public void post_new_task(long user_id, String access_token, String content, String device_type,
-			String devie_no, long local_id, int creation_date,
+			String devie_no, long local_id, int creation_date,int last_update,
 			AsyncHttpResponseHandler responseHandler) {
 
 		String url = RES_BASE_URL + "new";
@@ -46,9 +46,10 @@ public class FTDClient {
 		params.put("user_id", String.valueOf(user_id));
 		params.put("access_token", access_token);
 		params.put("content", content);
-		params.put("creation_date", String.valueOf(creation_date)); // ���ĸ�Ϊ׼�أ�
-		params.put("device_type", device_type);
-		params.put("device_no", devie_no);
+		params.put("creation_date", String.valueOf(creation_date)); // 
+		params.put("last_update", String.valueOf(last_update)); // 
+		//params.put("device_type", device_type);
+		//params.put("device_no", devie_no);
 		params.put("local_id", String.valueOf(local_id));
 
 		client.post(url, params, responseHandler);

@@ -21,8 +21,8 @@ public class SubjectDa {
 		ContentValues values = new ContentValues();
 		values.put("body", content);
 		values.put("user_id", user_id);
-		values.put("creation_date", 1); //
-		values.put("last_update", 0);
+		//values.put("creation_date", 1); //
+		//values.put("last_update", 0);
 		values.put("last_sync", 0);
 		values.put("is_del", 0);
 		values.put("is_sync", 0);
@@ -96,7 +96,7 @@ public class SubjectDa {
 		SQLiteDatabase db = getDb(context);
 		try {
 			Cursor cursor = db.query("subjects", new String[] { "pk_id",
-					"user_id", "body", "creation_date" },
+					"user_id", "body", "creation_date" ,"last_update"},
 					"user_id=? and is_sync=0 ",
 					new String[] { String.valueOf(user_id) }, null, null, null);
 			cursor.moveToFirst();
@@ -106,6 +106,7 @@ public class SubjectDa {
 				subject.setUserId(cursor.getLong(1));
 				subject.setBody(cursor.getString(2));
 				subject.setCreationDate(cursor.getInt(3));
+				subject.setUpdateDate(cursor.getInt(4));	
 				subjectList.add(subject);
 				cursor.moveToNext();
 			}
@@ -127,7 +128,7 @@ public class SubjectDa {
 			//int offset = (page - 1) * size;
 
 			Cursor cursor = db.query("subjects", new String[] { "pk_id",
-					"user_id", "body", "creation_date" }, "user_id=?",
+					"user_id", "body", "creation_date","last_update" }, "user_id=?",
 					new String[] { String.valueOf(user_id) }, null, null,
 					"remote_id DESC,pk_id desc limit " + String.valueOf(size)
 							+ " offset " + String.valueOf(offset));
@@ -138,6 +139,7 @@ public class SubjectDa {
 				subject.setUserId(cursor.getLong(1));
 				subject.setBody(cursor.getString(2));
 				subject.setCreationDate(cursor.getInt(3));
+				subject.setUpdateDate(cursor.getInt(4));				
 				subjectList.add(subject);
 				cursor.moveToNext();
 			}

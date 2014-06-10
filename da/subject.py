@@ -16,7 +16,7 @@ def insert(user_id,subject):
         last_update=web.SQLLiteral('now()'),
         plan_start_date=web.SQLLiteral('now()'))
 
-def insert2(user_id,body,device_type,device_no,local_id,created_date):
+def insert2(user_id,body,device_type,device_no,local_id,created_date,last_update):
     #device_type, 手机型号，比如HUAWEI_G730
     result = list(dbr.select(table_name,what="pk_id",
         where="user_id=$user_id and local_id=$local_id and device_type=$device_type and device_no=$device_no",
@@ -28,8 +28,9 @@ def insert2(user_id,body,device_type,device_no,local_id,created_date):
     else:
         return dbw.insert(table_name,user_id=user_id,subject="",body=body,
             device_no = device_no, local_id=local_id, device_type=device_type,
-            created_date=web.SQLLiteral('now()'),
-            last_update=web.SQLLiteral('now()'),
+            app_created_date=created_date,
+            last_update=last_update,
+            created_date = web.SQLLiteral('now()'),
             plan_start_date=web.SQLLiteral('now()'))
 
 def update(pk_id,user_id,**kv):
@@ -81,7 +82,7 @@ def load_page(cust_id,offset,limit):
     
 def load_page2(cust_id,offset,limit): 
     rows = list(dbr.select(table_name,
-        what="pk_id,user_id,body,created_date,local_id",
+        what="pk_id,user_id,body,created_date,last_update,local_id",
         where="user_id=$cust_id", 
         order="pk_id asc",
         offset=offset,limit=limit,
@@ -90,7 +91,7 @@ def load_page2(cust_id,offset,limit):
 
 def load_page3(cust_id,min_pk_id,limit): 
     rows = list(dbr.select(table_name,
-        what="pk_id,user_id,body,created_date,local_id",
+        what="pk_id,user_id,body,created_date,last_update,local_id",
         where="user_id=$cust_id and pk_id>$min_pk_id", 
         order="pk_id",
         offset=0,limit=limit,

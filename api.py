@@ -39,12 +39,12 @@ class CJsonEncoder(json.JSONEncoder):
 class New:
     @validate_token
     def POST(self):
-        i = web.input(content='',local_id=0,creation_date=1)  
+        i = web.input(content='',local_id=0,creation_date=0,last_update=0)  
 
         content = web.websafe(i.content)
         pk_id = da.subject.insert2(self.token.user_id,i.content,
             self.token.device_type,self.token.device_no,i.local_id,
-            i.creation_date) 
+            i.creation_date,i.last_update) 
 
         task = da.subject.load_by_id(pk_id)
         task.local_id = i.local_id  #local_id必须是本次请求的id

@@ -18,10 +18,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "pk_id  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
 				+ "user_id  INTEGER NOT NULL,"
 				+ "body  TEXT NOT NULL," 
-				+ "creation_date  timestamp  NOT NULL,"
-				+ "last_update  timestamp  NOT NULL,"
-				+ "last_sync  timestamp  NOT NULL," + "is_del INTEGER NOT NULL,"
-				+ "is_sync  INTEGER NOT NULL," + "remote_id  INTEGER NOT NULL)");
+				+ "creation_date  date default CURRENT_DATE,"
+				+ "last_update  date default CURRENT_DATE,"
+				+ "last_sync  timestamp  NOT NULL," 
+				+ "is_del INTEGER NOT NULL,"
+				+ "is_sync  INTEGER NOT NULL," 
+				+ "remote_id  INTEGER NOT NULL)");
 		
 		db.execSQL("CREATE INDEX  ix_remote_id ON subjects (remote_id DESC)");
 		
@@ -32,7 +34,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "access_token  NVARCHAR(50),"
 				+ "token_status  INTEGER,"
 				+ "current_active  INTEGER,"
-				+ "last_update  timestamp,"
+				+ "last_update  date default CURRENT_DATE,"
 				+ "PRIMARY KEY (user_id)"
 				+ ");");  
 		

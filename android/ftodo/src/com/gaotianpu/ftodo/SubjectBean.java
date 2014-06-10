@@ -10,6 +10,7 @@ public class SubjectBean {
 	
 	private String body;
 	private int creation_date;
+	private int update_date;
 	
 	private long user_id;
 	
@@ -38,6 +39,13 @@ public class SubjectBean {
 	}
 	public void setCreationDate(int creation_date) {
 		this.creation_date = creation_date;
+	}
+	
+	public int getUpdateDate() {
+		return update_date;
+	}
+	public void setUpdateDate(int update_date) {
+		this.update_date = update_date;
 	}
 	
 	public long getRemoteId() {

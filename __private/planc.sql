@@ -138,10 +138,11 @@ CREATE TABLE `subjects` (
   `device_type` varchar(200) DEFAULT NULL,
   `device_no` varchar(200) DEFAULT NULL,
   `local_id` bigint(20) DEFAULT NULL,
+  `app_created_date` datetime DEFAULT NULL,
   PRIMARY KEY (`pk_id`),
   KEY `ix_user_id` (`user_id`) USING BTREE,
   KEY `ix_plan_start_date` (`plan_start_date`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=226 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=228 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -229,7 +230,7 @@ CREATE TABLE `user_devices` (
   `access_token` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`pk_id`),
   UNIQUE KEY `uniq_id` (`user_id`,`device_no`) USING HASH
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -251,7 +252,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`pk_id`),
   UNIQUE KEY `ix_mobile` (`mobile`),
   UNIQUE KEY `ix_email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -263,4 +264,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-05-30 17:51:57
+-- Dump completed on 2014-06-10 18:37:03
