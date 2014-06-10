@@ -73,6 +73,12 @@ def auth(name,password,deive_no,device_type):
             #如果存在，accesss_token是否过期
     return False 
 
+def validate_token(user_id,access_token):
+    result = list(dbr.select('user_devices',
+        what="user_id,device_no,device_type,os_type", 
+        where="user_id=$user_id and access_token=$access_token",
+        vars=locals()))
+    return result 
 
 if __name__ == "__main__":
     register('gao@g.com','1222')

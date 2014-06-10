@@ -289,7 +289,7 @@ public class ListFragment extends Fragment implements
 		// max_remote_id_in_sqlite = 500;
 
 		FTDClient ftd = new FTDClient(ctx);
-		ftd.load_by_last_async_remote_id(cust_id, max_remote_id_in_sqlite, 50,
+		ftd.load_by_last_async_remote_id(cust_id, user.getAccessToken(), max_remote_id_in_sqlite, 50,
 				new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(JSONObject result) {

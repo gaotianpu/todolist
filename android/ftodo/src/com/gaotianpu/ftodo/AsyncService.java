@@ -45,6 +45,7 @@ public class AsyncService extends Service {
 
 	private MyApplication app;
 	private FTDClient ftd;
+	private UserBean user;
 
 	@Override
 	public void onCreate() {
@@ -74,8 +75,14 @@ public class AsyncService extends Service {
 			public void run() {
 				NetworkInfo info = cm.getActiveNetworkInfo();
 				if (info != null && info.isConnected()) {
-					upload();
+					user = app.getUser();
+					// Log.i(TAG, String.valueOf(user.getUserId()) +
+					// ","+String.valueOf(user.getTokenStatus()) );
+					if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
+						return;
+					}
 					
+					upload();					
 					download();
 				}
 
@@ -91,15 +98,7 @@ public class AsyncService extends Service {
 		super.onDestroy();
 	}
 
-	private void upload() {
-		UserBean user = app.getUser();
-		// Log.i(TAG, String.valueOf(user.getUserId()) +
-		// ","+String.valueOf(user.getTokenStatus()) );
-
-		if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
-			return;
-		}
-
+	private void upload() { 
 		// Log.i(TAG, "has_active_user " );
 
 		List<SubjectBean> subjectList = SubjectDa.load_not_uploaded_subjects(
@@ -113,7 +112,7 @@ public class AsyncService extends Service {
 		// todo, 单个上传要改成批量上传
 		for (SubjectBean subject : subjectList) {
 
-			ftd.post_new_task(subject.getUserId(), subject.getBody(),
+			ftd.post_new_task(subject.getUserId(),user.getAccessToken(), subject.getBody(),
 					device_type, devie_no, subject.getId(),
 					subject.getCreationDate(), new JsonHttpResponseHandler() {
 						@Override
@@ -134,14 +133,7 @@ public class AsyncService extends Service {
 		}
 	}
 
-	private void download() {
-		UserBean user = app.getUser();
-		// Log.i(TAG, String.valueOf(user.getUserId()) +
-		// ","+String.valueOf(user.getTokenStatus()) );
-		if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
-			return;
-		}
-		
+	private void download() { 
 		//获得total count, 这个步骤适合放在用户下拉刷新的时候触发		 
 //		ftd.load_total(user.getUserId(), user.getAccessToken(),
 //				new JsonHttpResponseHandler() {
@@ -173,7 +165,7 @@ public class AsyncService extends Service {
 		}  
 		
 		//for (Long offset : offset_list) {			
-			ftd.load_by_custId(user.getUserId(), offset_list.get(0), page_size,
+			ftd.load_by_custId(user.getUserId(), user.getAccessToken(), offset_list.get(0), page_size,
 					new JsonHttpResponseHandler() {
 						@Override
 						public void onSuccess(JSONObject result) {
