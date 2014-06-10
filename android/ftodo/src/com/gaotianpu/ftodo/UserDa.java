@@ -66,6 +66,16 @@ public class UserDa {
 
 	}
 
+	
+	public static void update_token_status(Context context, long user_id,int status){
+		ContentValues values1 = new ContentValues();
+		values1.put("token_status", status);
+		
+		SQLiteDatabase db = getDb(context);
+		db.update("users", values1, "user_id=?",
+				new String[] { String.valueOf(user_id) });
+	}
+	
 //	public static void insert(Context context, long user_id, String user_name,
 //			String access_token) {
 //		ContentValues values = new ContentValues();

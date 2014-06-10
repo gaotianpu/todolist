@@ -29,5 +29,10 @@ public class MyApplication extends Application {
 		UserDa.login(this,user_id,user_name,access_token);
 		return changeUser();
 	}
+	
+	public void set_token_failure(){
+		UserDa.update_token_status(this,user.getUserId(),0);
+		changeUser();
+	}
 
 }

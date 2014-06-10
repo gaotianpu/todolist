@@ -337,6 +337,7 @@ public class ListFragment extends Fragment implements
 					public void onFailure(int statusCode, Throwable e, JSONObject errorResponse){
 						if(statusCode==401){
 							//add code here
+							app.set_token_failure();
 						} 
 						
 						swipeLayout.setRefreshing(false);
