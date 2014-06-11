@@ -189,7 +189,7 @@ public class AsyncService extends Service {
 								for (SubjectBean s : subjectList) {
 									uid = s.getUserId();
 									
-									long local_id = SubjectDa.insert2(context,
+									SubjectDa.insert2(context,
 											s.getUserId(), s.getRemoteId(),
 											s.getBody(),
 											String.valueOf(s.getCreationDate()), 1,

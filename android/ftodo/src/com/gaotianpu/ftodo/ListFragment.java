@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
+ 
 
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +31,7 @@ import android.widget.EditText;
 
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
+ 
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
