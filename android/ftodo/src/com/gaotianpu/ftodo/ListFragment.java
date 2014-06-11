@@ -2,8 +2,8 @@ package com.gaotianpu.ftodo;
 
 import java.util.List;
 
-import org.json.JSONObject;
-
+import org.json.JSONObject; 
+ 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Fragment;
@@ -27,14 +27,17 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 
 public class ListFragment extends Fragment implements
-		SwipeRefreshLayout.OnRefreshListener { 
-	
+		SwipeRefreshLayout.OnRefreshListener {
+
 	public static final String TAG = "ListFragment";
 
 	private Context ctx;
@@ -55,11 +58,13 @@ public class ListFragment extends Fragment implements
 	private String device_type;
 	private String deviceId;
 	private long cust_id = 0;
+	
+	private MyApplication app;
 	private UserBean user;
 
 	private View rootView;
 
-	private MyApplication app;
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,23 +74,42 @@ public class ListFragment extends Fragment implements
 		ctx = this.getActivity();
 
 		app = (MyApplication) ctx.getApplicationContext();
-	//	Log.i(TAG, "onCreateView");
+		// Log.i(TAG, "onCreateView");
 
 		user = app.getUser();
 		cust_id = user.getUserId();
 
 		init();
+		
+		
+		//单击，查看明细
+		lvDefault.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				
+				SubjectBean subject = subjectList.get(arg2);
+				subject.getId();
+				
+				Log.i("setOnItemClickListener", String.valueOf(arg2) + ","  + String.valueOf(subject.getId()) );
+				
+				Intent detailIntent = new Intent(ctx, ItemDetailActivity.class);
+				detailIntent.putExtra(ItemDetailActivity.SUBJECT_LOCAL_ID, subject.getId());
+				startActivity(detailIntent); 
+
+			}
+		});
 
 		getActivity().setTitle("ftodo");
 		return rootView;
 	}
-	
-	private void add_data(int offset,int limit){
+
+	private void add_data(int offset, int limit) {
 		List<SubjectBean> list = SubjectDa.load(ctx, cust_id, offset, limit);
-		for(SubjectBean s : list){
+		for (SubjectBean s : list) {
 			subjectList.add(s);
 		}
-		listAdapter.notifyDataSetChanged(); //数据集变化后,通知adapter  
+		listAdapter.notifyDataSetChanged(); // 数据集变化后,通知adapter
 	}
 
 	private void init() {
@@ -117,7 +141,7 @@ public class ListFragment extends Fragment implements
 		tv_load_more = (TextView) moreView.findViewById(R.id.tv_load_more);
 		pb_load_progress = (ProgressBar) moreView
 				.findViewById(R.id.pb_load_progress);
-		lvDefault.addFooterView(moreView);   //设置列表底部视图  
+		lvDefault.addFooterView(moreView); // 设置列表底部视图
 
 		load_more_data_binding();
 
@@ -130,35 +154,37 @@ public class ListFragment extends Fragment implements
 		// 提交新subject
 		bind_post_new_task();
 
-	} 
+	}
 
 	private void load_more_data_binding() {
 		// 向下滚动翻页
 		lvDefault.setOnScrollListener(new OnScrollListener() {
 			// 添加滚动条滚到最底部，加载余下的元素
 			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {  
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
 				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE
 						&& view.getLastVisiblePosition() == view.getCount() - 1) {
 					pb_load_progress.setVisibility(View.VISIBLE);
 					tv_load_more.setText(R.string.loading_data);
-					
-					add_data(view.getCount(),100);
-					
-					//Log.i("onScroll", "loading..."+ String.valueOf(view.getLastVisiblePosition()) +","+ String.valueOf(view.getCount()) );
-					 
-				} 
+
+					add_data(view.getCount(), 100);
+
+					// Log.i("onScroll", "loading..."+
+					// String.valueOf(view.getLastVisiblePosition()) +","+
+					// String.valueOf(view.getCount()) );
+
+				}
 			}
 
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) { 
-//				Log.i("onScroll",
-//						"firstVisibleItem:" + String.valueOf(firstVisibleItem)
-//								+ ",visibleItemCount:"
-//								+ String.valueOf(visibleItemCount)
-//								+ ",totalItemCount:"
-//								+ String.valueOf(totalItemCount));
+					int visibleItemCount, int totalItemCount) {
+				// Log.i("onScroll",
+				// "firstVisibleItem:" + String.valueOf(firstVisibleItem)
+				// + ",visibleItemCount:"
+				// + String.valueOf(visibleItemCount)
+				// + ",totalItemCount:"
+				// + String.valueOf(totalItemCount));
 			}
 		});
 	}
@@ -213,8 +239,6 @@ public class ListFragment extends Fragment implements
 			return convertView;
 
 		}
-		
-		 
 
 	}
 
@@ -248,7 +272,7 @@ public class ListFragment extends Fragment implements
 							subject.setId(subjectID);
 							subject.setUserId(cust_id);
 							subject.setBody(txtNew.getText().toString().trim());
-							//subject.setCreationDate(1);
+							// subject.setCreationDate(1);
 
 							insert_new_item(subject, 0);
 
@@ -289,8 +313,8 @@ public class ListFragment extends Fragment implements
 		// max_remote_id_in_sqlite = 500;
 
 		FTDClient ftd = new FTDClient(ctx);
-		ftd.load_by_last_async_remote_id(cust_id, user.getAccessToken(), max_remote_id_in_sqlite, 50,
-				new JsonHttpResponseHandler() {
+		ftd.load_by_last_async_remote_id(cust_id, user.getAccessToken(),
+				max_remote_id_in_sqlite, 50, new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(JSONObject result) {
 
@@ -322,30 +346,29 @@ public class ListFragment extends Fragment implements
 								insert_new_item(s, 0);
 							}
 
-							
 						} catch (Exception e) {
 							Log.e("load_by_last_async_remote_id", e.toString());
 
-						}finally{
+						} finally {
 							swipeLayout.setRefreshing(false);
 							listAdapter.notifyDataSetChanged();
 						}
 
 					}
-					
+
 					@Override
-					public void onFailure(int statusCode, Throwable e, JSONObject errorResponse){
-						if(statusCode==401){
-							//add code here
+					public void onFailure(int statusCode, Throwable e,
+							JSONObject errorResponse) {
+						if (statusCode == 401) {
+							// add code here
 							app.set_token_failure();
-						} 
-						
+						}
+
 						swipeLayout.setRefreshing(false);
 						listAdapter.notifyDataSetChanged();
-						
-					} 
-					
-					
+
+					}
+
 				});
 
 		// 何时终止？

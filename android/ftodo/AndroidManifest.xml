@@ -19,7 +19,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.gaotianpu.ftodo.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,19 +28,22 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.gaotianpu.ftodo.AsyncService" >
+        <service android:name=".AsyncService" >
         </service>
 
         <activity
-            android:name="com.gaotianpu.ftodo.LoginActivity"
+            android:name=".LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
-            android:name="com.gaotianpu.ftodo.SettingsActivity"
+            android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
-         
+        <activity
+            android:name=".ItemDetailActivity"
+            android:label="@string/title_activity_item_detail" >
+        </activity>
     </application>
 
 </manifest>

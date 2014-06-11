@@ -89,6 +89,34 @@ public class SubjectDa {
 	public static void edit_content(long local_id, String content) {
 
 	}
+	
+	public static SubjectBean load_by_localId(Context context, long user_id, long local_id){
+		SubjectBean subject = new SubjectBean();
+		
+		SQLiteDatabase db = getDb(context);
+		try {
+			Cursor cursor = db.query("subjects", new String[] { "pk_id",
+					"user_id", "body", "creation_date" ,"last_update"},
+					"pk_id=? and user_id=? ",
+					new String[] { String.valueOf(local_id),String.valueOf(user_id) }, null, null, null);
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast() ) {
+				 
+				subject.setId(cursor.getLong(0));
+				subject.setUserId(cursor.getLong(1));
+				subject.setBody(cursor.getString(2));
+				subject.setCreationDate(cursor.getString(3));   
+				subject.setUpdateDate(cursor.getString(4));	
+				break ;
+			}
+		} catch (IllegalArgumentException e) {
+			Log.e("SQLiteOp", e.toString());
+		} finally {
+			db.close();
+		}
+
+		return subject;
+	}
 
 	public static List<SubjectBean> load_not_uploaded_subjects(Context context,
 			long user_id) {
