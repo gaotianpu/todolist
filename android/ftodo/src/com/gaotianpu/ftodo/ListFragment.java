@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.json.JSONObject; 
  
+ 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -96,6 +98,14 @@ public class ListFragment extends Fragment implements
 				Intent detailIntent = new Intent(ctx, ItemDetailActivity.class);
 				detailIntent.putExtra(ItemDetailActivity.SUBJECT_LOCAL_ID, subject.getId());
 				startActivity(detailIntent); 
+				
+//				Bundle args = new Bundle();				
+//		        args.putLong(ItemDetailFragment.SUBJECT_LOCAL_ID, subject.getId());		        
+//				Fragment fragment = new ItemDetailFragment(); 
+//		        fragment.setArguments(args);				
+//				FragmentManager fragmentManager = getFragmentManager();
+//				fragmentManager.beginTransaction()
+//						.replace(R.id.content_frame, fragment).commit();
 
 			}
 		});
