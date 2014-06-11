@@ -56,14 +56,7 @@ public class MainActivity extends Activity {
 		}
 	}
  
-	private void updateMenu(){
-		user = app.getUser(); //UserDa.load_current_user(this);
-		if (user.getUserId() != 0) {
-			// 菜单显示 未登录...
-			mPlanetTitles[0] = user.getEmail();			
-			adapter.notifyDataSetChanged();
-		} 
-	}
+	
 
 	private void init_navigation_drawer() {
 		mTitle = mDrawerTitle = getTitle();
@@ -109,6 +102,15 @@ public class MainActivity extends Activity {
 
 	}
 
+	private void updateMenu(){
+		user = app.getUser(); //UserDa.load_current_user(this);
+		if (user.getUserId() != 0) {
+			// 菜单显示 未登录...
+			mPlanetTitles[0] = user.getEmail();			
+			adapter.notifyDataSetChanged();
+		} 
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
