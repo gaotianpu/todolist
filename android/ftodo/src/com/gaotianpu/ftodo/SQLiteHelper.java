@@ -18,9 +18,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "pk_id  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
 				+ "user_id  INTEGER NOT NULL,"
 				+ "body  TEXT NOT NULL," 
-				+ "creation_date  date default CURRENT_DATE,"
-				+ "last_update  date default CURRENT_DATE,"
-				+ "last_sync  timestamp  NOT NULL," 
+				+ "creation_date  datetime default CURRENT_TIMESTAMP,"
+				+ "last_update  datetime default CURRENT_TIMESTAMP,"
+				+ "last_sync  datetime  NOT NULL," 
 				+ "is_del INTEGER NOT NULL,"
 				+ "is_sync  INTEGER NOT NULL," 
 				+ "remote_id  INTEGER NOT NULL)");
@@ -34,7 +34,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "access_token  NVARCHAR(50),"
 				+ "token_status  INTEGER,"
 				+ "current_active  INTEGER,"
-				+ "last_update  date default CURRENT_DATE,"
+				+ "last_update datetime default CURRENT_TIMESTAMP,"
 				+ "PRIMARY KEY (user_id)"
 				+ ");");  
 		

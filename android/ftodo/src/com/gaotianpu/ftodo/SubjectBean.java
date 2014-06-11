@@ -9,8 +9,8 @@ public class SubjectBean {
 	private long remote_id;
 	
 	private String body;
-	private int creation_date;
-	private int update_date;
+	private String creation_date;
+	private String update_date;
 	
 	private long user_id;
 	
@@ -34,17 +34,17 @@ public class SubjectBean {
 	public void setBody(String body) {
 		this.body = body;
 	}
-	public int getCreationDate() {
+	public String getCreationDate() {
 		return creation_date;
 	}
-	public void setCreationDate(int creation_date) {
+	public void setCreationDate(String creation_date) {
 		this.creation_date = creation_date;
 	}
 	
-	public int getUpdateDate() {
+	public String getUpdateDate() {
 		return update_date;
 	}
-	public void setUpdateDate(int update_date) {
+	public void setUpdateDate(String update_date) {
 		this.update_date = update_date;
 	}
 	

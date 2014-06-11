@@ -248,7 +248,7 @@ public class ListFragment extends Fragment implements
 							subject.setId(subjectID);
 							subject.setUserId(cust_id);
 							subject.setBody(txtNew.getText().toString().trim());
-							subject.setCreationDate(1);
+							//subject.setCreationDate(1);
 
 							insert_new_item(subject, 0);
 

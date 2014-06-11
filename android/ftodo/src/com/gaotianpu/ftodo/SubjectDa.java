@@ -105,8 +105,11 @@ public class SubjectDa {
 				subject.setId(cursor.getLong(0));
 				subject.setUserId(cursor.getLong(1));
 				subject.setBody(cursor.getString(2));
-				subject.setCreationDate(cursor.getInt(3));
-				subject.setUpdateDate(cursor.getInt(4));	
+				subject.setCreationDate(cursor.getString(3));  
+				
+				//Log.i("setCreationDate", String.valueOf(cursor.getInt(3)) +"," +  cursor.getString(3) ) ;
+				
+				subject.setUpdateDate(cursor.getString(4));	
 				subjectList.add(subject);
 				cursor.moveToNext();
 			}
@@ -138,8 +141,9 @@ public class SubjectDa {
 				subject.setId(cursor.getLong(0));
 				subject.setUserId(cursor.getLong(1));
 				subject.setBody(cursor.getString(2));
-				subject.setCreationDate(cursor.getInt(3));
-				subject.setUpdateDate(cursor.getInt(4));				
+				 
+				subject.setCreationDate(cursor.getString(3));
+				subject.setUpdateDate(cursor.getString(4));				
 				subjectList.add(subject);
 				cursor.moveToNext();
 			}

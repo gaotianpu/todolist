@@ -76,8 +76,8 @@ public class AsyncService extends Service {
 				NetworkInfo info = cm.getActiveNetworkInfo();
 				if (info != null && info.isConnected()) {
 					user = app.getUser();
-					// Log.i(TAG, String.valueOf(user.getUserId()) +
-					// ","+String.valueOf(user.getTokenStatus()) );
+					 Log.i(TAG, String.valueOf(user.getUserId()) +
+					 ","+String.valueOf(user.getTokenStatus()) );
 					if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
 						return;
 					}
@@ -111,11 +111,11 @@ public class AsyncService extends Service {
 
 		// todo, 单个上传要改成批量上传
 		for (SubjectBean subject : subjectList) {
-			//Log.i("getAccessToken", user.getAccessToken());
+			Log.i(TAG, String.valueOf(subject.getCreationDate()) + "," + String.valueOf(subject.getUpdateDate())  );
 
 			ftd.post_new_task(subject.getUserId(),user.getAccessToken(), subject.getBody(),
 					device_type, devie_no, subject.getId(),
-					subject.getCreationDate(), new JsonHttpResponseHandler() {
+					subject.getCreationDate(), subject.getUpdateDate(),new JsonHttpResponseHandler() {
 						@Override
 						public void onSuccess(JSONObject result) {
 							try {
