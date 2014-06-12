@@ -13,6 +13,9 @@ public class SettingFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_setting, container, false);
+		
+		getActivity().setTitle("设置");
+		
 		return rootView;
 	}
 

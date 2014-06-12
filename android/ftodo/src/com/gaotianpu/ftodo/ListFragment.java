@@ -108,7 +108,7 @@ public class ListFragment extends Fragment implements
 			}
 		});
 
-		getActivity().setTitle("ftodo");
+		getActivity().setTitle("全部");
 		return rootView;
 	}
 

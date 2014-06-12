@@ -26,6 +26,7 @@ public class UserDa {
 		if (!cursor.isAfterLast()) {
 			user.setUserId(cursor.getLong(0));
 			user.setEmail(cursor.getString(1));
+			user.setMobile(cursor.getInt(1));
 			user.setAccessToken(cursor.getString(2));
 			user.setTokenStatus(cursor.getInt(3));
 		}

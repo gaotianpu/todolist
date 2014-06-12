@@ -42,21 +42,19 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		app = (MyApplication)getApplicationContext();
+
+		app = (MyApplication) getApplicationContext();
 
 		// 启动 AsyncService
 		Intent startIntent = new Intent(this, AsyncService.class);
 		this.startService(startIntent); // service如何获得当前用户
 
-		init_navigation_drawer(); 
+		init_navigation_drawer();
 
 		if (savedInstanceState == null) {
 			selectItem(1);
 		}
 	}
- 
-	
 
 	private void init_navigation_drawer() {
 		mTitle = mDrawerTitle = getTitle();
@@ -69,8 +67,8 @@ public class MainActivity extends Activity {
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
 				GravityCompat.START);
 		// set up the drawer's list view with items and click listener
-		adapter = new ArrayAdapter<String>(this,
-				R.layout.drawer_list_item, mPlanetTitles);
+		adapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item,
+				mPlanetTitles);
 		mDrawerList.setAdapter(adapter);
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -102,15 +100,15 @@ public class MainActivity extends Activity {
 
 	}
 
-	private void updateMenu(){
-		user = app.getUser(); //UserDa.load_current_user(this);
+	private void updateMenu() {
+		user = app.getUser(); // UserDa.load_current_user(this);
 		if (user.getUserId() != 0) {
 			// 菜单显示 未登录...
-			mPlanetTitles[0] = user.getEmail();			
+			mPlanetTitles[0] = user.getEmail();
 			adapter.notifyDataSetChanged();
-		} 
+		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -171,18 +169,21 @@ public class MainActivity extends Activity {
 
 		switch (position) {
 		case 0:
-			fragment = new LoginFragment();
+			if(user.getUserId()>0 && user.getTokenStatus()>0){
+				fragment = new DashboardFragment();
+			}else{
+				fragment = new LoginFragment();
+			}
+			
 			// Bundle args0 = new Bundle();
 			// args0.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
 			// fragment.setArguments(args0);
 			break;
-		case 1:
-			fragment = new ListFragment();
-			// Bundle args1 = new Bundle();
-			// args1.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-			// fragment.setArguments(args1);
+		case 2:
+			fragment = new SettingFragment();
 			break;
-		default:	
+		case 1:
+		default:
 			fragment = new ListFragment();
 			break;
 		}
@@ -190,7 +191,7 @@ public class MainActivity extends Activity {
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction()
 				.replace(R.id.content_frame, fragment).commit();
-		
+
 		updateMenu();
 
 		// update selected item and title, then close the drawer
