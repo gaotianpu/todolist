@@ -32,5 +32,10 @@ public class MyApplication extends Application {
 		UserDa.update_token_status(this,user.getUserId(),0);
 		changeUser();
 	}
+	
+	public UserBean logout(){
+		//
+		return changeUser();
+	}
 
 }

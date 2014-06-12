@@ -10,10 +10,11 @@ import android.view.ViewGroup;
 public class DashboardFragment extends Fragment {
 	private View rootView; 
 	
+	private Activity act;
 	private MyApplication app;
 	private UserBean user;
 	
-	private Activity act;
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

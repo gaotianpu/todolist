@@ -36,10 +36,11 @@ public final class R {
         public static final int ic_launcher=0x7f020004;
     }
     public static final class id {
-        public static final int action_forgot_password=0x7f0a0014;
-        public static final int action_settings=0x7f0a0013;
-        public static final int action_websearch=0x7f0a0015;
+        public static final int action_forgot_password=0x7f0a0015;
+        public static final int action_settings=0x7f0a0014;
+        public static final int action_websearch=0x7f0a0016;
         public static final int bottom=0x7f0a0009;
+        public static final int btnLogout=0x7f0a0012;
         public static final int container=0x7f0a0000;
         public static final int content_frame=0x7f0a0002;
         public static final int drawer_layout=0x7f0a0001;
@@ -55,7 +56,7 @@ public final class R {
         public static final int sign_in_button=0x7f0a0011;
         public static final int subject_body=0x7f0a0006;
         public static final int swipe_container=0x7f0a0007;
-        public static final int tvBody=0x7f0a0012;
+        public static final int tvBody=0x7f0a0013;
         public static final int tv_load_more=0x7f0a0005;
         public static final int txtNew=0x7f0a000a;
     }
