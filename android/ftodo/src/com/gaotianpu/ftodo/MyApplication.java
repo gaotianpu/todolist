@@ -1,14 +1,13 @@
 package com.gaotianpu.ftodo;
 
-import android.app.Application;
- 
+import android.app.Application; 
 import android.util.Log;
 
 public class MyApplication extends Application {
 
 	private UserBean user;
 
-	private final String TAG = "MyApplication";
+	//private final String TAG = "MyApplication";
 
 	public UserBean getUser() {
 		if (this.user != null) {
