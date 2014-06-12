@@ -64,10 +64,12 @@ public final class R {
         public static final int activity_main=0x7f030001;
         public static final int drawer_list_item=0x7f030002;
         public static final int footer_more=0x7f030003;
-        public static final int fragment_item_detail=0x7f030004;
-        public static final int fragment_list=0x7f030005;
-        public static final int fragment_login=0x7f030006;
-        public static final int listview_item=0x7f030007;
+        public static final int fragment_dashboard=0x7f030004;
+        public static final int fragment_item_detail=0x7f030005;
+        public static final int fragment_list=0x7f030006;
+        public static final int fragment_login=0x7f030007;
+        public static final int fragment_setting=0x7f030008;
+        public static final int listview_item=0x7f030009;
     }
     public static final class menu {
         public static final int item_detail=0x7f090000;
