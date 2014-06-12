@@ -76,13 +76,14 @@ public class AsyncService extends Service {
 				NetworkInfo info = cm.getActiveNetworkInfo();
 				if (info != null && info.isConnected()) {
 					user = app.getUser();
-					 Log.i(TAG, String.valueOf(user.getUserId()) +
-					 ","+String.valueOf(user.getTokenStatus()) );
+					Log.i(TAG,
+							String.valueOf(user.getUserId()) + ","
+									+ String.valueOf(user.getTokenStatus()));
 					if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
 						return;
 					}
-					
-					upload();					
+
+					upload();
 					download();
 				}
 
@@ -98,7 +99,7 @@ public class AsyncService extends Service {
 		super.onDestroy();
 	}
 
-	private void upload() { 
+	private void upload() {
 		// Log.i(TAG, "has_active_user " );
 
 		List<SubjectBean> subjectList = SubjectDa.load_not_uploaded_subjects(
@@ -111,11 +112,14 @@ public class AsyncService extends Service {
 
 		// todo, 单个上传要改成批量上传
 		for (SubjectBean subject : subjectList) {
-			Log.i(TAG, String.valueOf(subject.getCreationDate()) + "," + String.valueOf(subject.getUpdateDate())  );
+			Log.i(TAG,
+					String.valueOf(subject.getCreationDate()) + ","
+							+ String.valueOf(subject.getUpdateDate()));
 
-			ftd.post_new_task(subject.getUserId(),user.getAccessToken(), subject.getBody(),
-					device_type, devie_no, subject.getId(),
-					subject.getCreationDate(), subject.getUpdateDate(),new JsonHttpResponseHandler() {
+			ftd.post_new_task(subject.getUserId(), user.getAccessToken(),
+					subject.getBody(), device_type, devie_no, subject.getId(),
+					subject.getCreationDate(), subject.getUpdateDate(),
+					new JsonHttpResponseHandler() {
 						@Override
 						public void onSuccess(JSONObject result) {
 							try {
@@ -123,98 +127,100 @@ public class AsyncService extends Service {
 
 								SubjectDa.set_remoteId(context,
 										data.getLong("local_id"),
-										data.getLong("pk_id"));
+										data.getLong("pk_id"),
+										data.getLong("user_id"));
 								// Log.d(TAG, "sucess");
 
 							} catch (JSONException e) {
 								Log.e(TAG, e.toString());
 							}
 						}
-						
+
 						@Override
-						public void onFailure(int statusCode, Throwable e, JSONObject errorResponse){
-							if(statusCode==401){
-								//add code here
+						public void onFailure(int statusCode, Throwable e,
+								JSONObject errorResponse) {
+							if (statusCode == 401) {
+								// add code here
 								app.set_token_failure();
-							} 
-							
-						} 
+							}
+
+						}
 					});
 		}
 	}
 
-	private void download() { 
-		//获得total count, 这个步骤适合放在用户下拉刷新的时候触发		 
-//		ftd.load_total(user.getUserId(), user.getAccessToken(),
-//				new JsonHttpResponseHandler() {
-//					@Override
-//					public void onSuccess(JSONObject result) {
-//						try {
-//							long total = result.getLong("total");
-//							long user_id = result.getLong("user_id");
-//							
-//							SubjectDa.save_download_records(context, user_id,
-//									total); // 每次都要全部写入？
-//							
-//
-//						} catch (JSONException e) {
-//							Log.e(TAG, e.toString());
-//						}
-//
-//					}
-//				}); 
+	private void download() {
+		// 获得total count, 这个步骤适合放在用户下拉刷新的时候触发
+		// ftd.load_total(user.getUserId(), user.getAccessToken(),
+		// new JsonHttpResponseHandler() {
+		// @Override
+		// public void onSuccess(JSONObject result) {
+		// try {
+		// long total = result.getLong("total");
+		// long user_id = result.getLong("user_id");
+		//
+		// SubjectDa.save_download_records(context, user_id,
+		// total); // 每次都要全部写入？
+		//
+		//
+		// } catch (JSONException e) {
+		// Log.e(TAG, e.toString());
+		// }
+		//
+		// }
+		// });
 
 		// download and insert into subjects
 		int page_size = 100;
 		List<Long> offset_list = SubjectDa.load_not_download(context,
 				user.getUserId());
-		//Log.i(TAG, String.valueOf( offset_list.size() ) );
-		
-		if(offset_list.size()==0){
-			return ;
-		}  
-		
-		//for (Long offset : offset_list) {			
-			ftd.load_by_custId(user.getUserId(), user.getAccessToken(), offset_list.get(0), page_size,
-					new JsonHttpResponseHandler() {
-						@Override
-						public void onSuccess(JSONObject result) {
-							try {
-								long uid = result.getLong("user_id");
-								long offset = result.getLong("offset");
+		// Log.i(TAG, String.valueOf( offset_list.size() ) );
 
-								List<SubjectBean> subjectList = FTDClient
-										.Json2SubjectList(result);
+		if (offset_list.size() == 0) {
+			return;
+		}
 
-								for (SubjectBean s : subjectList) {
-									uid = s.getUserId();
-									
-									SubjectDa.insert2(context,
-											s.getUserId(), s.getRemoteId(),
-											s.getBody(),
-											String.valueOf(s.getCreationDate()), 1,
-											1); 
-									 
-								}
-								
-								//then,update the download records
-								SubjectDa.update_download_records(context, uid,
-										offset);
+		// for (Long offset : offset_list) {
+		ftd.load_by_custId(user.getUserId(), user.getAccessToken(),
+				offset_list.get(0), page_size, new JsonHttpResponseHandler() {
+					@Override
+					public void onSuccess(JSONObject result) {
+						try {
+							long uid = result.getLong("user_id");
+							long offset = result.getLong("offset");
 
-							} catch (JSONException e) {
-								Log.e(TAG, e.toString());
+							List<SubjectBean> subjectList = FTDClient
+									.Json2SubjectList(result);
+
+							for (SubjectBean s : subjectList) {
+								uid = s.getUserId();
+
+								SubjectDa.insert2(context, s.getUserId(),
+										s.getRemoteId(), s.getBody(),
+										String.valueOf(s.getCreationDate()), 1,
+										1);
+
 							}
+
+							// then,update the download records
+							SubjectDa.update_download_records(context, uid,
+									offset);
+
+						} catch (JSONException e) {
+							Log.e(TAG, e.toString());
 						}
-						
-						@Override
-						public void onFailure(int statusCode, Throwable e, JSONObject errorResponse){
-							if(statusCode==401){
-								//add code here
-								app.set_token_failure();
-							} 
-						} 
-					}); 
-		//}
+					}
+
+					@Override
+					public void onFailure(int statusCode, Throwable e,
+							JSONObject errorResponse) {
+						if (statusCode == 401) {
+							// add code here
+							app.set_token_failure();
+						}
+					}
+				});
+		// }
 
 	}
 }

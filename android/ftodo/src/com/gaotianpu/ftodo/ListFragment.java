@@ -64,9 +64,7 @@ public class ListFragment extends Fragment implements
 	private MyApplication app;
 	private UserBean user;
 
-	private View rootView;
-
-	
+	private View rootView; 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -140,9 +138,11 @@ public class ListFragment extends Fragment implements
 		txtNew = (EditText) rootView.findViewById(R.id.txtNew);
 
 		// 从sqlite中读取数据，展示在listview中
-		subjectList = SubjectDa.load(ctx, cust_id, 0, 100);
+		subjectList = SubjectDa.load_not_uploaded_subjects(ctx, cust_id); //.load(ctx, cust_id, 0, 100);
 		listAdapter = new ListAdapter(ctx);
 		lvDefault.setAdapter(listAdapter);
+		
+		add_data(0, 100);
 
 		// 滚动翻页
 		// lvDefault.setOnScrollListener(this);

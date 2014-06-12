@@ -35,6 +35,18 @@ public class FTDClient {
 
 		// 单例模式？
 	}
+	
+	public void update_task(long user_id,String access_token,long remote_id,String content,AsyncHttpResponseHandler responseHandler){
+		String url = RES_BASE_URL + "edit";
+		
+		RequestParams params = new RequestParams();
+		params.put("user_id", String.valueOf(user_id));
+		params.put("remote_id", String.valueOf(remote_id));
+		params.put("access_token", access_token);
+		params.put("content", content);
+		client.post(url, params, responseHandler);
+		return;
+	}
 
 	public void post_new_task(long user_id, String access_token, String content, String device_type,
 			String devie_no, long local_id, String creation_date,String last_update,

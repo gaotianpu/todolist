@@ -70,12 +70,13 @@ public class SubjectDa {
 	}
 
 	public static void set_remoteId(Context context, long local_id,
-			long remote_id) {
+			long remote_id, long user_id) {
 
 		// update sqlite's remote_id
 
 		ContentValues values = new ContentValues();
 		values.put("remote_id", remote_id);
+		values.put("user_id", user_id);
 		values.put("is_sync", 1);
 		values.put("last_sync", 1); //
 
@@ -96,8 +97,8 @@ public class SubjectDa {
 		SQLiteDatabase db = getDb(context);
 		try {
 			Cursor cursor = db.query("subjects", new String[] { "pk_id",
-					"user_id", "body", "creation_date" ,"last_update"},
-					"pk_id=? and user_id=? ",
+					"user_id", "body", "creation_date" ,"last_update","remote_id"},
+					"pk_id=? and (user_id=? or user_id=0) ",
 					new String[] { String.valueOf(local_id),String.valueOf(user_id) }, null, null, null);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast() ) {
@@ -107,6 +108,7 @@ public class SubjectDa {
 				subject.setBody(cursor.getString(2));
 				subject.setCreationDate(cursor.getString(3));   
 				subject.setUpdateDate(cursor.getString(4));	
+				subject.setRemoteId(cursor.getLong(5));
 				break ;
 			}
 		} catch (IllegalArgumentException e) {
@@ -124,20 +126,21 @@ public class SubjectDa {
 		SQLiteDatabase db = getDb(context);
 		try {
 			Cursor cursor = db.query("subjects", new String[] { "pk_id",
-					"user_id", "body", "creation_date" ,"last_update"},
-					"user_id=? and is_sync=0 ",
+					"user_id", "body", "creation_date" ,"last_update","remote_id"},
+					"(user_id=? or user_id=0) and (is_sync=0 or remote_id=0) ",
 					new String[] { String.valueOf(user_id) }, null, null, null);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast() && (cursor.getString(1) != null)) {
 				SubjectBean subject = new SubjectBean();
-				subject.setId(cursor.getLong(0));
-				subject.setUserId(cursor.getLong(1));
+				subject.setId(cursor.getLong(0));				 
+				subject.setUserId(user_id); //cursor.getLong(1));
 				subject.setBody(cursor.getString(2));
 				subject.setCreationDate(cursor.getString(3));  
 				
 				//Log.i("setCreationDate", String.valueOf(cursor.getInt(3)) +"," +  cursor.getString(3) ) ;
 				
 				subject.setUpdateDate(cursor.getString(4));	
+				subject.setRemoteId(cursor.getLong(5));
 				subjectList.add(subject);
 				cursor.moveToNext();
 			}
@@ -159,7 +162,7 @@ public class SubjectDa {
 			//int offset = (page - 1) * size;
 
 			Cursor cursor = db.query("subjects", new String[] { "pk_id",
-					"user_id", "body", "creation_date","last_update" }, "user_id=?",
+					"user_id", "body", "creation_date","last_update" ,"remote_id"}, "user_id=? and remote_id<>0",
 					new String[] { String.valueOf(user_id) }, null, null,
 					"remote_id DESC,pk_id desc limit " + String.valueOf(size)
 							+ " offset " + String.valueOf(offset));
@@ -171,7 +174,8 @@ public class SubjectDa {
 				subject.setBody(cursor.getString(2));
 				 
 				subject.setCreationDate(cursor.getString(3));
-				subject.setUpdateDate(cursor.getString(4));				
+				subject.setUpdateDate(cursor.getString(4));	
+				subject.setRemoteId(cursor.getLong(5));
 				subjectList.add(subject);
 				cursor.moveToNext();
 			}
