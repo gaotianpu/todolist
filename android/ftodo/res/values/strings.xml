@@ -16,6 +16,11 @@
         <item>全部</item>
         <item>设置</item>        
     </string-array>
+    
+    <string-array name="drawer_menu_items_unlogin">
+        <item>未登录</item>
+        <item>全部</item>         
+    </string-array>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>

@@ -2,10 +2,13 @@ package com.gaotianpu.ftodo;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class SettingFragment extends Fragment {
 	private View rootView;
@@ -34,14 +37,34 @@ public class SettingFragment extends Fragment {
 
 						// 清理sqlite 里的数据？
 
-						// 修改左侧菜单？
-
-						// 定位到login
+						
+						logout();
+						
 
 					}
 				});
 
 		return rootView;
+	}
+	
+	private void logout(){
+		//转至login页
+		Fragment fragment = new LoginFragment();
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction()
+				.replace(R.id.content_frame, fragment).commit();
+		
+		// 修改左侧菜单？ 
+		String[] drawer_menu_items_unlogin = getResources()
+				.getStringArray(R.array.drawer_menu_items_unlogin);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(act,
+				R.layout.drawer_list_item, drawer_menu_items_unlogin);
+		
+		ListView mDrawerList = (ListView) act
+				.findViewById(R.id.left_drawer); 
+		mDrawerList.setAdapter(adapter);
+		
+		mDrawerList.setItemChecked(0, true);
 	}
 
 }

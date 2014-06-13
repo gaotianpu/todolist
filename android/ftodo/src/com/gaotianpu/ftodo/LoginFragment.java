@@ -71,7 +71,8 @@ public class LoginFragment extends Fragment {
 		
 		act = this.getActivity();
 		init();
-
+		
+		getActivity().setTitle("登录或注册");
 		return rootView;
 	}
 
