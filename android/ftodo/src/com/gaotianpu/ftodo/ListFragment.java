@@ -65,8 +65,6 @@ public class ListFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// 1.系统全局
-		rootView = inflater.inflate(R.layout.fragment_list, container, false);
-
 		ctx = this.getActivity();
 		app = (MyApplication) ctx.getApplicationContext();
 
@@ -85,8 +83,7 @@ public class ListFragment extends Fragment {
 		ftd = new FTDClient(ctx);
 
 		// 2.控件相关
-		getActivity().setTitle("全部");
-
+		rootView = inflater.inflate(R.layout.fragment_list, container, false);
 		lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
 		txtNew = (EditText) rootView.findViewById(R.id.txtNew);
 
@@ -103,6 +100,8 @@ public class ListFragment extends Fragment {
 		pb_load_progress = (ProgressBar) moreView
 				.findViewById(R.id.pb_load_progress);
 		lvDefault.addFooterView(moreView); // 设置列表底部视图
+
+		getActivity().setTitle("全部");
 
 		// 3.数据加载
 		subjectList = new ArrayList<SubjectBean>();
