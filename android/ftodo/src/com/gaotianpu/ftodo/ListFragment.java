@@ -1,5 +1,6 @@
 package com.gaotianpu.ftodo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -65,24 +66,74 @@ public class ListFragment extends Fragment implements
 	private View rootView;
 
 	private SubjectDa subjectDa;
+	private FTDClient ftd;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		// 1.系统全局
 		rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
 		ctx = this.getActivity();
-
-		app = (MyApplication) ctx.getApplicationContext();
-		// Log.i(TAG, "onCreateView");
+		app = (MyApplication) ctx.getApplicationContext();		
+		
+		cm = (ConnectivityManager) ctx
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		// 获得设备的相关信息
+		TelephonyManager tm = (TelephonyManager) ctx
+				.getSystemService(Context.TELEPHONY_SERVICE);
+		deviceId = tm.getDeviceId();
+		device_type = android.os.Build.MODEL;
 
 		user = app.getUser();
 		cust_id = user.getUserId();
 
 		subjectDa = new SubjectDa(ctx);
+		ftd = new FTDClient(ctx);
 
-		init();
+		// 2.控件相关
+		getActivity().setTitle("全部");
 
+		lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
+		txtNew = (EditText) rootView.findViewById(R.id.txtNew);
+
+		// 下拉刷新初始化设置
+		swipeLayout = (SwipeRefreshLayout) rootView
+				.findViewById(R.id.swipe_container);
+		swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
+				android.R.color.holo_green_light,
+				android.R.color.holo_orange_light,
+				android.R.color.holo_red_light);
+
+		// LayoutInflater inflater = LayoutInflater.from(ctx);
+		moreView = inflater.inflate(R.layout.footer_more, null);
+		tv_load_more = (TextView) moreView.findViewById(R.id.tv_load_more);
+		pb_load_progress = (ProgressBar) moreView
+				.findViewById(R.id.pb_load_progress);
+		lvDefault.addFooterView(moreView); // 设置列表底部视图
+
+		// 3.数据加载
+		subjectList = new ArrayList<SubjectBean>();
+		listAdapter = new ListAdapter(ctx);
+		lvDefault.setAdapter(listAdapter);		
+		load_new_data();
+
+		// 4.事件绑定
+		bind_post_new_task(); // 提交新subject
+		swipeLayout.setOnRefreshListener(this);
+		lvDefault_setOnItemClickListener();
+		load_more_data_binding(); // 滚动翻页
+
+		return rootView;
+	}
+
+	private void load_new_data() { 
+		// 从sqlite中读取数据，展示在listview中
+		subjectList = subjectDa.load_not_uploaded_subjects(cust_id);   
+		add_data(0, 100);  
+	}
+
+	private void lvDefault_setOnItemClickListener() {
 		// 单击，查看明细
 		lvDefault.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -112,8 +163,6 @@ public class ListFragment extends Fragment implements
 			}
 		});
 
-		getActivity().setTitle("全部");
-		return rootView;
 	}
 
 	private void add_data(int offset, int limit) {
@@ -122,55 +171,6 @@ public class ListFragment extends Fragment implements
 			subjectList.add(s);
 		}
 		listAdapter.notifyDataSetChanged(); // 数据集变化后,通知adapter
-	}
-
-	private void init() {
-		cm = (ConnectivityManager) ctx
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-		// 下拉刷新初始化设置
-		swipeLayout = (SwipeRefreshLayout) rootView
-				.findViewById(R.id.swipe_container);
-		swipeLayout.setOnRefreshListener(this);
-		swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
-				android.R.color.holo_green_light,
-				android.R.color.holo_orange_light,
-				android.R.color.holo_red_light);
-
-		//
-		lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
-		txtNew = (EditText) rootView.findViewById(R.id.txtNew);
-
-		// 从sqlite中读取数据，展示在listview中
-		subjectList = subjectDa.load_not_uploaded_subjects(cust_id); // .load(ctx,
-																		// cust_id,
-																		// 0,
-																		// 100);
-		listAdapter = new ListAdapter(ctx);
-		lvDefault.setAdapter(listAdapter);
-
-		add_data(0, 100);
-
-		// 滚动翻页
-		// lvDefault.setOnScrollListener(this);
-		LayoutInflater inflater = LayoutInflater.from(ctx);
-		moreView = inflater.inflate(R.layout.footer_more, null);
-		tv_load_more = (TextView) moreView.findViewById(R.id.tv_load_more);
-		pb_load_progress = (ProgressBar) moreView
-				.findViewById(R.id.pb_load_progress);
-		lvDefault.addFooterView(moreView); // 设置列表底部视图
-
-		load_more_data_binding();
-
-		// 获得设备的相关信息
-		TelephonyManager tm = (TelephonyManager) ctx
-				.getSystemService(Context.TELEPHONY_SERVICE);
-		deviceId = tm.getDeviceId();
-		device_type = android.os.Build.MODEL;
-
-		// 提交新subject
-		bind_post_new_task();
-
 	}
 
 	private void load_more_data_binding() {
@@ -310,15 +310,16 @@ public class ListFragment extends Fragment implements
 
 	private void download() {
 		// Log.i(TAG,"download");
-
-		if (cust_id == 0 || user.getTokenStatus() == 0) {
+		user = app.getUser();
+		if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
 			return;
 		}
 
-		// Log.i(TAG,"cust_id & token status is ok");
+		  Log.i(TAG,"cust_id & token status is ok");
 
 		// get max remote_id from sqlite
-		long max_remote_id_in_sqlite = subjectDa.get_max_remote_id(cust_id);
+		long max_remote_id_in_sqlite = subjectDa.get_max_remote_id(user
+				.getUserId());
 
 		Log.i("max_remote_id_in_sqlite",
 				"max_remote_id_in_sqlite "
@@ -326,9 +327,9 @@ public class ListFragment extends Fragment implements
 
 		// max_remote_id_in_sqlite = 500;
 
-		FTDClient ftd = new FTDClient(ctx);
-		ftd.load_by_last_async_remote_id(cust_id, user.getAccessToken(),
-				max_remote_id_in_sqlite, 50, new JsonHttpResponseHandler() {
+		ftd.load_by_last_async_remote_id(user.getUserId(),
+				user.getAccessToken(), max_remote_id_in_sqlite, 50,
+				new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(JSONObject result) {
 
@@ -356,8 +357,10 @@ public class ListFragment extends Fragment implements
 										1);
 
 								s.setId(local_id);
-								insert_new_item(s, 0);
+								//insert_new_item(s, 0);
 							}
+							
+							load_new_data();
 
 						} catch (Exception e) {
 							Log.e("load_by_last_async_remote_id", e.toString());

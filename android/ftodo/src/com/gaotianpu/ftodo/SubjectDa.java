@@ -63,6 +63,7 @@ public class SubjectDa {
 		if (!cursor.isAfterLast()) {
 			// has record, update
 			subjectID = cursor.getLong(0);
+			db.update("subjects", values, "remote_id=?",  new String[] { String.valueOf(remote_id) });
 		} else {
 			subjectID = db.insert("subjects", "pk_id", values);
 		}
