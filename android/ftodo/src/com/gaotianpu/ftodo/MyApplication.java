@@ -1,16 +1,20 @@
 package com.gaotianpu.ftodo;
 
-import android.app.Application; 
+import android.app.Application;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-public class MyApplication extends Application {	
+public class MyApplication extends Application {
 	private final String TAG = "MyApplication";
 
 	private UserBean user;
+	private UserDa userDa;
 
 	public UserBean getUser() {
+		userDa = new UserDa(this);
+
 		if (this.user != null) {
-			//Log.i(TAG, "getUser");
+			// Log.i(TAG, "getUser");
 			return this.user;
 		}
 
@@ -18,24 +22,33 @@ public class MyApplication extends Application {
 	}
 
 	public UserBean changeUser() {
-		//Log.i(TAG, "changeUser");
-		user = UserDa.load_current_user(this);
+		// Log.i(TAG, "changeUser");
+		user = userDa.load_current_user();
 		return user;
 	}
 
 	public UserBean login(long user_id, String user_name, String access_token) {
-		UserDa.login(this,user_id,user_name,access_token);
+		userDa.login(user_id, user_name, access_token);
 		return changeUser();
 	}
-	
-	public void set_token_failure(){
-		UserDa.update_token_status(this,user.getUserId(),0);
+
+	public void set_token_failure() {
+		userDa.update_token_status(user.getUserId(), 0);
 		changeUser();
 	}
-	
-	public UserBean logout(){
-		//
+
+	public UserBean logout() {
+		userDa.update_token_status(user.getUserId(), 0);
 		return changeUser();
+	}
+
+	private SQLiteHelper dbHelper;
+
+	public SQLiteDatabase getDB() {
+		if (this.dbHelper == null) {
+			dbHelper = new SQLiteHelper(this, "ftodo", null, 1);
+		}
+		return dbHelper.getWritableDatabase();
 	}
 
 }

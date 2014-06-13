@@ -24,6 +24,7 @@ public class ItemDetailActivity extends Activity {
 	private Context ctx;	
 	private MyApplication app;
 	private UserBean user;
+	private SubjectDa subjectDa;
 	
 	private Long subject_local_id  ;
 
@@ -35,6 +36,8 @@ public class ItemDetailActivity extends Activity {
 		ctx = this;		
 		app = (MyApplication) ctx.getApplicationContext(); 
 		user = app.getUser();
+		
+		subjectDa = new SubjectDa(this);
 		
 		Intent intent= getIntent();
 		subject_local_id = intent.getLongExtra(SUBJECT_LOCAL_ID, 0);
@@ -52,7 +55,7 @@ public class ItemDetailActivity extends Activity {
 	}
 	
 	private void render_details(){		
-		SubjectBean subject = SubjectDa.load_by_localId(ctx, user.getUserId(), subject_local_id);
+		SubjectBean subject = subjectDa.load_by_localId( user.getUserId(), subject_local_id);
 		Log.i("render_details", subject.getBody());
 		
 		//subject_body

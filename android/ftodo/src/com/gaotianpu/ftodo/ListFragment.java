@@ -2,13 +2,11 @@ package com.gaotianpu.ftodo;
 
 import java.util.List;
 
-import org.json.JSONObject; 
- 
- 
+import org.json.JSONObject;
+
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Fragment;
- 
 
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +29,7 @@ import android.widget.EditText;
 
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
- 
+
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -60,11 +58,13 @@ public class ListFragment extends Fragment implements
 	private String device_type;
 	private String deviceId;
 	private long cust_id = 0;
-	
+
 	private MyApplication app;
 	private UserBean user;
 
-	private View rootView; 
+	private View rootView;
+
+	private SubjectDa subjectDa;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,31 +79,35 @@ public class ListFragment extends Fragment implements
 		user = app.getUser();
 		cust_id = user.getUserId();
 
+		subjectDa = new SubjectDa(ctx);
+
 		init();
-		
-		
-		//单击，查看明细
+
+		// 单击，查看明细
 		lvDefault.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				
+
 				SubjectBean subject = subjectList.get(arg2);
 				subject.getId();
-				
-				Log.i("setOnItemClickListener", String.valueOf(arg2) + ","  + String.valueOf(subject.getId()) );
-				
+
+				Log.i("setOnItemClickListener", String.valueOf(arg2) + ","
+						+ String.valueOf(subject.getId()));
+
 				Intent detailIntent = new Intent(ctx, ItemDetailActivity.class);
-				detailIntent.putExtra(ItemDetailActivity.SUBJECT_LOCAL_ID, subject.getId());
-				startActivity(detailIntent); 
-				
-//				Bundle args = new Bundle();				
-//		        args.putLong(ItemDetailFragment.SUBJECT_LOCAL_ID, subject.getId());		        
-//				Fragment fragment = new ItemDetailFragment(); 
-//		        fragment.setArguments(args);				
-//				FragmentManager fragmentManager = getFragmentManager();
-//				fragmentManager.beginTransaction()
-//						.replace(R.id.content_frame, fragment).commit();
+				detailIntent.putExtra(ItemDetailActivity.SUBJECT_LOCAL_ID,
+						subject.getId());
+				startActivity(detailIntent);
+
+				// Bundle args = new Bundle();
+				// args.putLong(ItemDetailFragment.SUBJECT_LOCAL_ID,
+				// subject.getId());
+				// Fragment fragment = new ItemDetailFragment();
+				// fragment.setArguments(args);
+				// FragmentManager fragmentManager = getFragmentManager();
+				// fragmentManager.beginTransaction()
+				// .replace(R.id.content_frame, fragment).commit();
 
 			}
 		});
@@ -113,7 +117,7 @@ public class ListFragment extends Fragment implements
 	}
 
 	private void add_data(int offset, int limit) {
-		List<SubjectBean> list = SubjectDa.load(ctx, cust_id, offset, limit);
+		List<SubjectBean> list = subjectDa.load(cust_id, offset, limit);
 		for (SubjectBean s : list) {
 			subjectList.add(s);
 		}
@@ -138,10 +142,13 @@ public class ListFragment extends Fragment implements
 		txtNew = (EditText) rootView.findViewById(R.id.txtNew);
 
 		// 从sqlite中读取数据，展示在listview中
-		subjectList = SubjectDa.load_not_uploaded_subjects(ctx, cust_id); //.load(ctx, cust_id, 0, 100);
+		subjectList = subjectDa.load_not_uploaded_subjects(cust_id); // .load(ctx,
+																		// cust_id,
+																		// 0,
+																		// 100);
 		listAdapter = new ListAdapter(ctx);
 		lvDefault.setAdapter(listAdapter);
-		
+
 		add_data(0, 100);
 
 		// 滚动翻页
@@ -271,12 +278,10 @@ public class ListFragment extends Fragment implements
 						String content = txtNew.getText().toString().trim();
 						if (content.length() > 1) {
 
-							user = UserDa.load_current_user(ctx);
+							user = app.getUser();
 							cust_id = user.getUserId();
-							Log.e("cust_id", String.valueOf(cust_id));
 
-							Long subjectID = SubjectDa.insert(ctx, cust_id,
-									content);
+							Long subjectID = subjectDa.insert(cust_id, content);
 
 							SubjectBean subject = new SubjectBean();
 							subject.setId(subjectID);
@@ -313,8 +318,7 @@ public class ListFragment extends Fragment implements
 		// Log.i(TAG,"cust_id & token status is ok");
 
 		// get max remote_id from sqlite
-		long max_remote_id_in_sqlite = SubjectDa
-				.get_max_remote_id(ctx, cust_id);
+		long max_remote_id_in_sqlite = subjectDa.get_max_remote_id(cust_id);
 
 		Log.i("max_remote_id_in_sqlite",
 				"max_remote_id_in_sqlite "
@@ -337,8 +341,7 @@ public class ListFragment extends Fragment implements
 							// get user's total count
 							long total = result.getLong("total");
 							long user_id = result.getLong("user_id");
-							SubjectDa
-									.save_download_records(ctx, user_id, total); // 每次都要全部写入？
+							subjectDa.save_download_records(user_id, total); // 每次都要全部写入？
 
 							Log.i(TAG,
 									"subject count "
@@ -346,7 +349,7 @@ public class ListFragment extends Fragment implements
 
 							for (SubjectBean s : subjectList) {
 
-								long local_id = SubjectDa.insert2(ctx,
+								long local_id = subjectDa.insert2(
 										s.getUserId(), s.getRemoteId(),
 										s.getBody(),
 										String.valueOf(s.getCreationDate()), 1,

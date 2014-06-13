@@ -21,7 +21,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class AsyncService extends Service {
-
+	private SubjectDa subjectDa;
 	public class AsyncBinder extends Binder {
 		AsyncService getService() {
 			return AsyncService.this;
@@ -64,6 +64,7 @@ public class AsyncService extends Service {
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		context = this;
+		subjectDa = new SubjectDa(this);
 
 	}
 
@@ -102,8 +103,8 @@ public class AsyncService extends Service {
 	private void upload() {
 		// Log.i(TAG, "has_active_user " );
 
-		List<SubjectBean> subjectList = SubjectDa.load_not_uploaded_subjects(
-				context, user.getUserId());
+		List<SubjectBean> subjectList = subjectDa.load_not_uploaded_subjects(
+				 user.getUserId());
 		if (subjectList.size() == 0) {
 			return;
 		}
@@ -125,7 +126,7 @@ public class AsyncService extends Service {
 							try {
 								JSONObject data = result.getJSONObject("data");
 
-								SubjectDa.set_remoteId(context,
+								subjectDa.set_remoteId(
 										data.getLong("local_id"),
 										data.getLong("pk_id"),
 										data.getLong("user_id"));
@@ -172,7 +173,7 @@ public class AsyncService extends Service {
 
 		// download and insert into subjects
 		int page_size = 100;
-		List<Long> offset_list = SubjectDa.load_not_download(context,
+		List<Long> offset_list = subjectDa.load_not_download( 
 				user.getUserId());
 		// Log.i(TAG, String.valueOf( offset_list.size() ) );
 
@@ -195,7 +196,7 @@ public class AsyncService extends Service {
 							for (SubjectBean s : subjectList) {
 								uid = s.getUserId();
 
-								SubjectDa.insert2(context, s.getUserId(),
+								subjectDa.insert2(  s.getUserId(),
 										s.getRemoteId(), s.getBody(),
 										String.valueOf(s.getCreationDate()), 1,
 										1);
@@ -203,7 +204,7 @@ public class AsyncService extends Service {
 							}
 
 							// then,update the download records
-							SubjectDa.update_download_records(context, uid,
+							subjectDa.update_download_records(  uid,
 									offset);
 
 						} catch (JSONException e) {
