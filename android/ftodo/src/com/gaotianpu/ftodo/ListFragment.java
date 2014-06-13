@@ -36,37 +36,30 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 
-public class ListFragment extends Fragment implements
-		SwipeRefreshLayout.OnRefreshListener {
+public class ListFragment extends Fragment {
 
 	public static final String TAG = "ListFragment";
 
-	private Context ctx;
-
-	private SwipeRefreshLayout swipeLayout;
-	private ListView lvDefault;
-	private EditText txtNew;
-
-	private View moreView;
-	private TextView tv_load_more;
-	private ProgressBar pb_load_progress;
-
-	private List<SubjectBean> subjectList;
-	private ListAdapter listAdapter;
-
+	private MyApplication app;
 	private ConnectivityManager cm;
-
+	private Context ctx;
+	private UserBean user;
+	private long cust_id = 0;
 	private String device_type;
 	private String deviceId;
-	private long cust_id = 0;
-
-	private MyApplication app;
-	private UserBean user;
-
-	private View rootView;
 
 	private SubjectDa subjectDa;
 	private FTDClient ftd;
+	private List<SubjectBean> subjectList;
+	private ListAdapter listAdapter;
+
+	private View rootView;
+	private ListView lvDefault;
+	private EditText txtNew;
+	private SwipeRefreshLayout swipeLayout;
+	private View moreView;
+	private TextView tv_load_more;
+	private ProgressBar pb_load_progress;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,8 +68,8 @@ public class ListFragment extends Fragment implements
 		rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
 		ctx = this.getActivity();
-		app = (MyApplication) ctx.getApplicationContext();		
-		
+		app = (MyApplication) ctx.getApplicationContext();
+
 		cm = (ConnectivityManager) ctx
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		// 获得设备的相关信息
@@ -105,7 +98,6 @@ public class ListFragment extends Fragment implements
 				android.R.color.holo_orange_light,
 				android.R.color.holo_red_light);
 
-		// LayoutInflater inflater = LayoutInflater.from(ctx);
 		moreView = inflater.inflate(R.layout.footer_more, null);
 		tv_load_more = (TextView) moreView.findViewById(R.id.tv_load_more);
 		pb_load_progress = (ProgressBar) moreView
@@ -115,22 +107,31 @@ public class ListFragment extends Fragment implements
 		// 3.数据加载
 		subjectList = new ArrayList<SubjectBean>();
 		listAdapter = new ListAdapter(ctx);
-		lvDefault.setAdapter(listAdapter);		
+		lvDefault.setAdapter(listAdapter);
+
 		load_new_data();
 
 		// 4.事件绑定
-		bind_post_new_task(); // 提交新subject
-		swipeLayout.setOnRefreshListener(this);
+		txtNew_setOnKeyListener(); // 提交新subject
 		lvDefault_setOnItemClickListener();
-		load_more_data_binding(); // 滚动翻页
+		lvDefault_setOnScrollListener(); // 滚动翻页
+		swipeLayout_setOnRefreshListener(); // 下拉刷新
 
 		return rootView;
 	}
 
-	private void load_new_data() { 
+	private void load_new_data() {
 		// 从sqlite中读取数据，展示在listview中
-		subjectList = subjectDa.load_not_uploaded_subjects(cust_id);   
-		add_data(0, 100);  
+		subjectList = subjectDa.load_not_uploaded_subjects(cust_id); // 加载未上传的
+		add_data(0, 100);
+	}
+
+	private void add_data(int offset, int limit) {
+		List<SubjectBean> list = subjectDa.load(cust_id, offset, limit);
+		for (SubjectBean s : list) {
+			subjectList.add(s);
+		}
+		listAdapter.notifyDataSetChanged(); // 数据集变化后,通知adapter
 	}
 
 	private void lvDefault_setOnItemClickListener() {
@@ -165,15 +166,7 @@ public class ListFragment extends Fragment implements
 
 	}
 
-	private void add_data(int offset, int limit) {
-		List<SubjectBean> list = subjectDa.load(cust_id, offset, limit);
-		for (SubjectBean s : list) {
-			subjectList.add(s);
-		}
-		listAdapter.notifyDataSetChanged(); // 数据集变化后,通知adapter
-	}
-
-	private void load_more_data_binding() {
+	private void lvDefault_setOnScrollListener() {
 		// 向下滚动翻页
 		lvDefault.setOnScrollListener(new OnScrollListener() {
 			// 添加滚动条滚到最底部，加载余下的元素
@@ -206,60 +199,28 @@ public class ListFragment extends Fragment implements
 		});
 	}
 
-	// 下拉刷新
-	@Override
-	public void onRefresh() {
-		new Handler().postDelayed(new Runnable() {
-			public void run() {
-				NetworkInfo info = cm.getActiveNetworkInfo();
-				if (info != null && info.isConnected()) {
-					download();
-				} else {
-					swipeLayout.setRefreshing(false);
-				}
+	private void swipeLayout_setOnRefreshListener() {
+		swipeLayout
+				.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+					// 下拉刷新
+					@Override
+					public void onRefresh() {
+						new Handler().postDelayed(new Runnable() {
+							public void run() {
+								NetworkInfo info = cm.getActiveNetworkInfo();
+								if (info != null && info.isConnected()) {
+									download();
+								} else {
+									swipeLayout.setRefreshing(false);
+								}
 
-			}
-		}, 1000);
+							}
+						}, 1000);
+					}
+				});
 	}
 
-	private class ListAdapter extends BaseAdapter {
-		private LayoutInflater inflater1;
-
-		public ListAdapter(Context ctx1) {
-			this.inflater1 = LayoutInflater.from(ctx1);
-		}
-
-		@Override
-		public int getCount() {
-			// TODO Auto-generated method stub
-			return subjectList.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return position;
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-
-			convertView = inflater1.inflate(R.layout.listview_item, null);
-
-			TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
-			tv.setText("" + subjectList.get(position).getBody());
-
-			return convertView;
-
-		}
-
-	}
-
-	private void bind_post_new_task() {
+	private void txtNew_setOnKeyListener() {
 
 		txtNew.setOnKeyListener(new OnKeyListener() {
 			@Override
@@ -306,6 +267,43 @@ public class ListFragment extends Fragment implements
 		});
 	}
 
+	private class ListAdapter extends BaseAdapter {
+		private LayoutInflater inflater1;
+
+		public ListAdapter(Context ctx1) {
+			this.inflater1 = LayoutInflater.from(ctx1);
+		}
+
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return subjectList.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return position;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+
+			convertView = inflater1.inflate(R.layout.listview_item, null);
+
+			TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
+			tv.setText("" + subjectList.get(position).getBody());
+
+			return convertView;
+
+		}
+
+	}
+
 	// ///////////////////
 
 	private void download() {
@@ -315,7 +313,7 @@ public class ListFragment extends Fragment implements
 			return;
 		}
 
-		  Log.i(TAG,"cust_id & token status is ok");
+		Log.i(TAG, "cust_id & token status is ok");
 
 		// get max remote_id from sqlite
 		long max_remote_id_in_sqlite = subjectDa.get_max_remote_id(user
@@ -357,9 +355,9 @@ public class ListFragment extends Fragment implements
 										1);
 
 								s.setId(local_id);
-								//insert_new_item(s, 0);
+								// insert_new_item(s, 0);
 							}
-							
+
 							load_new_data();
 
 						} catch (Exception e) {
