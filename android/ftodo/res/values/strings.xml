@@ -11,7 +11,7 @@
     <string name="current_user">未登录用户&#8230;</string>
     <string name="title_activity_main">MainActivity</string>
 
-    <string-array name="planets_array">
+    <string-array name="drawer_menu_items_logined">
         <item>未登录</item>
         <item>全部</item>
         <item>设置</item>        

@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -32,7 +33,7 @@ public class MainActivity extends Activity {
 
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
-	private String[] mPlanetTitles;
+	private String[] mDrawerItems;
 
 	private UserBean user;
 	private ArrayAdapter adapter;
@@ -43,38 +44,49 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		// 1. 全局
 		app = (MyApplication) getApplicationContext();
 
-		// 启动 AsyncService
-		Intent startIntent = new Intent(this, AsyncService.class);
-		this.startService(startIntent); // service如何获得当前用户
+		// 2. UI控件
+		mTitle = mDrawerTitle = getTitle();
+		// enable ActionBar app icon to behave as action to toggle nav drawer
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
 
-		init_navigation_drawer();
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+				GravityCompat.START);
+
+		// 3. 数据加载
+		user = app.getUser();
+		if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
+			mDrawerItems = getResources().getStringArray(
+					R.array.drawer_menu_items_unlogin);
+		} else {
+			// 未登录的抽屉菜单 与 已登录的不一样
+			mDrawerItems = getResources().getStringArray(
+					R.array.drawer_menu_items_logined);
+			mDrawerItems[0] = user.getEmail();
+		}
+		adapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item,
+				mDrawerItems);
+		mDrawerList.setAdapter(adapter);
+
+		// 4. 事件绑定
+		mDrawerLayout_setDrawerListener();
+		mDrawerList_setOnItemClickListener();
 
 		if (savedInstanceState == null) {
 			selectItem(1);
 		}
+
+		// 启动 AsyncService
+		Intent startIntent = new Intent(this, AsyncService.class);
+		this.startService(startIntent); // service如何获得当前用户
 	}
 
-	private void init_navigation_drawer() {
-		mTitle = mDrawerTitle = getTitle();
-		mPlanetTitles = getResources().getStringArray(R.array.planets_array);
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-		// set a custom shadow that overlays the main content when the drawer
-		// opens
-		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-				GravityCompat.START);
-		// set up the drawer's list view with items and click listener
-		adapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item,
-				mPlanetTitles);
-		mDrawerList.setAdapter(adapter);
-		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-		// enable ActionBar app icon to behave as action to toggle nav drawer
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
+	private void mDrawerLayout_setDrawerListener() {
 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
@@ -104,7 +116,7 @@ public class MainActivity extends Activity {
 		user = app.getUser(); // UserDa.load_current_user(this);
 		if (user.getUserId() != 0) {
 			// 菜单显示 未登录...
-			mPlanetTitles[0] = user.getEmail();
+			mDrawerItems[0] = user.getEmail();
 			adapter.notifyDataSetChanged();
 		}
 	}
@@ -153,14 +165,14 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	/* The click listner for ListView in the navigation drawer */
-	private class DrawerItemClickListener implements
-			ListView.OnItemClickListener {
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			selectItem(position);
-		}
+	private void mDrawerList_setOnItemClickListener() {
+		mDrawerList.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				selectItem(position);
+			}
+		});
 	}
 
 	private void selectItem(int position) {
@@ -169,12 +181,12 @@ public class MainActivity extends Activity {
 
 		switch (position) {
 		case 0:
-			if(user.getUserId()>0 && user.getTokenStatus()>0){
+			if (user.getUserId() > 0 && user.getTokenStatus() > 0) {
 				fragment = new DashboardFragment();
-			}else{
+			} else {
 				fragment = new LoginFragment();
 			}
-			
+
 			// Bundle args0 = new Bundle();
 			// args0.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
 			// fragment.setArguments(args0);
@@ -196,7 +208,7 @@ public class MainActivity extends Activity {
 
 		// update selected item and title, then close the drawer
 		mDrawerList.setItemChecked(position, true);
-		setTitle(mPlanetTitles[position]);
+		setTitle(mDrawerItems[position]);
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 

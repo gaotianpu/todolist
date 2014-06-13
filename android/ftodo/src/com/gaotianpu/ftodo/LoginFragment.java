@@ -200,7 +200,7 @@ public class LoginFragment extends Fragment {
 										.replace(R.id.content_frame, fragment)
 										.commit();
 								String[] mPlanetTitles = getResources()
-										.getStringArray(R.array.planets_array);
+										.getStringArray(R.array.drawer_menu_items_logined);
 								ListView mDrawerList = (ListView) act
 										.findViewById(R.id.left_drawer);
 								
