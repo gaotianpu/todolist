@@ -19,7 +19,7 @@ def term_insert(term):
 
 
 def term_doc_insert(user_id,term_id,doc_id,term_count):
-    dbw.query("replace into term_doc(term_id,doc_id,term_count)values(%s,%s,%s)" % (term_id,doc_id,term_count)) 
+    dbw.query("replace into term_doc(user_id,term_id,doc_id,term_count)values(%s,%s,%s,%s)" % (user_id,term_id,doc_id,term_count)) 
 
 
 def compute_tf_idf():

@@ -50,6 +50,7 @@ def search(user_id,keywords):
     word_count_set = collections.Counter([w['word'] for w in terms if w['word'].strip()])
     uniq_terms = dict(word_count_set)
     rows = da.search.load_subjects(user_id,uniq_terms.keys())
+    #rows.append(terms)
     return rows
     
 
