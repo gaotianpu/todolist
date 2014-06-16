@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import web,urllib,urllib2,collections
-import simplejson as json
+import json
 import da
 import config
 import sys
@@ -32,7 +32,7 @@ def make_index(subject):
         #写入term_doc
         da.search.term_doc_insert(subject.user_id,term_id,subject.pk_id,count) 
 
-def test():
+def run_make_index():
     (offset,page_size) = (0,100)
     while  True:
         rows = da.subject.load_all(offset,page_size)         
@@ -42,6 +42,7 @@ def test():
         for r in rows:
             make_index(r)
         offset = offset + page_size
+    da.search.compute_tf_idf()
 
 ####------
 def search(user_id,keywords):
