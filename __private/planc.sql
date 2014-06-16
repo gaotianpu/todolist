@@ -34,22 +34,6 @@ CREATE TABLE `cloud_app_mapping` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `public_terms`
---
-
-DROP TABLE IF EXISTS `public_terms`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `public_terms` (
-  `term` varchar(10) NOT NULL DEFAULT '',
-  `sogou_count` int(11) NOT NULL DEFAULT '0',
-  `sogou_idf` float DEFAULT '0',
-  `sogou_last_get` datetime DEFAULT NULL,
-  PRIMARY KEY (`term`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `sessions`
 --
 
@@ -138,11 +122,11 @@ CREATE TABLE `subjects` (
   `device_type` varchar(200) DEFAULT NULL,
   `device_no` varchar(200) DEFAULT NULL,
   `local_id` bigint(20) DEFAULT NULL,
-  `app_created_date` datetime DEFAULT NULL,
+  `app_created_date` datetime NOT NULL,
   PRIMARY KEY (`pk_id`),
   KEY `ix_user_id` (`user_id`) USING BTREE,
   KEY `ix_plan_start_date` (`plan_start_date`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=228 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=857 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -182,11 +166,14 @@ DROP TABLE IF EXISTS `term_doc`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `term_doc` (
+  `user_id` bigint(20) DEFAULT NULL,
   `term_id` bigint(20) DEFAULT NULL,
   `doc_id` bigint(20) DEFAULT NULL,
-  `tf` float DEFAULT NULL,
+  `term_count` int(11) DEFAULT '1',
+  `tf_idf` float DEFAULT NULL,
   `last_update` datetime DEFAULT NULL,
-  KEY `ix_term_id` (`term_id`)
+  `tf` float DEFAULT NULL,
+  UNIQUE KEY `uniq_term_doc` (`term_id`,`doc_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -210,6 +197,30 @@ CREATE TABLE `term_doc_count` (
   PRIMARY KEY (`pk_id`),
   KEY `ix_count` (`count`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1216 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `terms`
+--
+
+DROP TABLE IF EXISTS `terms`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `terms` (
+  `term_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `term` varchar(100) NOT NULL DEFAULT '',
+  `term_len` int(11) DEFAULT NULL,
+  `term_sort` int(11) DEFAULT NULL,
+  `count_domain` int(11) DEFAULT NULL,
+  `idf_domain` float DEFAULT NULL,
+  `count_se` int(11) NOT NULL DEFAULT '0',
+  `idf_se` float DEFAULT '0',
+  `last_update` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `last_get_se` datetime DEFAULT NULL,
+  `word_tag` int(11) DEFAULT NULL,
+  PRIMARY KEY (`term_id`),
+  UNIQUE KEY `ix_term` (`term`) USING HASH
+) ENGINE=InnoDB AUTO_INCREMENT=3985 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -264,4 +275,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-06-10 18:37:03
+-- Dump completed on 2014-06-16 15:51:26
