@@ -48,10 +48,13 @@ def load_terms(terms):
 
 
 def load_subjects(user_id,terms):
-    rows = load_terms(terms)
+    terms = load_terms(terms)
     
-    total_weight = sum([r.idf_domain for r in rows])
-    term_ids = [str(r.term_id) for r in rows]
+    total_weight = sum([r.idf_domain for r in terms])
+    for r in terms:
+        r.weight = r.idf_domain / total_weight
+
+    term_ids = [str(r.term_id) for r in terms]
 
     r = dbr.query("""select s.pk_id,user_id,s.body,s.created_date,s.last_update,s.local_id from 
         (SELECT doc_id,sum(tf_idf) as tf_idf FROM term_doc  where user_id=%s and  term_id in (%s) group by doc_id) as t
@@ -60,11 +63,31 @@ def load_subjects(user_id,terms):
     return list(r)
 
 
-    term_docs = list(dbr.select('term_doc',what="doc_id,tf,tf_idf",
+    doc_terms = list(dbr.select('term_doc',what="doc_id,term_id,tf,tf_idf",
         where="user_id=$user_id and term_id in $term_ids",vars=locals()))
 
-    doc_ids = [t.doc_id for t in term_docs]
+    max_tf_idf = max([t.tf_idf for t in doc_terms])
+    doc_ids = list(set([t.doc_id for t in doc_terms]))
 
+    doc_weights = {}
+    for dt in doc_terms:
+        term_weight = [t.weight for t in terms if t.term_id==dt.term_id][0]
+        dweight = (dt.tf_idf / max_tf_idf) * (term_weight/total_weight)
+        if dt.doc_id in doc_weights:
+            doc_weights[dt.doc_id] = doc_weights[dt.doc_id] + dweight
+        else:
+            doc_weights[dt.doc_id] = dweight 
+
+    subjects = list(dbr.select('subjects',
+        what="pk_id,user_id,body,created_date,last_update,local_id", 
+        where="user_id=$user_id and pk_id in $doc_ids",vars=locals()))
+    for s in subjects:
+        s.weight = doc_weights[s.pk_id]         
+
+    #tmp = [(k,v) for k,v in doc_weights.items()]
+    subjects.sort(cmp=lambda x,y:cmp(y.weight,x.weight))
+    print subjects
+    return subjects
 
     for k,v in result.items():
         result[k].weight = v.idf_domain / total_weight
