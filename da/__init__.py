@@ -3,3 +3,4 @@
 import subject
 import termdoc
 import user
+import search

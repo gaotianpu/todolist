@@ -77,9 +77,9 @@ public class AsyncService extends Service {
 				NetworkInfo info = cm.getActiveNetworkInfo();
 				if (info != null && info.isConnected()) {
 					user = app.getUser();
-					Log.i(TAG,
-							String.valueOf(user.getUserId()) + ","
-									+ String.valueOf(user.getTokenStatus()));
+//					Log.i(TAG,
+//							String.valueOf(user.getUserId()) + ","
+//									+ String.valueOf(user.getTokenStatus()));
 					if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
 						return;
 					}

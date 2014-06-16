@@ -11,11 +11,10 @@ from config import dbw
 web.config.debug = False
 
 urls = (
-    '/api', api.app,
+    '/api', api.app,     
     '/register','Register',
     '/login','Login',
-    '/list','List',
-    
+    '/list','List',    
     '/datelist','DateList',    
     '/new','New',       
     '/details','Details',
@@ -141,6 +140,8 @@ class Details:
         da.subject.update(i.pk_id,session.user_id,subject="",body=i.body)
         cron.update_term_count_by_id(i.pk_id) #remove to eda?
         return  
+
+
 
 import cron
 class Done:

@@ -10,7 +10,9 @@ urls = (
     "/new", "New",
     "/list2","List2",
     "/list3","List3",
-    "/total","Total")
+    "/total","Total",
+    "/dashboard","Dashboard",
+    "/search","Search")
 
 #register, mobile + sms_validate_code
 #login, mobile + password_encryption
@@ -80,7 +82,18 @@ class List3:
         r = {'code':1,'list':rows,'total':total_count,'user_id':self.token.user_id}
         return json.dumps(r,cls=CJsonEncoder)
 
+class Dashboard:
+    def GET(self):
+        #self.token.user_id
+        return  "<h1>hello,world</h1>"
 
+import search
+class Search:
+    @validate_token
+    def GET(self):
+        i = web.input(keywords="")         
+        rows = search.search(self.token.user_id,i.keywords)
+        return  json.dumps(rows,cls=CJsonEncoder)
 
 def api_loadhook():
     # 如果把login剔除api，所有资源访问都可以加上user_id+device_no+access_token?
