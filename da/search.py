@@ -43,25 +43,36 @@ def compute_tf_idf():
     where td.term_id = t.term_id """)
 
 def load_terms(terms):
-    rows = list(dbr.select('terms',what="term_id,term",where="term in $terms",vars=locals()))
-    d={}
-    for r in rows:
-        d[r.term] = r
-    return d
+    rows = list(dbr.select('terms',what="term_id,term,idf_domain",where="term in $terms",vars=locals()))
+    return rows 
 
 
 def load_subjects(user_id,terms):
-    result = load_terms(terms)
-    term_ids = [str(k.term_id) for k in result.values()]
-    rows = list(dbr.select('term_doc',what="doc_id",where="user_id=$user_id and term_id in $term_ids",vars=locals()))
+    rows = load_terms(terms)
     
+    total_weight = sum([r.idf_domain for r in rows])
+    term_ids = [str(r.term_id) for r in rows]
+
     r = dbr.query("""select s.pk_id,user_id,s.body,s.created_date,s.last_update,s.local_id from 
         (SELECT doc_id,sum(tf_idf) as tf_idf FROM term_doc  where user_id=%s and  term_id in (%s) group by doc_id) as t
         left join subjects s on t.doc_id = s.pk_id
         order by t.tf_idf desc""" %(str(user_id),','.join(term_ids)) )
     return list(r)
 
+
+    term_docs = list(dbr.select('term_doc',what="doc_id,tf,tf_idf",
+        where="user_id=$user_id and term_id in $term_ids",vars=locals()))
+
+    doc_ids = [t.doc_id for t in term_docs]
+
+
+    for k,v in result.items():
+        result[k].weight = v.idf_domain / total_weight
+
+    #term_ids = [str(k.term_id) for k in result.values()] 
+
     #compute 匹配度
+    rows = list(dbr.select('term_doc',what="doc_id",where="user_id=$user_id and term_id in $term_ids",vars=locals()))
     doc_ids = [r.doc_id for r in rows]
     subjects = list(dbr.select('subjects',
         what="pk_id,user_id,body,created_date,last_update,local_id", 

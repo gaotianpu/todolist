@@ -51,8 +51,7 @@ def search(user_id,keywords):
     uniq_terms = dict(word_count_set)
     rows = da.search.load_subjects(user_id,uniq_terms.keys())
     return rows
-    for r in rows:
-        print r.pk_id
+    
 
     
 
