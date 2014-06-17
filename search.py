@@ -47,7 +47,7 @@ def run_make_index():
 ####------
 def search(user_id,keywords):
     terms = segment(keywords)
-    word_count_set = collections.Counter([w['word'] for w in terms if w['word'].strip()])
+    word_count_set = collections.Counter([w['word'] for w in terms if len(w['word'].strip())>1])
     uniq_terms = dict(word_count_set)
     rows = da.search.load_subjects(user_id,uniq_terms.keys())
     #rows.append(terms)

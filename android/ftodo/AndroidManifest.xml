@@ -26,6 +26,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
         <activity
             android:name=".ItemDetailActivity"
@@ -35,6 +42,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value=".MainActivity" />
 
         <service android:name=".AsyncService" >
         </service>

@@ -156,8 +156,10 @@ public class MainActivity extends Activity {
 			if (intent.resolveActivity(getPackageManager()) != null) {
 				startActivity(intent);
 			} else {
-				Toast.makeText(this, R.string.app_not_available,
-						Toast.LENGTH_LONG).show();
+				return super.onSearchRequested();  
+//				
+//				Toast.makeText(this, R.string.app_not_available,
+//						Toast.LENGTH_LONG).show();
 			}
 			return true;
 		default:

@@ -59,7 +59,7 @@ def load_subjects(user_id,terms):
     r = dbr.query("""select s.pk_id,user_id,s.body,s.created_date,s.last_update,s.local_id from 
         (SELECT doc_id,sum(tf_idf) as tf_idf FROM term_doc  where user_id=%s and  term_id in (%s) group by doc_id) as t
         left join subjects s on t.doc_id = s.pk_id
-        order by t.tf_idf desc""" %(str(user_id),','.join(term_ids)) )
+        order by t.tf_idf desc limit 0,50""" %(str(user_id),','.join(term_ids)) )
     return list(r)
 
 

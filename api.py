@@ -91,9 +91,10 @@ import search
 class Search:
     @validate_token
     def GET(self):
-        i = web.input(keywords="")         
-        rows = search.search(self.token.user_id,i.keywords)
-        return  json.dumps(rows,cls=CJsonEncoder)
+        i = web.input(query="")         
+        rows = search.search(self.token.user_id,i.query)
+        r = {'code':1,'list':rows,'user_id':self.token.user_id}
+        return  json.dumps(r,cls=CJsonEncoder)
 
 def api_loadhook():
     # 如果把login剔除api，所有资源访问都可以加上user_id+device_no+access_token?

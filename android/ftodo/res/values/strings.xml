@@ -10,6 +10,10 @@
     <string name="newpost_hint">请在这里输入文字&#8230;</string>
     <string name="current_user">未登录用户&#8230;</string>
     <string name="title_activity_main">MainActivity</string>
+    
+     <string name="search_hint">搜索</string>
+     <string name="search_label"></string>
+     <string name="settings_description">settings_description</string>
 
     <string-array name="drawer_menu_items_logined">
         <item>未登录</item>

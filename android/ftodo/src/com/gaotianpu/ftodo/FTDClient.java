@@ -102,6 +102,20 @@ public class FTDClient {
 		client.get(url, params, responseHandler);
 
 	}
+	
+	public void search(long user_id,String access_token,String query, AsyncHttpResponseHandler responseHandler){
+		//public void update_task(long user_id,String access_token,long remote_id,String content,AsyncHttpResponseHandler responseHandler){
+		String url = RES_BASE_URL + "search";
+		
+		RequestParams params = new RequestParams();
+		params.put("user_id", String.valueOf(user_id));
+		params.put("access_token", access_token);
+		params.put("query", query); 
+		client.get(url, params, responseHandler);
+		return;
+	 
+	}
+	
 
 	public void load_total(long user_id, String access_token,
 			AsyncHttpResponseHandler responseHandler) {

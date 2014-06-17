@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Fragment;
+import android.app.SearchManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -47,6 +48,7 @@ public class ListFragment extends Fragment {
 	private long cust_id = 0;
 	private String device_type;
 	private String deviceId;
+	private String queryStr = "";
 
 	private SubjectDa subjectDa;
 	private FTDClient ftd;
@@ -103,12 +105,25 @@ public class ListFragment extends Fragment {
 
 		getActivity().setTitle("全部");
 
+		Intent intent = this.getActivity().getIntent();
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			queryStr = intent.getStringExtra(SearchManager.QUERY);
+			getActivity().setTitle("搜索:" + queryStr);
+
+			// Log.i("search",queryStr);
+			moreView.setVisibility(0);
+		}
+
 		// 3.数据加载
 		subjectList = new ArrayList<SubjectBean>();
 		listAdapter = new ListAdapter(ctx);
 		lvDefault.setAdapter(listAdapter);
 
-		load_new_data();
+		if(queryStr==""){
+			load_new_data();
+		}else{
+			this.search();
+		}
 
 		// 4.事件绑定
 		txtNew_setOnKeyListener(); // 提交新subject
@@ -304,6 +319,62 @@ public class ListFragment extends Fragment {
 	}
 
 	// ///////////////////
+	
+	private void search() {
+		// Log.i(TAG,"download");
+		user = app.getUser();
+		if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
+			return;
+		}
+
+		Log.i("search", queryStr); 
+		// max_remote_id_in_sqlite = 500;
+
+		ftd.search(user.getUserId(), user.getAccessToken(), this.queryStr,
+				new JsonHttpResponseHandler() {
+					@Override
+					public void onSuccess(JSONObject result) {
+						Log.i("search", "search onSuccess");
+						try {
+							 
+							// 这行代码可以继续封装到 FTDClient.load_by_custId方法中去，？
+							 subjectList = FTDClient
+									.Json2SubjectList(result);  
+							 
+							 Log.i("search", String.valueOf(  subjectList.size() ) );
+							 
+
+						} catch (Exception e) {
+							Log.e("search", e.toString());
+
+						} finally {
+							swipeLayout.setRefreshing(false);
+							listAdapter.notifyDataSetChanged();
+						}
+
+					}
+
+					@Override
+					public void onFailure(int statusCode, Throwable e,
+							JSONObject errorResponse) {
+						
+						Log.i("search", "search onFailure");
+						
+						if (statusCode == 401) {
+							// add code here
+							app.set_token_failure();
+						}
+
+						swipeLayout.setRefreshing(false);
+						listAdapter.notifyDataSetChanged();
+
+					}
+
+				});
+
+		// 何时终止？
+
+	}
 
 	private void download() {
 		// Log.i(TAG,"download");
