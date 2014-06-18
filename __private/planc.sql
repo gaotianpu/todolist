@@ -123,6 +123,12 @@ CREATE TABLE `subjects` (
   `device_no` varchar(200) DEFAULT NULL,
   `local_id` bigint(20) DEFAULT NULL,
   `app_created_date` datetime NOT NULL,
+  `is_todo` int(11) NOT NULL DEFAULT '0',
+  `is_alert` int(11) NOT NULL DEFAULT '0',
+  `parent_id` bigint(20) NOT NULL DEFAULT '0',
+  `alert_datetime` datetime DEFAULT NULL,
+  `alert_frequency` int(11) DEFAULT '0',
+  `alert_next` datetime DEFAULT NULL,
   PRIMARY KEY (`pk_id`),
   KEY `ix_user_id` (`user_id`) USING BTREE,
   KEY `ix_plan_start_date` (`plan_start_date`) USING BTREE
@@ -275,4 +281,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-06-16 15:51:26
+-- Dump completed on 2014-06-18 15:15:39
