@@ -120,8 +120,12 @@ public class AsyncService extends Service {
 			Log.i(TAG,
 					String.valueOf(subject.getCreationDate()) + ","
 							+ String.valueOf(subject.getUpdateDate()));
-
-			ftd.post_new_task(subject.getUserId(), user.getAccessToken(),
+			long user_id = subject.getUserId();
+			if (user_id==0){
+				user_id = user.getUserId();
+			}
+					
+			ftd.post_new_task(user_id, user.getAccessToken(),
 					subject.getBody(), device_type, devie_no, subject.getId(),
 					subject.getCreationDate(), subject.getUpdateDate(),
 					new JsonHttpResponseHandler() {
