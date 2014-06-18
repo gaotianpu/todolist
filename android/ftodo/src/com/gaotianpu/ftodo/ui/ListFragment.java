@@ -180,9 +180,9 @@ public class ListFragment extends Fragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_todo:
+		case R.id.action_todo:
 			break;
-		case R.id.menu_alert:
+		case R.id.action_alert:
 			break;
 		}
 		return super.onOptionsItemSelected(item);

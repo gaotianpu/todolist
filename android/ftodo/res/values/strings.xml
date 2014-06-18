@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="action_search">Web search</string>
+     <string name="action_settings">设置</string>
+     <string name="action_todo">待办</string>
+    <string name="action_alert">提醒</string>
 
     <string name="app_name">ftodo</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">设置</string>
+   
     <string name="load_more_data">load_more_data</string>
     <string name="loading_data">loading_data</string>
     <string name="no_more_data">no_more_data</string>
@@ -15,8 +19,7 @@
     <string name="tab_todo">待办</string>
     <string name="tab_alert">提醒</string>
     
-     <string name="menu_todo">待办</string>
-    <string name="menu_alert">提醒</string>
+     
     
      <string name="search_hint">搜索</string>
      <string name="search_label"></string>
@@ -37,7 +40,7 @@
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="action_websearch">Web search</string>
+    
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
     <string name="title_activity_item_detail">ItemDetailActivity</string>
 
