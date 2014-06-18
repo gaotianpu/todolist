@@ -74,6 +74,15 @@ public class UserDa {
 		db.update("users", values1, "user_id=?",
 				new String[] { String.valueOf(user_id) });
 	}
+	
+	public void update_active(long user_id, int active) {
+		ContentValues values1 = new ContentValues();
+		values1.put("current_active", active);
+
+		db = dbHelper.getWritableDatabase();
+		db.update("users", values1, "user_id=?",
+				new String[] { String.valueOf(user_id) });
+	}
 
 	// public static void insert(Context context, long user_id, String
 	// user_name,

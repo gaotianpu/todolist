@@ -3,11 +3,11 @@ package com.gaotianpu.ftodo.da;
 public class UserBean {
 
 	private long user_id=0;
-	private long mobile;
-	private String email;
-	private String display_name;
-	private String access_token;
-	private int token_status;
+	private long mobile=0;
+	private String email="";
+	private String display_name="";
+	private String access_token="";
+	private int token_status=0;
 	 
 
 	public long getUserId() {

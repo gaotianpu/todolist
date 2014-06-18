@@ -19,6 +19,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,7 +56,7 @@ public class MainActivity extends Activity {
 		app = (MyApplication) getApplicationContext();
 
 		// 2. UI控件
-		mTitle = mDrawerTitle = getTitle();
+		//mTitle = mDrawerTitle = getTitle();
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
@@ -67,15 +68,13 @@ public class MainActivity extends Activity {
 
 		// 3. 数据加载
 		user = app.getUser();
-		if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
-			mDrawerItems = getResources().getStringArray(
-					R.array.drawer_menu_items_unlogin);
-		} else {
-			// 未登录的抽屉菜单 与 已登录的不一样
-			mDrawerItems = getResources().getStringArray(
-					R.array.drawer_menu_items_logined);
+		mDrawerItems = getResources().getStringArray(
+				R.array.drawer_menu_items);
+		if (user.getUserId() != 0 && user.getTokenStatus() != 0) {
 			mDrawerItems[0] = user.getEmail();
 		}
+		
+		 
 		adapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item,
 				mDrawerItems);
 		mDrawerList.setAdapter(adapter);
@@ -104,12 +103,14 @@ public class MainActivity extends Activity {
 		R.string.drawer_close /* "close drawer" description for accessibility */
 		) {
 			public void onDrawerClosed(View view) {
+				Log.i("title",mTitle.toString());
 				getActionBar().setTitle(mTitle);
 				invalidateOptionsMenu(); // creates call to
 											// onPrepareOptionsMenu()
 			}
 
 			public void onDrawerOpened(View drawerView) {
+				Log.i("title",mTitle.toString());
 				getActionBar().setTitle(mDrawerTitle);
 				invalidateOptionsMenu(); // creates call to
 											// onPrepareOptionsMenu()
@@ -121,7 +122,7 @@ public class MainActivity extends Activity {
 
 	private void updateMenu() {
 		user = app.getUser(); // UserDa.load_current_user(this);
-		if (user.getUserId() != 0) {
+		if ( user.getUserId() != 0) {
 			// 菜单显示 未登录...
 			mDrawerItems[0] = user.getEmail();
 			adapter.notifyDataSetChanged();
@@ -193,7 +194,8 @@ public class MainActivity extends Activity {
 
 		switch (position) {
 		case 0:
-			if (user.getUserId() > 0 && user.getTokenStatus() > 0) {
+			user = app.getUser();
+			if ( user.getUserId() > 0 && user.getTokenStatus() > 0) {
 				fragment = new DashboardFragment();
 			} else {
 				fragment = new LoginFragment();
@@ -236,7 +238,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void setTitle(CharSequence title) {
-		mTitle = title;
+		mTitle = mDrawerTitle = title;
 		getActionBar().setTitle(mTitle);
 	}
 

@@ -34,6 +34,10 @@ public class SettingFragment extends Fragment {
 		act = getActivity();
 		app = (MyApplication) act.getApplicationContext();
 		user = app.getUser();
+		
+		if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
+			rootView.findViewById(R.id.btnLogout).setVisibility(View.GONE);
+		}
 
 		// 退出按钮
 		rootView.findViewById(R.id.btnLogout).setOnClickListener(
@@ -42,9 +46,7 @@ public class SettingFragment extends Fragment {
 					public void onClick(View view) {
 						user = app.logout();
 
-						// 清理sqlite 里的数据？
-
-						
+						// 清理sqlite 里的数据？ 
 						logout();
 						
 
@@ -63,7 +65,7 @@ public class SettingFragment extends Fragment {
 		
 		// 修改左侧菜单？ 
 		String[] drawer_menu_items_unlogin = getResources()
-				.getStringArray(R.array.drawer_menu_items_unlogin);
+				.getStringArray(R.array.drawer_menu_items);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(act,
 				R.layout.drawer_list_item, drawer_menu_items_unlogin);
 		

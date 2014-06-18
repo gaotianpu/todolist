@@ -28,6 +28,9 @@ public class MyApplication extends Application {
 	public UserBean changeUser() {
 		// Log.i(TAG, "changeUser");
 		user = userDa.load_current_user();
+		if(user==null){
+			return new UserBean();
+		}
 		return user;
 	}
 
@@ -43,6 +46,8 @@ public class MyApplication extends Application {
 
 	public UserBean logout() {
 		userDa.update_token_status(user.getUserId(), 0);
+		userDa.update_active(user.getUserId(), 0);
+		
 		return changeUser();
 	}
 

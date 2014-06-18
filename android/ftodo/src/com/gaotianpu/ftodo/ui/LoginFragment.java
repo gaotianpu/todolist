@@ -72,15 +72,19 @@ public class LoginFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_login, container, false);
+		
+		Log.i("login","1");
 
 		//ctx = this.getActivity();
 		act = this.getActivity();
+		Log.i("login","2");
 		app = (MyApplication)act.getApplicationContext();
-		
+		Log.i("login","3");
 		
 		init();
+		Log.i("login","4");
 		
-		//getActivity().setTitle("登录或注册");
+		getActivity().setTitle("登录或注册");
 		return rootView;
 	}
 
@@ -208,7 +212,7 @@ public class LoginFragment extends Fragment {
 										.replace(R.id.content_frame, fragment)
 										.commit();
 								String[] mPlanetTitles = getResources()
-										.getStringArray(R.array.drawer_menu_items_logined);
+										.getStringArray(R.array.drawer_menu_items);
 								ListView mDrawerList = (ListView) act
 										.findViewById(R.id.left_drawer);
 								
@@ -223,7 +227,7 @@ public class LoginFragment extends Fragment {
 								//mDrawerList.getItemAtPosition(0);
 								//mDrawerList.getAdapter().notifyDataSetChanged();
 								
-								act.setTitle(mPlanetTitles[position]);
+							//	act.setTitle(mPlanetTitles[position]);
 								
 								//ListView lvDefault = (ListView) act.findViewById(R.id.lvDefault); 
 				

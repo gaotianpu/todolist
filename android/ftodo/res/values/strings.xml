@@ -25,18 +25,13 @@
      <string name="search_label"></string>
      <string name="settings_description">settings_description</string>
 
-    <string-array name="drawer_menu_items_logined">
-        <item>当前用户:</item>
+    <string-array name="drawer_menu_items">
+        <item>登录或注册</item>
         <item>全部</item>
         <item>待办</item>
         <item>提醒</item>
         <item>设置</item>        
-    </string-array>
-    
-    <string-array name="drawer_menu_items_unlogin">
-        <item>登录或注册</item>
-        <item>全部</item>         
-    </string-array>
+    </string-array> 
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
