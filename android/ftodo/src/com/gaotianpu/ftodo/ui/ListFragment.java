@@ -120,7 +120,9 @@ public class ListFragment extends Fragment {
 		tv_load_more = (TextView) moreView.findViewById(R.id.tv_load_more);
 		pb_load_progress = (ProgressBar) moreView
 				.findViewById(R.id.pb_load_progress);
-		lvDefault.addFooterView(moreView); // 设置列表底部视图
+		
+		//lvDefault.addFooterView(moreView); // 设置列表底部视图
+		//moreView.setVisibility(View.GONE);
 
 		// getActivity().setTitle("全部");
 
