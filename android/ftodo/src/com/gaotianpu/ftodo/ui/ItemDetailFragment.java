@@ -1,4 +1,9 @@
-package com.gaotianpu.ftodo;
+package com.gaotianpu.ftodo.ui;
+
+import com.gaotianpu.ftodo.MyApplication;
+import com.gaotianpu.ftodo.R;
+import com.gaotianpu.ftodo.R.layout;
+import com.gaotianpu.ftodo.da.UserBean;
 
 import android.app.Fragment;
 import android.content.Context;

@@ -1,5 +1,9 @@
 package com.gaotianpu.ftodo;
 
+import com.gaotianpu.ftodo.da.SQLiteHelper;
+import com.gaotianpu.ftodo.da.UserBean;
+import com.gaotianpu.ftodo.da.UserDa;
+
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;

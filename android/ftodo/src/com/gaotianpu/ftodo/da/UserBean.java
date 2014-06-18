@@ -1,4 +1,4 @@
-package com.gaotianpu.ftodo;
+package com.gaotianpu.ftodo.da;
 
 public class UserBean {
 

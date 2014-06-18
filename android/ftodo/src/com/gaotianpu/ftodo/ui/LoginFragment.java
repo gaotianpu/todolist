@@ -1,9 +1,16 @@
-package com.gaotianpu.ftodo;
+package com.gaotianpu.ftodo.ui;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
  
+import com.gaotianpu.ftodo.MyApplication;
+import com.gaotianpu.ftodo.R;
+import com.gaotianpu.ftodo.R.array;
+import com.gaotianpu.ftodo.R.id;
+import com.gaotianpu.ftodo.R.layout;
+import com.gaotianpu.ftodo.R.string;
+import com.gaotianpu.ftodo.da.FTDClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
  
 

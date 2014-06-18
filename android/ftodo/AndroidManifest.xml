@@ -35,7 +35,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".ItemDetailActivity"
+            android:name="com.gaotianpu.ftodo.ui.ItemDetailActivity"
             android:label="@string/title_activity_item_detail"
             android:parentActivityName=".MainActivity" >
             <meta-data

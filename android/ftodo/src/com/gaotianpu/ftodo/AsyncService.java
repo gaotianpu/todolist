@@ -5,6 +5,10 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.gaotianpu.ftodo.da.FTDClient;
+import com.gaotianpu.ftodo.da.SubjectBean;
+import com.gaotianpu.ftodo.da.SubjectDa;
+import com.gaotianpu.ftodo.da.UserBean;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Service;
