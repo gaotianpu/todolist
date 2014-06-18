@@ -34,6 +34,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -159,7 +160,7 @@ public class ListFragment extends Fragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// onCreateView setHasOptionsMenu(true);
 		menu.clear();
-		inflater.inflate(R.menu.list, menu);  
+		inflater.inflate(R.menu.list, menu);
 	}
 
 	@Override
@@ -174,6 +175,17 @@ public class ListFragment extends Fragment {
 
 		// menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
 		// menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_todo:
+			break;
+		case R.id.menu_alert:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void load_new_data() {
