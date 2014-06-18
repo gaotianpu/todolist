@@ -15,6 +15,9 @@
     <string name="tab_todo">待办</string>
     <string name="tab_alert">提醒</string>
     
+     <string name="menu_todo">待办</string>
+    <string name="menu_alert">提醒</string>
+    
      <string name="search_hint">搜索</string>
      <string name="search_label"></string>
      <string name="settings_description">settings_description</string>

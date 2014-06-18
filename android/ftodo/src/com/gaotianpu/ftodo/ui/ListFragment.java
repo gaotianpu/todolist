@@ -26,11 +26,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnKeyListener;
@@ -65,7 +69,7 @@ public class ListFragment extends Fragment {
 	private FTDClient ftd;
 	private List<SubjectBean> subjectList;
 	private ListAdapter listAdapter;
-	
+
 	private TabHost tabHost;
 
 	private View rootView;
@@ -81,7 +85,7 @@ public class ListFragment extends Fragment {
 			Bundle savedInstanceState) {
 		// 1.系统全局
 		act = this.getActivity();
-		app = (MyApplication) act.getApplicationContext(); 
+		app = (MyApplication) act.getApplicationContext();
 
 		cm = (ConnectivityManager) act
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -97,8 +101,8 @@ public class ListFragment extends Fragment {
 		subjectDa = new SubjectDa(act);
 		ftd = new FTDClient(act);
 
-		// 2.控件相关 
-		
+		// 2.控件相关
+
 		rootView = inflater.inflate(R.layout.fragment_list, container, false);
 		lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
 		txtNew = (EditText) rootView.findViewById(R.id.txtNew);
@@ -117,7 +121,7 @@ public class ListFragment extends Fragment {
 				.findViewById(R.id.pb_load_progress);
 		lvDefault.addFooterView(moreView); // 设置列表底部视图
 
-		//getActivity().setTitle("全部");
+		// getActivity().setTitle("全部");
 
 		Intent intent = this.getActivity().getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -128,14 +132,17 @@ public class ListFragment extends Fragment {
 			moreView.setVisibility(0);
 		}
 
+		// 定义可选菜单
+		setHasOptionsMenu(true);
+
 		// 3.数据加载
 		subjectList = new ArrayList<SubjectBean>();
 		listAdapter = new ListAdapter(act);
 		lvDefault.setAdapter(listAdapter);
 
-		if(queryStr==""){
+		if (queryStr == "") {
 			load_new_data();
-		}else{
+		} else {
 			this.search();
 		}
 
@@ -146,6 +153,27 @@ public class ListFragment extends Fragment {
 		swipeLayout_setOnRefreshListener(); // 下拉刷新
 
 		return rootView;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		// onCreateView setHasOptionsMenu(true);
+		menu.clear();
+		inflater.inflate(R.menu.list, menu);  
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		DrawerLayout mDrawerLayout = (DrawerLayout) act
+				.findViewById(R.id.drawer_layout);
+		ListView mDrawerList = (ListView) act.findViewById(R.id.left_drawer);
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+		if (drawerOpen) {
+			menu.clear();
+		}
+
+		// menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+		// menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
 	}
 
 	private void load_new_data() {
@@ -333,7 +361,7 @@ public class ListFragment extends Fragment {
 	}
 
 	// ///////////////////
-	
+
 	private void search() {
 		// Log.i(TAG,"download");
 		user = app.getUser();
@@ -341,7 +369,7 @@ public class ListFragment extends Fragment {
 			return;
 		}
 
-		Log.i("search", queryStr); 
+		Log.i("search", queryStr);
 		// max_remote_id_in_sqlite = 500;
 
 		ftd.search(user.getUserId(), user.getAccessToken(), this.queryStr,
@@ -350,13 +378,11 @@ public class ListFragment extends Fragment {
 					public void onSuccess(JSONObject result) {
 						Log.i("search", "search onSuccess");
 						try {
-							 
+
 							// 这行代码可以继续封装到 FTDClient.load_by_custId方法中去，？
-							 subjectList = FTDClient
-									.Json2SubjectList(result);  
-							 
-							 Log.i("search", String.valueOf(  subjectList.size() ) );
-							 
+							subjectList = FTDClient.Json2SubjectList(result);
+
+							Log.i("search", String.valueOf(subjectList.size()));
 
 						} catch (Exception e) {
 							Log.e("search", e.toString());
@@ -371,9 +397,9 @@ public class ListFragment extends Fragment {
 					@Override
 					public void onFailure(int statusCode, Throwable e,
 							JSONObject errorResponse) {
-						
+
 						Log.i("search", "search onFailure");
-						
+
 						if (statusCode == 401) {
 							// add code here
 							app.set_token_failure();
