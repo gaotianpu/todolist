@@ -81,15 +81,15 @@ public class AsyncService extends Service {
 				NetworkInfo info = cm.getActiveNetworkInfo();
 				if (info != null && info.isConnected()) {
 					user = app.getUser();
-//					Log.i(TAG,
+//					Log.i("onStartCommand",
 //							String.valueOf(user.getUserId()) + ","
 //									+ String.valueOf(user.getTokenStatus()));
-					if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
-						return;
+					if (user.getUserId() != 0 && user.getTokenStatus() != 0) {
+						upload();
+						download();
 					}
 
-					upload();
-					download();
+					
 				}
 
 				mHandler.postDelayed(this, 9000);

@@ -434,6 +434,7 @@ public class ListFragment extends Fragment {
 		// Log.i(TAG,"download");
 		user = app.getUser();
 		if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
+			swipeLayout.setRefreshing(false);
 			return;
 		}
 
