@@ -1,6 +1,11 @@
 package com.gaotianpu.ftodo;
 
 import com.gaotianpu.ftodo.R;
+import com.gaotianpu.ftodo.da.UserBean;
+import com.gaotianpu.ftodo.ui.DashboardFragment;
+import com.gaotianpu.ftodo.ui.ListFragment;
+import com.gaotianpu.ftodo.ui.LoginFragment;
+import com.gaotianpu.ftodo.ui.SettingFragment;
 
 import java.util.Locale;
 import android.app.Activity;
@@ -135,6 +140,7 @@ public class MainActivity extends Activity {
 		// view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
 		menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+		menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -156,10 +162,10 @@ public class MainActivity extends Activity {
 			if (intent.resolveActivity(getPackageManager()) != null) {
 				startActivity(intent);
 			} else {
-				return super.onSearchRequested();  
-//				
-//				Toast.makeText(this, R.string.app_not_available,
-//						Toast.LENGTH_LONG).show();
+				return super.onSearchRequested();
+				//
+				// Toast.makeText(this, R.string.app_not_available,
+				// Toast.LENGTH_LONG).show();
 			}
 			return true;
 		default:
@@ -189,18 +195,22 @@ public class MainActivity extends Activity {
 				fragment = new LoginFragment();
 			}
 
-			// Bundle args0 = new Bundle();
-			// args0.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-			// fragment.setArguments(args0);
 			break;
-		case 2:
+		case 1: // 全部
+		case 2: // 待办
+		case 3: // 提醒
+			fragment = new ListFragment();
+			
+			Bundle args0 = new Bundle();
+			args0.putInt("drawer_item_position", position);
+			fragment.setArguments(args0);
+			
+			break;
+		case 4:
+		default:
 			fragment = new SettingFragment();
 			break;
-		case 1:
-		default:
-			fragment = new ListFragment();
-			break;
-		}
+		} 
 
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction()

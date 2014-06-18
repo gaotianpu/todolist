@@ -6,6 +6,12 @@
         android:id="@+id/action_websearch"
         android:icon="@drawable/action_search"
         android:showAsAction="ifRoom|withText"
-        android:title="@string/action_websearch"/> 
+        android:title="@string/action_websearch"/>
+    
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
         
 </menu>

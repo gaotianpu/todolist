@@ -11,6 +11,10 @@
     <string name="current_user">未登录用户&#8230;</string>
     <string name="title_activity_main">MainActivity</string>
     
+    <string name="tab_all">全部</string>
+    <string name="tab_todo">待办</string>
+    <string name="tab_alert">提醒</string>
+    
      <string name="search_hint">搜索</string>
      <string name="search_label"></string>
      <string name="settings_description">settings_description</string>
@@ -18,6 +22,8 @@
     <string-array name="drawer_menu_items_logined">
         <item>未登录</item>
         <item>全部</item>
+        <item>待办</item>
+        <item>提醒</item>
         <item>设置</item>        
     </string-array>
     
