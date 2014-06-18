@@ -112,7 +112,7 @@ public class CopyOfListFragment extends Fragment {
 				.findViewById(R.id.pb_load_progress);
 		lvDefault.addFooterView(moreView); // 设置列表底部视图
 
-		getActivity().setTitle("全部");
+		//getActivity().setTitle("全部");
 
 		Intent intent = this.getActivity().getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {

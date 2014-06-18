@@ -63,7 +63,7 @@ public class LoginFragment extends Fragment {
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
 
-	private Context ctx;
+	//private Context ctx;
 	private View rootView;
 	private Activity act;
 	private MyApplication app;
@@ -73,13 +73,14 @@ public class LoginFragment extends Fragment {
 			Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
-		ctx = this.getActivity();
-		app = (MyApplication)ctx.getApplicationContext();
-		
+		//ctx = this.getActivity();
 		act = this.getActivity();
+		app = (MyApplication)act.getApplicationContext();
+		
+		
 		init();
 		
-		getActivity().setTitle("登录或注册");
+		//getActivity().setTitle("登录或注册");
 		return rootView;
 	}
 
@@ -177,7 +178,7 @@ public class LoginFragment extends Fragment {
 			String device_type = android.os.Build.MODEL;
 			String os_type = "android." + android.os.Build.VERSION.RELEASE; 
 
-			FTDClient client = new FTDClient(ctx);
+			FTDClient client = new FTDClient(act);
 			client.login_or_register(mEmail, mPassword, deviceId, device_type,
 					os_type, new JsonHttpResponseHandler() {
 						@Override

@@ -59,7 +59,7 @@ public class ItemDetailActivity extends Activity {
 //					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		
-		setTitle("details");
+	//	setTitle("details");
 	}
 	
 	private void render_details(){		

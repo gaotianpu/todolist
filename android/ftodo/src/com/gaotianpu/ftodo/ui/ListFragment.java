@@ -16,6 +16,7 @@ import com.gaotianpu.ftodo.da.SubjectDa;
 import com.gaotianpu.ftodo.da.UserBean;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.SearchManager;
 
@@ -53,7 +54,7 @@ public class ListFragment extends Fragment {
 
 	private MyApplication app;
 	private ConnectivityManager cm;
-	private Context ctx;
+	private Activity act;
 	private UserBean user;
 	private long cust_id = 0;
 	private String device_type;
@@ -79,13 +80,13 @@ public class ListFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// 1.系统全局
-		ctx = this.getActivity();
-		app = (MyApplication) ctx.getApplicationContext();
+		act = this.getActivity();
+		app = (MyApplication) act.getApplicationContext(); 
 
-		cm = (ConnectivityManager) ctx
+		cm = (ConnectivityManager) act
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		// 获得设备的相关信息
-		TelephonyManager tm = (TelephonyManager) ctx
+		TelephonyManager tm = (TelephonyManager) act
 				.getSystemService(Context.TELEPHONY_SERVICE);
 		deviceId = tm.getDeviceId();
 		device_type = android.os.Build.MODEL;
@@ -93,8 +94,8 @@ public class ListFragment extends Fragment {
 		user = app.getUser();
 		cust_id = user.getUserId();
 
-		subjectDa = new SubjectDa(ctx);
-		ftd = new FTDClient(ctx);
+		subjectDa = new SubjectDa(act);
+		ftd = new FTDClient(act);
 
 		// 2.控件相关 
 		
@@ -116,7 +117,7 @@ public class ListFragment extends Fragment {
 				.findViewById(R.id.pb_load_progress);
 		lvDefault.addFooterView(moreView); // 设置列表底部视图
 
-		getActivity().setTitle("全部");
+		//getActivity().setTitle("全部");
 
 		Intent intent = this.getActivity().getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -129,7 +130,7 @@ public class ListFragment extends Fragment {
 
 		// 3.数据加载
 		subjectList = new ArrayList<SubjectBean>();
-		listAdapter = new ListAdapter(ctx);
+		listAdapter = new ListAdapter(act);
 		lvDefault.setAdapter(listAdapter);
 
 		if(queryStr==""){
@@ -174,7 +175,7 @@ public class ListFragment extends Fragment {
 				Log.i("setOnItemClickListener", String.valueOf(arg2) + ","
 						+ String.valueOf(subject.getId()));
 
-				Intent detailIntent = new Intent(ctx, ItemDetailActivity.class);
+				Intent detailIntent = new Intent(act, ItemDetailActivity.class);
 				detailIntent.putExtra(ItemDetailActivity.SUBJECT_LOCAL_ID,
 						subject.getId());
 				startActivity(detailIntent);
@@ -280,7 +281,7 @@ public class ListFragment extends Fragment {
 							insert_new_item(subject, 0);
 
 							// show new item in ListView
-							lvDefault.setAdapter(new ListAdapter(ctx));
+							lvDefault.setAdapter(new ListAdapter(act));
 							txtNew.setText("");
 						}
 

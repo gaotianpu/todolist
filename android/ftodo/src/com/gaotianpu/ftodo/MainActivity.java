@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -200,21 +201,27 @@ public class MainActivity extends Activity {
 		case 2: // 待办
 		case 3: // 提醒
 			fragment = new ListFragment();
-			
+
 			Bundle args0 = new Bundle();
 			args0.putInt("drawer_item_position", position);
 			fragment.setArguments(args0);
-			
+
 			break;
 		case 4:
 		default:
 			fragment = new SettingFragment();
 			break;
 		} 
-
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction()
+		 
+		getFragmentManager().beginTransaction()
 				.replace(R.id.content_frame, fragment).commit();
+
+		// 使用后退按键？
+		// android.app.FragmentTransaction transaction =
+		// getFragmentManager().beginTransaction();
+		// transaction.replace(R.id.content_frame,fragment);
+		// transaction.addToBackStack(null);
+		// transaction.commit();
 
 		updateMenu();
 

@@ -29,7 +29,7 @@ public class SettingFragment extends Fragment {
 			Bundle savedInstanceState) {
 		rootView = inflater
 				.inflate(R.layout.fragment_setting, container, false);
-		getActivity().setTitle("设置");
+		//getActivity().setTitle("设置");
 
 		act = getActivity();
 		app = (MyApplication) act.getApplicationContext();

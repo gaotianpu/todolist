@@ -20,7 +20,7 @@
      <string name="settings_description">settings_description</string>
 
     <string-array name="drawer_menu_items_logined">
-        <item>未登录</item>
+        <item>当前用户:</item>
         <item>全部</item>
         <item>待办</item>
         <item>提醒</item>
@@ -28,7 +28,7 @@
     </string-array>
     
     <string-array name="drawer_menu_items_unlogin">
-        <item>未登录</item>
+        <item>登录或注册</item>
         <item>全部</item>         
     </string-array>
 
