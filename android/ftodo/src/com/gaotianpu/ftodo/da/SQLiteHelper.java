@@ -24,10 +24,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "is_del INTEGER NOT NULL,"				
 				+ "is_sync  INTEGER NOT NULL," 
 				+ "is_todo INTEGER NOT NULL default 0,"
-				+ "is_alert INTEGER NOT NULL default 0 ,"
-				+ "alert_datetime datetime ,"
-				+ "alert_frequency INTEGER NOT NULL default 0,"
-				+ "alert_next datetime ,"
+				+ "is_remind INTEGER NOT NULL default 0 ,"
+				+ "remind_datetime datetime ,"
+				+ "remind_frequency INTEGER NOT NULL default 0,"
+				+ "remind_next datetime ,"
 				+ "remote_id  INTEGER NOT NULL)");
 		
 		db.execSQL("CREATE INDEX  ix_remote_id ON subjects (remote_id DESC)");
