@@ -230,20 +230,12 @@ public class ListFragment extends Fragment {
 
 				switch (action_menu_checked_menu) {
 				case R.id.action_list_todo:
-					if (subject.getIsTodo() == 0) {
-						subject.setIsTodo(1);
-					} else {
-						subject.setIsTodo(0);
-					}
+					subject.setIsTodo(!subject.getIsTodo());
 
 					listAdapter.notifyDataSetInvalidated();
 					break;
 				case R.id.action_list_remind:
-					if (subject.getIsRemind() == 0) {
-						subject.setIsRemind(1);
-					} else {
-						subject.setIsRemind(0);
-					}
+					subject.setIsRemind(!subject.getIsRemind());
 
 					listAdapter.notifyDataSetInvalidated();
 					break;
@@ -399,7 +391,6 @@ public class ListFragment extends Fragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			int listview_item_res_id = 0;
 
 			SubjectBean subject = subjectList.get(position);
 			ImageView ic;
@@ -409,7 +400,7 @@ public class ListFragment extends Fragment {
 				convertView = inflater1.inflate(R.layout.listview_item_todo,
 						null);
 				ic = (ImageView) convertView.findViewById(R.id.icon);
-				if (subject.getIsTodo() == 1) {
+				if (subject.getIsTodo()) {
 					ic.setColorFilter(Color.RED);
 				}
 				break;
@@ -417,7 +408,7 @@ public class ListFragment extends Fragment {
 				convertView = inflater1.inflate(R.layout.listview_item_remind,
 						null);
 				ic = (ImageView) convertView.findViewById(R.id.icon);
-				if (subject.getIsRemind() == 1) {
+				if (subject.getIsRemind()) {
 					ic.setColorFilter(Color.RED);
 				}
 				break;

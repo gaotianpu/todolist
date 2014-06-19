@@ -12,8 +12,8 @@ public class SubjectBean {
 	private String creation_date;
 	private String update_date;
 	
-	private int is_todo=0;
-	private int is_remind=0; 
+	private boolean is_todo=false;
+	private boolean is_remind=false; 
 	
 	
 	public long getId() {
@@ -58,17 +58,17 @@ public class SubjectBean {
 	}
 	
 	//
-	public int getIsTodo() {
+	public boolean getIsTodo() {
 		return is_todo;
 	}
-	public void setIsTodo(int t) {
+	public void setIsTodo(boolean t) {
 		this.is_todo = t;
 	}
 	//
-	public int getIsRemind() {
+	public boolean getIsRemind() {
 		return is_remind;
 	}
-	public void setIsRemind(int r) {
+	public void setIsRemind(boolean r) {
 		this.is_remind = r;
 	}
 	//
