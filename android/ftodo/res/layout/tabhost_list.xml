@@ -29,10 +29,10 @@
                 android:text="@string/tab_todo"
                 android:textColor="#385E0F" />
             <TextView
-                android:id="@+id/list_tab_alert"
+                android:id="@+id/list_tab_remind"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:text="@string/tab_alert"
+                android:text="@string/tab_remind"
                 android:textColor="#1E90FF" />
         
         </FrameLayout> 

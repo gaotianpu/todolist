@@ -8,8 +8,8 @@
         android:layout_width="25dp"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:contentDescription="@string/tab_todo"
-        android:src="@drawable/ic_flag"
+        android:contentDescription="@string/tab_remind"
+        android:src="@drawable/ic_alarm"
         android:tint="#ccc" />
 
     <TextView

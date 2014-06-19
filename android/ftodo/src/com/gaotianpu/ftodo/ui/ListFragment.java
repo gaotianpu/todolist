@@ -120,9 +120,9 @@ public class ListFragment extends Fragment {
 		tv_load_more = (TextView) moreView.findViewById(R.id.tv_load_more);
 		pb_load_progress = (ProgressBar) moreView
 				.findViewById(R.id.pb_load_progress);
-		
-		//lvDefault.addFooterView(moreView); // 设置列表底部视图
-		//moreView.setVisibility(View.GONE);
+
+		// lvDefault.addFooterView(moreView); // 设置列表底部视图
+		// moreView.setVisibility(View.GONE);
 
 		// getActivity().setTitle("全部");
 
@@ -140,7 +140,7 @@ public class ListFragment extends Fragment {
 
 		// 3.数据加载
 		subjectList = new ArrayList<SubjectBean>();
-		listAdapter = new ListAdapter(act);
+		listAdapter = new ListAdapter(act, 0);
 		lvDefault.setAdapter(listAdapter);
 
 		if (queryStr == "") {
@@ -181,10 +181,20 @@ public class ListFragment extends Fragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Log.i("menu_onOptionsItemSelected", String.valueOf(R.id.action_todo)); 
+
+		item.setChecked(true);
+		
+		
 		switch (item.getItemId()) {
 		case R.id.action_todo:
+			listAdapter = new ListAdapter(act, 1);
+			lvDefault.setAdapter(listAdapter);
 			break;
 		case R.id.action_alert:
+			listAdapter = new ListAdapter(act, 2);
+			lvDefault.setAdapter(listAdapter);
+			
 			break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -323,7 +333,7 @@ public class ListFragment extends Fragment {
 							insert_new_item(subject, 0);
 
 							// show new item in ListView
-							lvDefault.setAdapter(new ListAdapter(act));
+							lvDefault.setAdapter(new ListAdapter(act, 0));
 							txtNew.setText("");
 						}
 
@@ -339,9 +349,11 @@ public class ListFragment extends Fragment {
 
 	private class ListAdapter extends BaseAdapter {
 		private LayoutInflater inflater1;
+		private int _sort = 0;
 
-		public ListAdapter(Context ctx1) {
+		public ListAdapter(Context ctx1, int sort) {
 			this.inflater1 = LayoutInflater.from(ctx1);
+			_sort = sort;
 		}
 
 		@Override
@@ -362,8 +374,23 @@ public class ListFragment extends Fragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+			int listview_item_res_id = 0;
 
-			convertView = inflater1.inflate(R.layout.listview_item, null);
+			switch (_sort) {			 
+			case 1:
+				listview_item_res_id = R.layout.listview_item_todo;
+				break;
+			case 2:
+				listview_item_res_id = R.layout.listview_item_remind;
+				break;
+			case 0:
+			default:
+				listview_item_res_id = R.layout.listview_item;
+				break;
+			}
+			
+			convertView = inflater1.inflate(listview_item_res_id, null);
+			 
 
 			TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
 			tv.setText("" + subjectList.get(position).getBody());

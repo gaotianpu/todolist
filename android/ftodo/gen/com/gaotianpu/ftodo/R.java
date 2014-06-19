@@ -32,25 +32,28 @@ public final class R {
         public static final int action_search=0x7f020000;
         public static final int drawer_shadow=0x7f020001;
         public static final int editbox_boder=0x7f020002;
-        public static final int ic_drawer=0x7f020003;
-        public static final int ic_launcher=0x7f020004;
+        public static final int ic_alarm=0x7f020003;
+        public static final int ic_drawer=0x7f020004;
+        public static final int ic_flag=0x7f020005;
+        public static final int ic_launcher=0x7f020006;
     }
     public static final class id {
-        public static final int action_alert=0x7f0a001a;
-        public static final int action_forgot_password=0x7f0a001b;
-        public static final int action_settings=0x7f0a0017;
-        public static final int action_todo=0x7f0a0019;
-        public static final int action_websearch=0x7f0a0018;
+        public static final int action_alert=0x7f0a001b;
+        public static final int action_forgot_password=0x7f0a001c;
+        public static final int action_settings=0x7f0a0018;
+        public static final int action_todo=0x7f0a001a;
+        public static final int action_websearch=0x7f0a0019;
         public static final int bottom=0x7f0a0009;
         public static final int btnLogout=0x7f0a0012;
         public static final int container=0x7f0a0000;
         public static final int content_frame=0x7f0a0002;
         public static final int drawer_layout=0x7f0a0001;
         public static final int email=0x7f0a000e;
+        public static final int icon=0x7f0a0014;
         public static final int left_drawer=0x7f0a0003;
-        public static final int list_tab_alert=0x7f0a0016;
-        public static final int list_tab_all=0x7f0a0014;
-        public static final int list_tab_todo=0x7f0a0015;
+        public static final int list_tab_all=0x7f0a0015;
+        public static final int list_tab_remind=0x7f0a0017;
+        public static final int list_tab_todo=0x7f0a0016;
         public static final int login=0x7f0a0010;
         public static final int login_form=0x7f0a000d;
         public static final int login_status=0x7f0a000b;
@@ -76,8 +79,9 @@ public final class R {
         public static final int fragment_login=0x7f030007;
         public static final int fragment_setting=0x7f030008;
         public static final int listview_item=0x7f030009;
-        public static final int listview_item_todo=0x7f03000a;
-        public static final int tabhost_list=0x7f03000b;
+        public static final int listview_item_remind=0x7f03000a;
+        public static final int listview_item_todo=0x7f03000b;
+        public static final int tabhost_list=0x7f03000c;
     }
     public static final class menu {
         public static final int item_detail=0x7f090000;
@@ -86,8 +90,8 @@ public final class R {
         public static final int main=0x7f090003;
     }
     public static final class string {
-        public static final int action_alert=0x7f060003;
         public static final int action_forgot_password=0x7f06001b;
+        public static final int action_remind=0x7f060003;
         public static final int action_search=0x7f060000;
         public static final int action_settings=0x7f060001;
         public static final int action_sign_in_register=0x7f060019;
@@ -136,8 +140,8 @@ public final class R {
         public static final int search_hint=0x7f06000f;
         public static final int search_label=0x7f060010;
         public static final int settings_description=0x7f060011;
-        public static final int tab_alert=0x7f06000e;
         public static final int tab_all=0x7f06000c;
+        public static final int tab_remind=0x7f06000e;
         public static final int tab_todo=0x7f06000d;
         public static final int title_activity_item_detail=0x7f060015;
         public static final int title_activity_login=0x7f060016;
