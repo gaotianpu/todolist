@@ -163,6 +163,9 @@ public class ListFragment extends Fragment {
 		// onCreateView setHasOptionsMenu(true);
 		menu.clear();
 		inflater.inflate(R.menu.list, menu);
+		
+	
+	 
 	}
 
 	@Override
@@ -174,29 +177,26 @@ public class ListFragment extends Fragment {
 		if (drawerOpen) {
 			menu.clear();
 		}
-
+		 
 		// menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
 		// menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.i("menu_onOptionsItemSelected", String.valueOf(R.id.action_todo)); 
+		//Log.i("menu_onOptionsItemSelected", String.valueOf(R.id.action_list_todo));
+		
+		if(item.isChecked()){
+			return true;
+		}
 
 		item.setChecked(true);
 		
+		listAdapter = new ListAdapter(act, item.getItemId());
+		lvDefault.setAdapter(listAdapter);
+		 
+
 		
-		switch (item.getItemId()) {
-		case R.id.action_todo:
-			listAdapter = new ListAdapter(act, 1);
-			lvDefault.setAdapter(listAdapter);
-			break;
-		case R.id.action_alert:
-			listAdapter = new ListAdapter(act, 2);
-			lvDefault.setAdapter(listAdapter);
-			
-			break;
-		}
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -375,22 +375,21 @@ public class ListFragment extends Fragment {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			int listview_item_res_id = 0;
-
-			switch (_sort) {			 
-			case 1:
+			
+			switch (_sort) {
+			case R.id.action_list_todo:
 				listview_item_res_id = R.layout.listview_item_todo;
 				break;
-			case 2:
+			case R.id.action_list_remind:
 				listview_item_res_id = R.layout.listview_item_remind;
 				break;
-			case 0:
+			case R.id.action_list_normal:
 			default:
 				listview_item_res_id = R.layout.listview_item;
 				break;
-			}
-			
+			} 
+
 			convertView = inflater1.inflate(listview_item_res_id, null);
-			 
 
 			TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
 			tv.setText("" + subjectList.get(position).getBody());

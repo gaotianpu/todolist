@@ -7,17 +7,24 @@
         android:icon="@drawable/action_search"
         android:showAsAction="ifRoom|withText"
         android:title="@string/action_search"/>
-    
-    <item
-        android:id="@+id/action_todo"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_todo"/>
-    
-    <item
-        android:id="@+id/action_alert"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_remind"/>
-        
+
+    <group android:checkableBehavior="single" >
+        <item
+            android:id="@+id/action_list_normal"
+            android:checked="true"
+            android:orderInCategory="100"
+            android:showAsAction="never"
+            android:title="@string/action_normal"/>
+        <item
+            android:id="@+id/action_list_todo"
+            android:orderInCategory="100"
+            android:showAsAction="never"
+            android:title="@string/action_todo"/>
+        <item
+            android:id="@+id/action_list_remind"
+            android:orderInCategory="100"
+            android:showAsAction="never"
+            android:title="@string/action_remind"/>
+    </group>
+
 </menu>
