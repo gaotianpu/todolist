@@ -206,11 +206,9 @@ public class MainActivity extends Activity {
 		case 2: // 待办
 		case 3: // 提醒
 			fragment = new ListFragment();
-
-			Bundle args0 = new Bundle();
-			args0.putInt("drawer_item_position", position);
+			Bundle args0 = new Bundle();			
+			args0.putInt(ListFragment.LIST_SORT, position);
 			fragment.setArguments(args0);
-
 			break;
 		case 4:
 		default:

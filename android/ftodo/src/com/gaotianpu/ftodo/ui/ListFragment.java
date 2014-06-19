@@ -59,6 +59,9 @@ import android.widget.AbsListView.OnScrollListener;
 public class ListFragment extends Fragment {
 
 	public static final String TAG = "ListFragment";
+	public static final String LIST_SORT = "ListSort"; 
+	
+	private int list_sort = 0; //1全部,2待办,3提醒
 
 	private MyApplication app;
 	private ConnectivityManager cm;
@@ -107,6 +110,19 @@ public class ListFragment extends Fragment {
 		ftd = new FTDClient(act);
 
 		// 2.控件相关
+		Intent intent= act.getIntent();
+		//list sort
+		int drawer_item_position = intent.getIntExtra(LIST_SORT, 1) ;
+		list_sort = drawer_item_position - 1; // 
+		
+		//搜索
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			queryStr = intent.getStringExtra(SearchManager.QUERY);
+			getActivity().setTitle("搜索:" + queryStr);
+			// Log.i("search",queryStr);
+			moreView.setVisibility(0);
+		}
+		
 
 		rootView = inflater.inflate(R.layout.fragment_list, container, false);
 		lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
@@ -128,16 +144,7 @@ public class ListFragment extends Fragment {
 		// lvDefault.addFooterView(moreView); // 设置列表底部视图
 		// moreView.setVisibility(View.GONE);
 
-		// getActivity().setTitle("全部");
-
-		Intent intent = this.getActivity().getIntent();
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			queryStr = intent.getStringExtra(SearchManager.QUERY);
-			getActivity().setTitle("搜索:" + queryStr);
-
-			// Log.i("search",queryStr);
-			moreView.setVisibility(0);
-		}
+		// getActivity().setTitle("全部"); 
 
 		action_menu_checked_menu = R.id.action_list_normal;
 
@@ -145,6 +152,7 @@ public class ListFragment extends Fragment {
 		setHasOptionsMenu(true);
 
 		// 3.数据加载
+		
 		subjectList = new ArrayList<SubjectBean>();
 		listAdapter = new ListAdapter(act, 0);
 		lvDefault.setAdapter(listAdapter);
