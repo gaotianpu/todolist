@@ -48,6 +48,7 @@ import android.widget.EditText;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -231,12 +232,12 @@ public class ListFragment extends Fragment {
 				switch (action_menu_checked_menu) {
 				case R.id.action_list_todo:
 					subject.setIsTodo(!subject.getIsTodo());
-
+					subjectDa.set_todo(subject.getId(),subject.getIsTodo()); 
 					listAdapter.notifyDataSetInvalidated();
 					break;
 				case R.id.action_list_remind:
 					subject.setIsRemind(!subject.getIsRemind());
-
+					subjectDa.set_remind(subject.getId(),subject.getIsRemind()); 
 					listAdapter.notifyDataSetInvalidated();
 					break;
 				case R.id.action_list_normal:
@@ -415,6 +416,11 @@ public class ListFragment extends Fragment {
 			case R.id.action_list_normal:
 			default:
 				convertView = inflater1.inflate(R.layout.listview_item, null);
+				if (subject.getIsTodo()) {
+					//CheckBox cb = (CheckBox) convertView.findViewById(R.id.cb);
+					//cb.setVisibility(View.VISIBLE);
+				}
+				
 				break;
 			}
 

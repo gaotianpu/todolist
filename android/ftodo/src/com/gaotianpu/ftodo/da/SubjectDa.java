@@ -89,6 +89,26 @@ public class SubjectDa {
 		db.close();
 
 	}
+	
+	public void set_todo(long local_id, boolean todo){
+		ContentValues values = new ContentValues();
+		values.put("is_todo", todo);
+
+		db = dbHelper.getWritableDatabase();
+		db.update("subjects", values, "pk_id=?",
+				new String[] { String.valueOf(local_id) });
+		db.close();
+	}
+	
+	public void set_remind(long local_id, boolean remind){
+		ContentValues values = new ContentValues();
+		values.put("is_remind", remind);
+
+		db = dbHelper.getWritableDatabase();
+		db.update("subjects", values, "pk_id=?",
+				new String[] { String.valueOf(local_id) });
+		db.close();
+	}
 
 	public void edit_content(long local_id, String content) {
 
@@ -101,7 +121,7 @@ public class SubjectDa {
 			Cursor cursor = db.query(
 					"subjects",
 					new String[] { "pk_id", "user_id", "body", "creation_date",
-							"last_update", "remote_id" },
+							"last_update", "remote_id","is_todo","is_remind" },
 					"pk_id=? and (user_id=? or user_id=0) ",
 					new String[] { String.valueOf(local_id),
 							String.valueOf(user_id) }, null, null, null);
@@ -114,6 +134,8 @@ public class SubjectDa {
 				subject.setCreationDate(cursor.getString(3));
 				subject.setUpdateDate(cursor.getString(4));
 				subject.setRemoteId(cursor.getLong(5));
+				subject.setIsTodo(cursor.getInt(6)==1 ? true : false);
+				subject.setIsRemind(cursor.getInt(7)==1 ? true : false);
 				break;
 			}
 		} catch (IllegalArgumentException e) {
@@ -131,7 +153,7 @@ public class SubjectDa {
 		try {
 			Cursor cursor = db.query("subjects", new String[] { "pk_id",
 					"user_id", "body", "creation_date", "last_update",
-					"remote_id" },
+					"remote_id", "is_todo","is_remind"},
 					"(user_id=? or user_id=0) and (is_sync=0 or remote_id=0) ",
 					new String[] { String.valueOf(user_id) }, null, null, null);
 			cursor.moveToFirst();
@@ -147,6 +169,8 @@ public class SubjectDa {
 
 				subject.setUpdateDate(cursor.getString(4));
 				subject.setRemoteId(cursor.getLong(5));
+				subject.setIsTodo(cursor.getInt(6)==1 ? true : false);
+				subject.setIsRemind(cursor.getInt(7)==1 ? true : false);
 				subjectList.add(subject);
 				cursor.moveToNext();
 			}
@@ -168,7 +192,7 @@ public class SubjectDa {
 
 			Cursor cursor = db.query("subjects", new String[] { "pk_id",
 					"user_id", "body", "creation_date", "last_update",
-					"remote_id" }, "user_id=? and remote_id<>0",
+					"remote_id", "is_todo","is_remind" }, "user_id=? and remote_id<>0",
 					new String[] { String.valueOf(user_id) }, null, null,
 					"remote_id DESC,pk_id desc limit " + String.valueOf(size)
 							+ " offset " + String.valueOf(offset));
@@ -182,6 +206,8 @@ public class SubjectDa {
 				subject.setCreationDate(cursor.getString(3));
 				subject.setUpdateDate(cursor.getString(4));
 				subject.setRemoteId(cursor.getLong(5));
+				subject.setIsTodo(cursor.getInt(6)==1 ? true : false);
+				subject.setIsRemind(cursor.getInt(7)==1 ? true : false);
 				subjectList.add(subject);
 				cursor.moveToNext();
 			}
