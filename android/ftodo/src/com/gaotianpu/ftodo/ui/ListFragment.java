@@ -22,6 +22,7 @@ import android.app.SearchManager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ import android.widget.EditText;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TabHost;
@@ -80,6 +82,7 @@ public class ListFragment extends Fragment {
 	private View moreView;
 	private TextView tv_load_more;
 	private ProgressBar pb_load_progress;
+	private int action_menu_checked_menu;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -135,6 +138,8 @@ public class ListFragment extends Fragment {
 			moreView.setVisibility(0);
 		}
 
+		action_menu_checked_menu = R.id.action_list_normal;
+
 		// 定义可选菜单
 		setHasOptionsMenu(true);
 
@@ -163,9 +168,7 @@ public class ListFragment extends Fragment {
 		// onCreateView setHasOptionsMenu(true);
 		menu.clear();
 		inflater.inflate(R.menu.list, menu);
-		
-	
-	 
+
 	}
 
 	@Override
@@ -177,26 +180,26 @@ public class ListFragment extends Fragment {
 		if (drawerOpen) {
 			menu.clear();
 		}
-		 
+
 		// menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
 		// menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		//Log.i("menu_onOptionsItemSelected", String.valueOf(R.id.action_list_todo));
-		
-		if(item.isChecked()){
+		// Log.i("menu_onOptionsItemSelected",
+		// String.valueOf(R.id.action_list_todo));
+
+		if (item.isChecked()) {
 			return true;
 		}
 
 		item.setChecked(true);
-		
+
+		action_menu_checked_menu = item.getItemId();
 		listAdapter = new ListAdapter(act, item.getItemId());
 		lvDefault.setAdapter(listAdapter);
-		 
 
-		
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -222,15 +225,37 @@ public class ListFragment extends Fragment {
 					long arg3) {
 
 				SubjectBean subject = subjectList.get(arg2);
-				subject.getId();
+				// Log.i("setOnItemClickListener", String.valueOf(arg2) + ","
+				// + String.valueOf(subject.getId()));
 
-				Log.i("setOnItemClickListener", String.valueOf(arg2) + ","
-						+ String.valueOf(subject.getId()));
+				switch (action_menu_checked_menu) {
+				case R.id.action_list_todo:
+					if (subject.getIsTodo() == 0) {
+						subject.setIsTodo(1);
+					} else {
+						subject.setIsTodo(0);
+					}
 
-				Intent detailIntent = new Intent(act, ItemDetailActivity.class);
-				detailIntent.putExtra(ItemDetailActivity.SUBJECT_LOCAL_ID,
-						subject.getId());
-				startActivity(detailIntent);
+					listAdapter.notifyDataSetInvalidated();
+					break;
+				case R.id.action_list_remind:
+					if (subject.getIsRemind() == 0) {
+						subject.setIsRemind(1);
+					} else {
+						subject.setIsRemind(0);
+					}
+
+					listAdapter.notifyDataSetInvalidated();
+					break;
+				case R.id.action_list_normal:
+				default:
+					Intent detailIntent = new Intent(act,
+							ItemDetailActivity.class);
+					detailIntent.putExtra(ItemDetailActivity.SUBJECT_LOCAL_ID,
+							subject.getId());
+					startActivity(detailIntent);
+					break;
+				}
 
 				// Bundle args = new Bundle();
 				// args.putLong(ItemDetailFragment.SUBJECT_LOCAL_ID,
@@ -375,24 +400,35 @@ public class ListFragment extends Fragment {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			int listview_item_res_id = 0;
-			
+
+			SubjectBean subject = subjectList.get(position);
+			ImageView ic;
+
 			switch (action_sort) {
 			case R.id.action_list_todo:
-				listview_item_res_id = R.layout.listview_item_todo;
+				convertView = inflater1.inflate(R.layout.listview_item_todo,
+						null);
+				ic = (ImageView) convertView.findViewById(R.id.icon);
+				if (subject.getIsTodo() == 1) {
+					ic.setColorFilter(Color.RED);
+				}
 				break;
 			case R.id.action_list_remind:
-				listview_item_res_id = R.layout.listview_item_remind;
+				convertView = inflater1.inflate(R.layout.listview_item_remind,
+						null);
+				ic = (ImageView) convertView.findViewById(R.id.icon);
+				if (subject.getIsRemind() == 1) {
+					ic.setColorFilter(Color.RED);
+				}
 				break;
 			case R.id.action_list_normal:
 			default:
-				listview_item_res_id = R.layout.listview_item;
+				convertView = inflater1.inflate(R.layout.listview_item, null);
 				break;
-			} 
-
-			convertView = inflater1.inflate(listview_item_res_id, null);
+			}
 
 			TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
-			tv.setText("" + subjectList.get(position).getBody());
+			tv.setText("" + subject.getBody());
 
 			return convertView;
 

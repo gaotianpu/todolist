@@ -7,12 +7,14 @@ public class SubjectBean {
 	
 	private long pk_id;
 	private long remote_id;
-	
+	private long user_id;
 	private String body;
 	private String creation_date;
 	private String update_date;
 	
-	private long user_id;
+	private int is_todo=0;
+	private int is_remind=0; 
+	
 	
 	public long getId() {
 		return pk_id;
@@ -54,4 +56,20 @@ public class SubjectBean {
 	public void setRemoteId(long id) {
 		this.remote_id = id;
 	}
+	
+	//
+	public int getIsTodo() {
+		return is_todo;
+	}
+	public void setIsTodo(int t) {
+		this.is_todo = t;
+	}
+	//
+	public int getIsRemind() {
+		return is_remind;
+	}
+	public void setIsRemind(int r) {
+		this.is_remind = r;
+	}
+	//
 }
