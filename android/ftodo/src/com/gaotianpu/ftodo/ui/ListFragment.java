@@ -349,11 +349,11 @@ public class ListFragment extends Fragment {
 
 	private class ListAdapter extends BaseAdapter {
 		private LayoutInflater inflater1;
-		private int _sort = 0;
+		private int action_sort = 0;
 
 		public ListAdapter(Context ctx1, int sort) {
 			this.inflater1 = LayoutInflater.from(ctx1);
-			_sort = sort;
+			action_sort = sort;
 		}
 
 		@Override
@@ -376,7 +376,7 @@ public class ListFragment extends Fragment {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			int listview_item_res_id = 0;
 			
-			switch (_sort) {
+			switch (action_sort) {
 			case R.id.action_list_todo:
 				listview_item_res_id = R.layout.listview_item_todo;
 				break;
