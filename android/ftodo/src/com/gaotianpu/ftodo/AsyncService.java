@@ -109,12 +109,12 @@ public class AsyncService extends Service {
 		// need changed?
 		List<SubjectBean> subjectList = subjectDa
 				.load_changed_but_not_uploaded(user.getUserId());
-		Log.i(TAG,  String.valueOf(subjectList.size() ) );
+		//Log.i(TAG,  String.valueOf(subjectList.size() ) );
 		if (subjectList.size() == 0) {
 			return;
 		}
 
-		Log.i(TAG, "has not async subjects times ");
+	//	Log.i(TAG, "has not async subjects times ");
 
 		// todo, 单个上传要改成批量上传
 		for (SubjectBean subject : subjectList) {
@@ -190,7 +190,7 @@ public class AsyncService extends Service {
 		// download and insert into subjects
 		int page_size = 100;
 		List<Long> offset_list = subjectDa.load_not_download(user.getUserId());
-		 Log.i(TAG,  "download"   );
+		// Log.i(TAG,  "download"   );
 
 		if (offset_list.size() == 0) {
 			return;
