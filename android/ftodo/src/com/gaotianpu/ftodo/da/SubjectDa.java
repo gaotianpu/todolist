@@ -147,6 +147,40 @@ public class SubjectDa {
 
 		return subject;
 	}
+	
+	public List<SubjectBean> load_changed_but_not_uploaded(long user_id){
+		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
+		db = dbHelper.getWritableDatabase();
+		try {
+			String sqlwhere = "(user_id=? or user_id=0) and (is_sync=0 or remote_id=0) " ; 
+			
+			Cursor cursor = db.query("subjects", new String[] { "pk_id",
+					"user_id", "body", "creation_date", "last_update",
+					"remote_id", "is_todo","is_remind"},
+					sqlwhere,
+					new String[] { String.valueOf(user_id) }, null, null, "pk_id desc");
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast() && (cursor.getString(1) != null)) {
+				SubjectBean subject = new SubjectBean();
+				subject.setId(cursor.getLong(0));
+				subject.setUserId(user_id); // cursor.getLong(1));
+				subject.setBody(cursor.getString(2));
+				subject.setCreationDate(cursor.getString(3)); 
+				subject.setUpdateDate(cursor.getString(4));
+				subject.setRemoteId(cursor.getLong(5));
+				subject.setIsTodo(cursor.getInt(6)==1 ? true : false);
+				subject.setIsRemind(cursor.getInt(7)==1 ? true : false);
+				subjectList.add(subject);
+				cursor.moveToNext();
+			}
+		} catch (IllegalArgumentException e) {
+			Log.e("SQLiteOp", e.toString());
+		} finally {
+			db.close();
+		}
+
+		return subjectList;
+	}
 
 	public List<SubjectBean> load_not_uploaded_subjects(long user_id,int list_sort) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();

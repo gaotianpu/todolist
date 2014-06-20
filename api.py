@@ -8,7 +8,8 @@ from datetime import *
 
 urls = (     
     "/new", "New",
-    "/list2","List2",
+    "/edit", "Edit",
+    "/list","List",
     "/list3","List3",
     "/total","Total",
     "/dashboard","Dashboard",
@@ -54,6 +55,17 @@ class New:
         r = {"code":1,"data":task}
         return json.dumps(r,cls=CJsonEncoder) 
 
+class Edit:
+    @validate_token
+    def POST(self):
+        i = web.input(remote_id=0,local_id=0,content='')  
+        content = web.websafe(i.content)
+        da.subject.update(i.remote_id,self.token.user_id,body=i.content) 
+        task = da.subject.load_by_id(i.remote_id) 
+        task.local_id = i.local_id        
+        r = {"code":1,"data":task}
+        return json.dumps(r,cls=CJsonEncoder) 
+
 class Total:
     @validate_token
     def GET(self): 
@@ -61,7 +73,7 @@ class Total:
         r = {'code':1,'total':count,'user_id':self.token.user_id}
         return json.dumps(r)
 
-class List2:
+class List:
     @validate_token
     def GET(self):
         i = web.input(offset=0,size=100)

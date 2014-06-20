@@ -48,11 +48,12 @@ public class FTDClient {
 		return;
 	}
 
-	public void post_new_task(long user_id, String access_token, String content, String device_type,
+	public void post_task(long user_id, String access_token, long remote_id, String content, String device_type,
 			String devie_no, long local_id, String creation_date,String last_update,
 			AsyncHttpResponseHandler responseHandler) {
-
-		String url = RES_BASE_URL + "new";
+		
+		String edit_or_new = (remote_id==0 ) ? "new" : "edit";
+		String url = RES_BASE_URL + edit_or_new;
 
 		RequestParams params = new RequestParams();
 		params.put("user_id", String.valueOf(user_id));
@@ -63,6 +64,7 @@ public class FTDClient {
 		//params.put("device_type", device_type);
 		//params.put("device_no", devie_no);
 		params.put("local_id", String.valueOf(local_id));
+		params.put("remote_id", String.valueOf(remote_id));
 
 		client.post(url, params, responseHandler);
 		return;
@@ -76,7 +78,7 @@ public class FTDClient {
 
 	public void load_by_custId(long user_id, String access_token,long offset, int page_size, 
 			AsyncHttpResponseHandler responseHandler) {
-		String url = RES_BASE_URL + "list2";
+		String url = RES_BASE_URL + "list";
 
 		RequestParams params = new RequestParams();
 		params.put("user_id", String.valueOf(user_id));

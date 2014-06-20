@@ -29,7 +29,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "remind_datetime datetime ,"
 				+ "remind_frequency INTEGER NOT NULL default 0,"
 				+ "remind_next datetime ,"
-				+ "remote_id  INTEGER NOT NULL)");
+				+ "remote_id  INTEGER NOT NULL default 0)");
 		
 		db.execSQL("CREATE INDEX  ix_remote_id ON subjects (remote_id DESC)");
 		
