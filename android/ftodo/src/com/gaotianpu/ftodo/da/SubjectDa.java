@@ -94,6 +94,7 @@ public class SubjectDa {
 	public void set_todo(long local_id, boolean todo){
 		ContentValues values = new ContentValues();
 		values.put("is_todo", todo);
+		values.put("is_sync", 0);
 
 		db = dbHelper.getWritableDatabase();
 		db.update("subjects", values, "pk_id=?",
@@ -104,6 +105,7 @@ public class SubjectDa {
 	public void set_remind(long local_id, boolean remind){
 		ContentValues values = new ContentValues();
 		values.put("is_remind", remind);
+		values.put("is_sync", 0);
 
 		db = dbHelper.getWritableDatabase();
 		db.update("subjects", values, "pk_id=?",
@@ -112,6 +114,14 @@ public class SubjectDa {
 	}
 
 	public void edit_content(long local_id, String content) {
+		ContentValues values = new ContentValues();
+		values.put("body", content);
+		values.put("is_sync", 0);
+
+		db = dbHelper.getWritableDatabase();
+		db.update("subjects", values, "pk_id=?",
+				new String[] { String.valueOf(local_id) });
+		db.close();
 
 	}
 

@@ -58,9 +58,10 @@ class New:
 class Edit:
     @validate_token
     def POST(self):
-        i = web.input(remote_id=0,local_id=0,content='')  
+        i = web.input(remote_id=0,local_id=0,content='',is_todo=0,is_remind=0,parent_id=0)  
         content = web.websafe(i.content)
-        da.subject.update(i.remote_id,self.token.user_id,body=i.content) 
+        da.subject.update(i.remote_id,self.token.user_id,
+            body=i.content,is_todo=i.is_todo,is_remind=i.is_remind,parent_id=i.parent_id) 
         task = da.subject.load_by_id(i.remote_id) 
         task.local_id = i.local_id        
         r = {"code":1,"data":task}

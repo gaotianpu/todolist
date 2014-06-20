@@ -109,6 +109,7 @@ public class AsyncService extends Service {
 		// need changed?
 		List<SubjectBean> subjectList = subjectDa
 				.load_changed_but_not_uploaded(user.getUserId());
+		Log.i(TAG,  String.valueOf(subjectList.size() ) );
 		if (subjectList.size() == 0) {
 			return;
 		}
@@ -124,11 +125,16 @@ public class AsyncService extends Service {
 			if (user_id == 0) {
 				user_id = user.getUserId();
 			}
-
+			
+			Log.i(TAG, String.valueOf(subject.getRemoteId()));
+			
 			ftd.post_task(user_id, user.getAccessToken(),
 					subject.getRemoteId(), subject.getBody(), device_type,
 					devie_no, subject.getId(), subject.getCreationDate(),
-					subject.getUpdateDate(), new JsonHttpResponseHandler() {
+					subject.getUpdateDate(),
+					subject.getIsTodo(),
+					subject.getIsRemind(),
+					new JsonHttpResponseHandler() {
 						@Override
 						public void onSuccess(JSONObject result) {
 							try {
@@ -138,7 +144,7 @@ public class AsyncService extends Service {
 										data.getLong("local_id"),
 										data.getLong("pk_id"),
 										data.getLong("user_id"));
-								// Log.d(TAG, "sucess");
+								 Log.d(TAG, "sucess");
 
 							} catch (JSONException e) {
 								Log.e(TAG, e.toString());
@@ -152,6 +158,8 @@ public class AsyncService extends Service {
 								// add code here
 								app.set_token_failure();
 							}
+							
+							Log.d(TAG, String.valueOf(statusCode));
 
 						}
 					});

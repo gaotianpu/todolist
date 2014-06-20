@@ -49,11 +49,13 @@ public class FTDClient {
 	}
 
 	public void post_task(long user_id, String access_token, long remote_id, String content, String device_type,
-			String devie_no, long local_id, String creation_date,String last_update,
+			String devie_no, long local_id, String creation_date,String last_update,boolean is_todo,boolean is_remind,
 			AsyncHttpResponseHandler responseHandler) {
 		
 		String edit_or_new = (remote_id==0 ) ? "new" : "edit";
 		String url = RES_BASE_URL + edit_or_new;
+		
+		Log.i("AsyncService",url);
 
 		RequestParams params = new RequestParams();
 		params.put("user_id", String.valueOf(user_id));
@@ -61,10 +63,13 @@ public class FTDClient {
 		params.put("content", content);
 		params.put("creation_date", creation_date); // 
 		params.put("last_update", last_update); // 
-		//params.put("device_type", device_type);
-		//params.put("device_no", devie_no);
-		params.put("local_id", String.valueOf(local_id));
-		params.put("remote_id", String.valueOf(remote_id));
+		params.put("is_todo", is_todo ? 1 :0);
+		params.put("is_remind", is_remind ? 1 : 0);
+		params.put("local_id", local_id);
+		params.put("remote_id", remote_id);
+		
+		Log.i("AsyncService",params.toString());
+		
 
 		client.post(url, params, responseHandler);
 		return;

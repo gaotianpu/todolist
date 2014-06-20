@@ -93,7 +93,8 @@ public class ListFragment extends Fragment {
 			Bundle savedInstanceState) {
 		// 0.外部传入参数
 		// list sort
-		int drawer_item_position = getArguments().getInt(LIST_SORT);  
+		 
+		int drawer_item_position = getArguments()!=null ? getArguments().getInt(LIST_SORT) : 1;  
 		list_sort = drawer_item_position - 1; //
 		//Log.i("list_sort", String.valueOf(drawer_item_position));
 
@@ -109,8 +110,8 @@ public class ListFragment extends Fragment {
 		deviceId = tm.getDeviceId();
 		device_type = android.os.Build.MODEL;
 
-		user = app.getUser();
-		cust_id = user.getUserId();
+//		user = app.getUser();
+//		cust_id = user.getUserId();
 
 		subjectDa = new SubjectDa(act);
 		ftd = new FTDClient(act);
@@ -146,6 +147,10 @@ public class ListFragment extends Fragment {
 		// moreView.setVisibility(View.GONE); 
 
 		action_menu_checked_menu = R.id.action_list_normal;
+		
+		String[] mDrawerItems = getResources().getStringArray(
+				R.array.drawer_menu_items);
+		act.setTitle(mDrawerItems[drawer_item_position]); 
 
 		// 定义可选菜单
 		setHasOptionsMenu(true);
