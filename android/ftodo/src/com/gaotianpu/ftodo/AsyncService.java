@@ -190,7 +190,7 @@ public class AsyncService extends Service {
 		// download and insert into subjects
 		int page_size = 100;
 		List<Long> offset_list = subjectDa.load_not_download(user.getUserId());
-		// Log.i(TAG, String.valueOf( offset_list.size() ) );
+		 Log.i(TAG,  "download"   );
 
 		if (offset_list.size() == 0) {
 			return;

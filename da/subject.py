@@ -17,21 +17,27 @@ def insert(user_id,subject):
         plan_start_date=web.SQLLiteral('now()'))
 
 def insert2(user_id,body,device_type,device_no,local_id,created_date,last_update):
-    #device_type, 手机型号，比如HUAWEI_G730
-    result = list(dbr.select(table_name,what="pk_id",
-        where="user_id=$user_id and local_id=$local_id and device_type=$device_type and device_no=$device_no",
-        vars=locals()))
-    if result:
-        pk_id = result[0].pk_id
-        dbw.update(table_name,body=body,where="pk_id=$pk_id",vars=locals())
-        return pk_id
-    else:
-        return dbw.insert(table_name,user_id=user_id,subject="",body=body,
+    rows = list(dbr.select(table_name,what="pk_id,body", where="user_id=$user_id",vars=locals(),order="pk_id desc", limit=20))
+    for r in rows:
+        if cmp(r.body,body)==0:
+            return r.pk_id
+    return dbw.insert(table_name,user_id=user_id,subject="",body=body,
             device_no = device_no, local_id=local_id, device_type=device_type,
             app_created_date=created_date,
             last_update=last_update,
             created_date = web.SQLLiteral('now()'),
             plan_start_date=web.SQLLiteral('now()'))
+
+    #device_type, 手机型号，比如HUAWEI_G730
+    # result = list(dbr.select(table_name,what="pk_id",
+    #     where="user_id=$user_id and local_id=$local_id and device_type=$device_type and device_no=$device_no",
+    #     vars=locals()))
+    # if result:
+    #     pk_id = result[0].pk_id
+    #     dbw.update(table_name,body=body,where="pk_id=$pk_id",vars=locals())
+    #     return pk_id
+    # else:
+    #     pass
 
 def update(pk_id,user_id,**kv):
     return dbw.update(table_name,last_update=web.SQLLiteral('now()'),where='pk_id=$pk_id and user_id=$user_id',vars=locals(),**kv) 

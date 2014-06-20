@@ -110,8 +110,8 @@ public class ListFragment extends Fragment {
 		deviceId = tm.getDeviceId();
 		device_type = android.os.Build.MODEL;
 
-//		user = app.getUser();
-//		cust_id = user.getUserId();
+		user = app.getUser();
+		cust_id = user.getUserId();
 
 		subjectDa = new SubjectDa(act);
 		ftd = new FTDClient(act);
@@ -224,6 +224,8 @@ public class ListFragment extends Fragment {
 	private void add_data(int offset, int limit) {
 		List<SubjectBean> list = subjectDa.load(cust_id, list_sort, offset,
 				limit);
+		
+		Log.i("localdata", String.valueOf(list.size()));
 		for (SubjectBean s : list) {
 			subjectList.add(s);
 		}

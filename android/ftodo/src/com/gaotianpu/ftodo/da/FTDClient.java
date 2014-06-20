@@ -63,10 +63,10 @@ public class FTDClient {
 		params.put("content", content);
 		params.put("creation_date", creation_date); // 
 		params.put("last_update", last_update); // 
-		params.put("is_todo", is_todo ? 1 :0);
-		params.put("is_remind", is_remind ? 1 : 0);
-		params.put("local_id", local_id);
-		params.put("remote_id", remote_id);
+		params.put("is_todo", String.valueOf(is_todo ? 1 :0) );
+		params.put("is_remind", String.valueOf(is_remind ? 1 : 0)  );
+		params.put("local_id", String.valueOf(local_id) );
+		params.put("remote_id", String.valueOf(remote_id) );
 		
 		Log.i("AsyncService",params.toString());
 		

@@ -32,6 +32,8 @@ public class SubjectDa {
 		values.put("is_sync", 0);
 		values.put("remote_id", 0);
 		values.put("last_sync", 0); 
+		values.put("is_todo", 0);
+		values.put("is_remind", 0);
 
 		// 每次都要构造SQLiteDatabase， 对性能影响有多大？
 		db = dbHelper.getWritableDatabase();
