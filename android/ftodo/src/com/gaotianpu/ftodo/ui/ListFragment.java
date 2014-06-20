@@ -143,9 +143,7 @@ public class ListFragment extends Fragment {
 				.findViewById(R.id.pb_load_progress);
 
 		// lvDefault.addFooterView(moreView); // 设置列表底部视图
-		// moreView.setVisibility(View.GONE);
-
-		// getActivity().setTitle("全部");
+		// moreView.setVisibility(View.GONE); 
 
 		action_menu_checked_menu = R.id.action_list_normal;
 
@@ -153,7 +151,6 @@ public class ListFragment extends Fragment {
 		setHasOptionsMenu(true);
 
 		// 3.数据加载
-
 		subjectList = new ArrayList<SubjectBean>();
 		listAdapter = new ListAdapter(act, 0);
 		lvDefault.setAdapter(listAdapter);
@@ -350,7 +347,7 @@ public class ListFragment extends Fragment {
 							user = app.getUser();
 							cust_id = user.getUserId();
 
-							Long subjectID = subjectDa.insert(cust_id, content);
+							Long subjectID = subjectDa.insert(cust_id, content,0);
 
 							SubjectBean subject = new SubjectBean();
 							subject.setId(subjectID);

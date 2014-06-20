@@ -23,14 +23,15 @@ public class SubjectDa {
 	// return db;
 	// }
 
-	public long insert(long user_id, String content) {
+	public long insert(long user_id, String content,long parent_id) {
 		ContentValues values = new ContentValues();
 		values.put("body", content);
 		values.put("user_id", user_id);
+		values.put("parent_id", parent_id);
 		values.put("is_del", 0);
 		values.put("is_sync", 0);
 		values.put("remote_id", 0);
-		values.put("last_sync", 0);
+		values.put("last_sync", 0); 
 
 		// 每次都要构造SQLiteDatabase， 对性能影响有多大？
 		db = dbHelper.getWritableDatabase();

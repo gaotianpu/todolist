@@ -1,94 +1,161 @@
-package com.gaotianpu.ftodo.ui; 
+package com.gaotianpu.ftodo.ui;
 
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
-import com.gaotianpu.ftodo.R.id;
-import com.gaotianpu.ftodo.R.layout;
+
 import com.gaotianpu.ftodo.da.SubjectBean;
 import com.gaotianpu.ftodo.da.SubjectDa;
 import com.gaotianpu.ftodo.da.UserBean;
 
 import android.app.Activity;
- 
-import android.app.Fragment;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
+
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.KeyEvent;
+
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+
+import android.view.View.OnKeyListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
- 
 
 public class ItemDetailActivity extends Activity {
-	
-	public static final String SUBJECT_LOCAL_ID = "subject_local_id"; 
-	
-	private Context ctx;	
+
+	public static final String SUBJECT_LOCAL_ID = "subject_local_id";
+
+	private Context ctx;
 	private MyApplication app;
-	private UserBean user;
 	private SubjectDa subjectDa;
-	
-	private Long subject_local_id  ;
+
+	private UserBean user;
+	private SubjectBean parentSubject;
+
+	private Long subject_local_id;
+
+	private TextView txtSubjectBody;
+	private EditText txtNew;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.fragment_item_detail );  // activity_item_detail.xml
-		
-		ctx = this;		
-		app = (MyApplication) ctx.getApplicationContext(); 
-		user = app.getUser();
-		
-		subjectDa = new SubjectDa(this);
-		
-		Intent intent= getIntent();
-		subject_local_id = intent.getLongExtra(SUBJECT_LOCAL_ID, 0);
-		
-		render_details();
-		
-		Log.i("setOnItemClickListener", "ItemDetailActivity:" + String.valueOf(subject_local_id));
+		setContentView(R.layout.fragment_item_detail); // activity_item_detail.xml
 
-		if (savedInstanceState == null) {
-//			getFragmentManager().beginTransaction()
-//					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
-		
-	//	setTitle("details");
+		// 0.外部传入参数
+		Intent intent = getIntent();
+		subject_local_id = intent.getLongExtra(SUBJECT_LOCAL_ID, 0);
+
+		// 1 全局
+		ctx = this;
+		app = (MyApplication) ctx.getApplicationContext();
+		user = app.getUser();
+		subjectDa = new SubjectDa(this);
+
+		// 2 UI
+		txtSubjectBody = (TextView) findViewById(R.id.subject_body);
+		txtNew = (EditText) findViewById(R.id.txtNew);
+
+		// 3 load data
+		parentSubject = subjectDa.load_by_localId(user.getUserId(),
+				subject_local_id);
+
+		txtSubjectBody.setText(parentSubject.getBody());
+		setTitle(parentSubject.getBody());
+
+		// 4. event binding
+		txtNew_setOnKeyListener();
+
+		Log.i("setOnItemClickListener",
+				"ItemDetailActivity:" + String.valueOf(subject_local_id));
+
 	}
-	
-	private void render_details(){		
-		SubjectBean subject = subjectDa.load_by_localId( user.getUserId(), subject_local_id);
-		Log.i("render_details", subject.getBody());
-		
-		//subject_body
-		TextView txtSubjectBody = (TextView) findViewById(R.id.subject_body);
-		txtSubjectBody.setText(subject.getBody());
+
+	private void txtNew_setOnKeyListener() {
+
+		txtNew.setOnKeyListener(new OnKeyListener() {
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// TODO Auto-generated method stub
+				if (keyCode == KeyEvent.KEYCODE_ENTER) {
+					InputMethodManager imm = (InputMethodManager) v
+							.getContext().getSystemService(
+									Context.INPUT_METHOD_SERVICE);
+					if (imm.isActive()) {
+						// insert into sqlite
+						String content = txtNew.getText().toString().trim();
+						if (content.length() > 1) {
+
+							user = app.getUser();
+							Long subjectID = subjectDa.insert(user.getUserId(),
+									content, parentSubject.getId());
+
+//							SubjectBean subject = new SubjectBean();
+//							subject.setId(subjectID);
+//							subject.setUserId(user.getUserId());
+//							subject.setBody(txtNew.getText().toString().trim());
+//						 
+
+							// insert_new_item(subject, 0);
+
+							// show new item in ListView
+							// lvDefault.setAdapter(new ListAdapter(act, 0));
+							txtNew.setText("");
+						}
+
+					}
+					return true;
+				}
+				return false;
+
+			}
+
+		});
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.item, menu);
+		return super.onCreateOptionsMenu(menu);
 
-		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.item_detail, menu);
-		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();  
-		
-		if (id == R.id.action_settings) {
+
+		int id = item.getItemId();
+
+		if (item.isChecked()) {
 			return true;
 		}
+
+		switch (id) {
+		case R.id.action_item_edit:
+			break;
+		case R.id.action_item_todo:
+			break;
+		case R.id.action_item_remind:
+			break;
+		case R.id.action_item_delete:
+			break;
+		case R.id.action_item_read:
+		default:
+			break;
+
+		}
+
+		item.setChecked(true);
+
+		// if (id == R.id.action_item_edit) {
+		// return true;
+		// }
+
 		return super.onOptionsItemSelected(item);
-	} 
+	}
 }

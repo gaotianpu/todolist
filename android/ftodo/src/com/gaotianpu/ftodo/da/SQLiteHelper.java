@@ -23,6 +23,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "last_sync  datetime  ," 
 				+ "is_del INTEGER NOT NULL,"				
 				+ "is_sync  INTEGER NOT NULL," 
+				+ "parent_id INTEGER NOT NULL default 0,"
 				+ "is_todo INTEGER NOT NULL default 0,"
 				+ "is_remind INTEGER NOT NULL default 0 ,"
 				+ "remind_datetime datetime ,"
