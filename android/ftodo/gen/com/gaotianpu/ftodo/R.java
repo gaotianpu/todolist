@@ -48,7 +48,7 @@ public final class R {
         public static final int action_list_remind=0x7f0a0021;
         public static final int action_list_todo=0x7f0a0020;
         public static final int action_websearch=0x7f0a001e;
-        public static final int bottom=0x7f0a0007;
+        public static final int bottom=0x7f0a0005;
         public static final int btnLogout=0x7f0a0012;
         public static final int cb=0x7f0a0013;
         public static final int container=0x7f0a0000;
@@ -66,28 +66,32 @@ public final class R {
         public static final int login_status_message=0x7f0a000c;
         public static final int lvDefault=0x7f0a000a;
         public static final int password=0x7f0a000f;
-        public static final int pb_load_progress=0x7f0a0004;
+        public static final int pb_load_progress=0x7f0a0007;
         public static final int sign_in_button=0x7f0a0011;
-        public static final int subject_body=0x7f0a0006;
+        public static final int subject_body=0x7f0a0004;
         public static final int swipe_container=0x7f0a0009;
         public static final int tvBody=0x7f0a0014;
-        public static final int tv_load_more=0x7f0a0005;
-        public static final int txtNew=0x7f0a0008;
+        public static final int tv_load_more=0x7f0a0008;
+        public static final int txtNew=0x7f0a0006;
     }
     public static final class layout {
         public static final int activity_item_detail=0x7f030000;
         public static final int activity_main=0x7f030001;
-        public static final int drawer_list_item=0x7f030002;
-        public static final int footer_more=0x7f030003;
-        public static final int fragment_dashboard=0x7f030004;
-        public static final int fragment_item_detail=0x7f030005;
-        public static final int fragment_list=0x7f030006;
-        public static final int fragment_login=0x7f030007;
-        public static final int fragment_setting=0x7f030008;
-        public static final int listview_item=0x7f030009;
-        public static final int listview_item_remind=0x7f03000a;
-        public static final int listview_item_todo=0x7f03000b;
-        public static final int tabhost_list=0x7f03000c;
+        public static final int detail_edit=0x7f030002;
+        public static final int detail_read=0x7f030003;
+        public static final int detail_remind=0x7f030004;
+        public static final int detail_todo=0x7f030005;
+        public static final int drawer_list_item=0x7f030006;
+        public static final int footer_more=0x7f030007;
+        public static final int fragment_dashboard=0x7f030008;
+        public static final int fragment_item_detail=0x7f030009;
+        public static final int fragment_list=0x7f03000a;
+        public static final int fragment_login=0x7f03000b;
+        public static final int fragment_setting=0x7f03000c;
+        public static final int listview_item=0x7f03000d;
+        public static final int listview_item_remind=0x7f03000e;
+        public static final int listview_item_todo=0x7f03000f;
+        public static final int tabhost_list=0x7f030010;
     }
     public static final class menu {
         public static final int item=0x7f090000;
