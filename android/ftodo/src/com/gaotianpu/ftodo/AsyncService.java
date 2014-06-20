@@ -26,6 +26,7 @@ import android.util.Log;
 
 public class AsyncService extends Service {
 	private SubjectDa subjectDa;
+
 	public class AsyncBinder extends Binder {
 		AsyncService getService() {
 			return AsyncService.this;
@@ -81,15 +82,14 @@ public class AsyncService extends Service {
 				NetworkInfo info = cm.getActiveNetworkInfo();
 				if (info != null && info.isConnected()) {
 					user = app.getUser();
-//					Log.i("onStartCommand",
-//							String.valueOf(user.getUserId()) + ","
-//									+ String.valueOf(user.getTokenStatus()));
+					// Log.i("onStartCommand",
+					// String.valueOf(user.getUserId()) + ","
+					// + String.valueOf(user.getTokenStatus()));
 					if (user.getUserId() != 0 && user.getTokenStatus() != 0) {
 						upload();
 						download();
 					}
 
-					
 				}
 
 				mHandler.postDelayed(this, 9000);
@@ -108,7 +108,7 @@ public class AsyncService extends Service {
 		// Log.i(TAG, "has_active_user " );
 
 		List<SubjectBean> subjectList = subjectDa.load_not_uploaded_subjects(
-				 user.getUserId());
+				user.getUserId(), 0);
 		if (subjectList.size() == 0) {
 			return;
 		}
@@ -121,10 +121,10 @@ public class AsyncService extends Service {
 					String.valueOf(subject.getCreationDate()) + ","
 							+ String.valueOf(subject.getUpdateDate()));
 			long user_id = subject.getUserId();
-			if (user_id==0){
+			if (user_id == 0) {
 				user_id = user.getUserId();
 			}
-					
+
 			ftd.post_new_task(user_id, user.getAccessToken(),
 					subject.getBody(), device_type, devie_no, subject.getId(),
 					subject.getCreationDate(), subject.getUpdateDate(),
@@ -181,8 +181,7 @@ public class AsyncService extends Service {
 
 		// download and insert into subjects
 		int page_size = 100;
-		List<Long> offset_list = subjectDa.load_not_download( 
-				user.getUserId());
+		List<Long> offset_list = subjectDa.load_not_download(user.getUserId());
 		// Log.i(TAG, String.valueOf( offset_list.size() ) );
 
 		if (offset_list.size() == 0) {
@@ -204,7 +203,7 @@ public class AsyncService extends Service {
 							for (SubjectBean s : subjectList) {
 								uid = s.getUserId();
 
-								subjectDa.insert2(  s.getUserId(),
+								subjectDa.insert2(s.getUserId(),
 										s.getRemoteId(), s.getBody(),
 										String.valueOf(s.getCreationDate()), 1,
 										1);
@@ -212,8 +211,7 @@ public class AsyncService extends Service {
 							}
 
 							// then,update the download records
-							subjectDa.update_download_records(  uid,
-									offset);
+							subjectDa.update_download_records(uid, offset);
 
 						} catch (JSONException e) {
 							Log.e(TAG, e.toString());

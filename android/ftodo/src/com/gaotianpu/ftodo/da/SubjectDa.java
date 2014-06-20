@@ -147,15 +147,24 @@ public class SubjectDa {
 		return subject;
 	}
 
-	public List<SubjectBean> load_not_uploaded_subjects(long user_id) {
+	public List<SubjectBean> load_not_uploaded_subjects(long user_id,int list_sort) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		db = dbHelper.getWritableDatabase();
 		try {
+			String sqlwhere;
+			if(list_sort==1){ //待办
+				sqlwhere = "(user_id=? or user_id=0) and (is_sync=0 or remote_id=0) and is_todo=1";
+			}else if(list_sort==2){ //提醒
+				sqlwhere = "(user_id=? or user_id=0) and (is_sync=0 or remote_id=0) and is_remind=1";
+			}else{
+				sqlwhere = "(user_id=? or user_id=0) and (is_sync=0 or remote_id=0) " ;
+			}
+			
 			Cursor cursor = db.query("subjects", new String[] { "pk_id",
 					"user_id", "body", "creation_date", "last_update",
 					"remote_id", "is_todo","is_remind"},
-					"(user_id=? or user_id=0) and (is_sync=0 or remote_id=0) ",
-					new String[] { String.valueOf(user_id) }, null, null, null);
+					sqlwhere,
+					new String[] { String.valueOf(user_id) }, null, null, "pk_id desc");
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast() && (cursor.getString(1) != null)) {
 				SubjectBean subject = new SubjectBean();
@@ -183,16 +192,24 @@ public class SubjectDa {
 		return subjectList;
 	}
 
-	public List<SubjectBean> load(long user_id, int offset, int size) {
+	public List<SubjectBean> load(long user_id, int list_sort, int offset, int size) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		db = dbHelper.getWritableDatabase();
 		try {
 
 			// int offset = (page - 1) * size;
+			String sqlwhere;
+			if(list_sort==1){ //待办
+				sqlwhere = "user_id=? and remote_id<>0 and is_todo=1";
+			}else if(list_sort==2){ //提醒
+				sqlwhere = "user_id=? and remote_id<>0 and is_remind=1";
+			}else{
+				sqlwhere = "user_id=? and remote_id<>0" ;
+			}
 
 			Cursor cursor = db.query("subjects", new String[] { "pk_id",
 					"user_id", "body", "creation_date", "last_update",
-					"remote_id", "is_todo","is_remind" }, "user_id=? and remote_id<>0",
+					"remote_id", "is_todo","is_remind" }, sqlwhere,
 					new String[] { String.valueOf(user_id) }, null, null,
 					"remote_id DESC,pk_id desc limit " + String.valueOf(size)
 							+ " offset " + String.valueOf(offset));

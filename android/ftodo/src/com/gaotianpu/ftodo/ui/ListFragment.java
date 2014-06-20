@@ -59,9 +59,9 @@ import android.widget.AbsListView.OnScrollListener;
 public class ListFragment extends Fragment {
 
 	public static final String TAG = "ListFragment";
-	public static final String LIST_SORT = "ListSort"; 
-	
-	private int list_sort = 0; //1全部,2待办,3提醒
+	public static final String LIST_SORT = "ListSort";
+
+	private int list_sort = 0; // 1全部,2待办,3提醒
 
 	private MyApplication app;
 	private ConnectivityManager cm;
@@ -91,6 +91,12 @@ public class ListFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		// 0.外部传入参数
+		// list sort
+		int drawer_item_position = getArguments().getInt(LIST_SORT);  
+		list_sort = drawer_item_position - 1; //
+		//Log.i("list_sort", String.valueOf(drawer_item_position));
+
 		// 1.系统全局
 		act = this.getActivity();
 		app = (MyApplication) act.getApplicationContext();
@@ -110,19 +116,14 @@ public class ListFragment extends Fragment {
 		ftd = new FTDClient(act);
 
 		// 2.控件相关
-		Intent intent= act.getIntent();
-		//list sort
-		int drawer_item_position = intent.getIntExtra(LIST_SORT, 1) ;
-		list_sort = drawer_item_position - 1; // 
-		
-		//搜索
+		Intent intent = act.getIntent();
+		// 搜索
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			queryStr = intent.getStringExtra(SearchManager.QUERY);
 			getActivity().setTitle("搜索:" + queryStr);
 			// Log.i("search",queryStr);
 			moreView.setVisibility(0);
 		}
-		
 
 		rootView = inflater.inflate(R.layout.fragment_list, container, false);
 		lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
@@ -144,7 +145,7 @@ public class ListFragment extends Fragment {
 		// lvDefault.addFooterView(moreView); // 设置列表底部视图
 		// moreView.setVisibility(View.GONE);
 
-		// getActivity().setTitle("全部"); 
+		// getActivity().setTitle("全部");
 
 		action_menu_checked_menu = R.id.action_list_normal;
 
@@ -152,7 +153,7 @@ public class ListFragment extends Fragment {
 		setHasOptionsMenu(true);
 
 		// 3.数据加载
-		
+
 		subjectList = new ArrayList<SubjectBean>();
 		listAdapter = new ListAdapter(act, 0);
 		lvDefault.setAdapter(listAdapter);
@@ -214,12 +215,13 @@ public class ListFragment extends Fragment {
 
 	private void load_new_data() {
 		// 从sqlite中读取数据，展示在listview中
-		subjectList = subjectDa.load_not_uploaded_subjects(cust_id); // 加载未上传的
+		subjectList = subjectDa.load_not_uploaded_subjects(cust_id, list_sort); // 加载未上传的
 		add_data(0, 100);
 	}
 
 	private void add_data(int offset, int limit) {
-		List<SubjectBean> list = subjectDa.load(cust_id, offset, limit);
+		List<SubjectBean> list = subjectDa.load(cust_id, list_sort, offset,
+				limit);
 		for (SubjectBean s : list) {
 			subjectList.add(s);
 		}
@@ -240,12 +242,12 @@ public class ListFragment extends Fragment {
 				switch (action_menu_checked_menu) {
 				case R.id.action_list_todo:
 					subject.setIsTodo(!subject.getIsTodo());
-					subjectDa.set_todo(subject.getId(),subject.getIsTodo()); 
+					subjectDa.set_todo(subject.getId(), subject.getIsTodo());
 					listAdapter.notifyDataSetInvalidated();
 					break;
 				case R.id.action_list_remind:
 					subject.setIsRemind(!subject.getIsRemind());
-					subjectDa.set_remind(subject.getId(),subject.getIsRemind()); 
+					subjectDa.set_remind(subject.getId(), subject.getIsRemind());
 					listAdapter.notifyDataSetInvalidated();
 					break;
 				case R.id.action_list_normal:
@@ -425,10 +427,11 @@ public class ListFragment extends Fragment {
 			default:
 				convertView = inflater1.inflate(R.layout.listview_item, null);
 				if (subject.getIsTodo()) {
-					//CheckBox cb = (CheckBox) convertView.findViewById(R.id.cb);
-					//cb.setVisibility(View.VISIBLE);
+					// CheckBox cb = (CheckBox)
+					// convertView.findViewById(R.id.cb);
+					// cb.setVisibility(View.VISIBLE);
 				}
-				
+
 				break;
 			}
 
