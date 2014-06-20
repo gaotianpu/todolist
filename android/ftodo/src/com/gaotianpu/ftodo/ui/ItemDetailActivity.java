@@ -42,7 +42,7 @@ public class ItemDetailActivity extends Activity {
 	private SubjectDa subjectDa;
 
 	private UserBean user;
-	private SubjectBean parentSubject;
+	private static SubjectBean parentSubject;
 
 	private Long subject_local_id; 
 
@@ -60,32 +60,17 @@ public class ItemDetailActivity extends Activity {
 		app = (MyApplication) ctx.getApplicationContext();
 		user = app.getUser();
 		subjectDa = new SubjectDa(this); 
-
+		
 		// 2 UI
-//		txtSubjectBody = (TextView) findViewById(R.id.subject_body);
-//		txtNew = (EditText) findViewById(R.id.txtNew);
-//
+		
 		// 3 load data
 		parentSubject = subjectDa.load_by_localId(user.getUserId(),
 				subject_local_id);
-//		
-//
-//		txtSubjectBody.setText(parentSubject.getBody());
- 		setTitle(parentSubject.getBody());
-//
-//		// 4. event binding
-//		txtNew_setOnKeyListener();
-//
-//		Log.i("setOnItemClickListener",
-//				"ItemDetailActivity:" + String.valueOf(subject_local_id));
- 		
+		setTitle(parentSubject.getBody());
+		
+		// 4. event binding  
  		if (savedInstanceState == null) {
- 			Fragment f = new DetailReadFragment();
- 			
-// 			Bundle args0 = new Bundle();			
-//			args0.putInt(FRAGMENT_SORT, parentSubject);
-//			f.setArguments(args0);
- 			
+ 			Fragment f = new DetailReadFragment(); 
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, f).commit();
 		}
@@ -148,6 +133,8 @@ public class ItemDetailActivity extends Activity {
 		private TextView txtSubjectBody;
 		private EditText txtNew;
 		
+		
+		
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
@@ -157,7 +144,7 @@ public class ItemDetailActivity extends Activity {
 			txtSubjectBody = (TextView)rootView.findViewById(R.id.subject_body);
 			txtNew = (EditText) rootView.findViewById(R.id.txtNew);
 			
-			txtNew_setOnKeyListener();
+			txtNew_setOnKeyListener(); 
 			
 			return rootView;
 		}
