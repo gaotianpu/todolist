@@ -11,6 +11,7 @@ import com.gaotianpu.ftodo.da.SubjectDa;
 import com.gaotianpu.ftodo.da.UserBean;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 
 import android.content.Context;
@@ -116,9 +117,12 @@ public class ItemDetailActivity extends Activity {
 		// .commit();
 		// break;
 		case R.id.action_item_delete:
-			getFragmentManager().beginTransaction()
-					.replace(R.id.container, new DetailDeleteFragment())
-					.commit();
+			new AlertDialog.Builder(ctx) 
+			.setTitle("确认")
+			.setMessage("确定吗？")
+			.setPositiveButton("是", null)
+			.setNegativeButton("否", null)
+			.show();
 			break;
 		case R.id.action_item_read:
 			getFragmentManager().beginTransaction()
