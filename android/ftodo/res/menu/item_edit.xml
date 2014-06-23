@@ -3,12 +3,12 @@
     tools:context="com.gaotianpu.ftodo.ItemDetailActivity" >
 
     <item
-        android:id="@+id/action_item_save1"
+        android:id="@+id/action_item_save"
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/action_item_save"/>
     <item
-        android:id="@+id/action_item_cancel1"
+        android:id="@+id/action_item_cancel"
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/action_item_cancel"/>

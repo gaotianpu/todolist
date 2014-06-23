@@ -106,15 +106,15 @@ public class ItemDetailActivity extends Activity {
 			getFragmentManager().beginTransaction()
 					.replace(R.id.container, new DetailEditFragment()).commit();
 			break;
-		case R.id.action_item_todo:
-			getFragmentManager().beginTransaction()
-					.replace(R.id.container, new DetailTodoFragment()).commit();
-			break;
-		case R.id.action_item_remind:
-			getFragmentManager().beginTransaction()
-					.replace(R.id.container, new DetailRemindFragment())
-					.commit();
-			break;
+		// case R.id.action_item_todo:
+		// getFragmentManager().beginTransaction()
+		// .replace(R.id.container, new DetailTodoFragment()).commit();
+		// break;
+		// case R.id.action_item_remind:
+		// getFragmentManager().beginTransaction()
+		// .replace(R.id.container, new DetailRemindFragment())
+		// .commit();
+		// break;
 		case R.id.action_item_delete:
 			getFragmentManager().beginTransaction()
 					.replace(R.id.container, new DetailDeleteFragment())
@@ -123,8 +123,8 @@ public class ItemDetailActivity extends Activity {
 		case R.id.action_item_read:
 			getFragmentManager().beginTransaction()
 					.replace(R.id.container, new DetailReadFragment()).commit();
-		default: 			 
-			return super.onOptionsItemSelected(item);  //如果没有这条语句，Fragment下的菜单将不会被执行
+		default:
+			return super.onOptionsItemSelected(item); // 如果没有这条语句，Fragment下的菜单将不会被执行
 		}
 
 		item.setChecked(true);
@@ -297,50 +297,58 @@ public class ItemDetailActivity extends Activity {
 	// 文本编辑模式
 	public static class DetailEditFragment extends Fragment {
 		private EditText txtEdit;
+		private InputMethodManager imm;
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			
-			
 			View rootView = inflater.inflate(R.layout.detail_edit, container,
 					false);
-			
-			
-			
-			
-			
+
 			txtEdit = (EditText) rootView.findViewById(R.id.txtEdit);
 			txtEdit.setText(currentSubject.getBody());
+			txtEdit.setSelection(currentSubject.getBody().length());
+			txtEdit.requestFocus();
 			
-			//txtEdit.setVisibility(View.INVISIBLE);
-			
-			setHasOptionsMenu(true); 
+			//自动开启软键盘
+			 imm = (InputMethodManager) ctx
+					.getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);   
 
+			setHasOptionsMenu(true);
 			return rootView;
 		}
 
 		@Override
 		public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-			menu.clear(); 
-			inflater.inflate(R.menu.item_edit, menu); 
+			menu.clear();
+			inflater.inflate(R.menu.item_edit, menu);
 		}
-		 
 
 		@Override
 		public boolean onOptionsItemSelected(MenuItem item) {
+			//隐藏键盘
+			imm.hideSoftInputFromWindow(txtEdit.getWindowToken(), 0);  
 			
-			int id = item.getItemId(); 
-			Log.i("onOptionsItemSelected",String.valueOf(id));
-
+			int id = item.getItemId();
 			switch (id) {
-			case R.id.action_item_save1:
-				ctx.setTitle(txtEdit.getText().toString().trim() );
-				Log.i("onOptionsItemSelected","action_item_save");
+			case R.id.action_item_save:
+				String newTxt = txtEdit.getText().toString().trim();
+				ctx.setTitle(newTxt);
+				currentSubject.setBody(newTxt);
+				subjectDa.edit_content(currentSubject.getId(), newTxt);
+				
+				getFragmentManager().beginTransaction()
+						.replace(R.id.container, new DetailReadFragment())
+						.commit();
+
 				break;
-			case R.id.action_item_cancel1:
-				Log.i("onOptionsItemSelected","action_item_cancel");
-				break; 
+			case R.id.action_item_cancel:
+				getFragmentManager().beginTransaction()
+						.replace(R.id.container, new DetailReadFragment())
+						.commit();
+
+				break;
 			}
 			return super.onOptionsItemSelected(item);
 		}
