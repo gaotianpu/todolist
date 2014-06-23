@@ -11,6 +11,9 @@
         <item>设置</item>
     </string-array>
     
+    <string name="action_item_save">保存</string>    
+    <string name="action_item_cancel">取消</string>
+    
      <string name="action_item_read">浏览</string>
      <string name="action_item_edit">编辑</string>
      <string name="action_item_todo">待办</string>

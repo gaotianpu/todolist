@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.gaotianpu.ftodo.ItemDetailActivity" >
+
+    <item
+        android:id="@+id/action_item_save1"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_item_save"/>
+    <item
+        android:id="@+id/action_item_cancel1"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_item_cancel"/>
+
+</menu>

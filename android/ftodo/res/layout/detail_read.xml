@@ -4,14 +4,20 @@
     android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/subject_body"
+            android:id="@+id/subject_body"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="4dp"
+            android:lineSpacingMultiplier="1.2"
+            android:padding="8dip"
+            android:textSize="16sp" />
+    <!-- 
+    <ListView
+        android:id="@+id/lvDefault"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:includeFontPadding="false"
-        android:lineSpacingExtra="4dp"
-        android:lineSpacingMultiplier="1.2"
-        android:padding="8dip"
-        android:textSize="16sp" />
+        android:layout_height="fill_parent" >
+    </ListView>
 
     <LinearLayout
         android:id="@+id/bottom"
@@ -29,5 +35,5 @@
             android:imeOptions="actionSend"
             android:inputType="text" />
     </LinearLayout>
-
+ -->
 </RelativeLayout>

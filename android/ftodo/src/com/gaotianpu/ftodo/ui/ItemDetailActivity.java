@@ -1,6 +1,7 @@
 package com.gaotianpu.ftodo.ui;
 
- 
+import java.util.ArrayList;
+import java.util.List;
 
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
@@ -14,6 +15,7 @@ import android.app.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -28,56 +30,59 @@ import android.view.ViewGroup;
 
 import android.view.View.OnKeyListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class ItemDetailActivity extends Activity {
 
 	public static final String SUBJECT_LOCAL_ID = "subject_local_id";
-	
+
 	public static final String FRAGMENT_SORT = "FRAGMENT_SORT";
 
-	private Context ctx;
+	private static Activity ctx;
 	private MyApplication app;
-	private SubjectDa subjectDa;
+	private static SubjectDa subjectDa;
 
-	private UserBean user;
-	private static SubjectBean parentSubject;
+	private static UserBean user;
+	private static SubjectBean currentSubject;
 
-	private Long subject_local_id; 
+	private Long subject_local_id;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_item_detail);  
+		setContentView(R.layout.activity_item_detail);
 
 		// 0.外部传入参数
 		Intent intent = getIntent();
-		subject_local_id = intent.getLongExtra(SUBJECT_LOCAL_ID, 0); 
+		subject_local_id = intent.getLongExtra(SUBJECT_LOCAL_ID, 0);
 
 		// 1 全局
 		ctx = this;
 		app = (MyApplication) ctx.getApplicationContext();
 		user = app.getUser();
-		subjectDa = new SubjectDa(this); 
-		
+		subjectDa = new SubjectDa(this);
+
 		// 2 UI
-		
+
 		// 3 load data
-		parentSubject = subjectDa.load_by_localId(user.getUserId(),
+		currentSubject = subjectDa.load_by_localId(user.getUserId(),
 				subject_local_id);
-		setTitle(parentSubject.getBody());
-		
-		// 4. event binding  
- 		if (savedInstanceState == null) {
- 			Fragment f = new DetailReadFragment(); 
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, f).commit();
+		setTitle(currentSubject.getBody());
+
+		// 4. event binding
+		if (savedInstanceState == null) {
+			Fragment f = new DetailReadFragment();
+			getFragmentManager().beginTransaction().replace(R.id.container, f)
+					.commit();
 		}
 
 	}
-
-	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -99,56 +104,83 @@ public class ItemDetailActivity extends Activity {
 		switch (id) {
 		case R.id.action_item_edit:
 			getFragmentManager().beginTransaction()
-			.add(R.id.container, new DetailEditFragment()).commit();
+					.replace(R.id.container, new DetailEditFragment()).commit();
 			break;
 		case R.id.action_item_todo:
 			getFragmentManager().beginTransaction()
-			.add(R.id.container, new DetailTodoFragment()).commit();
+					.replace(R.id.container, new DetailTodoFragment()).commit();
 			break;
 		case R.id.action_item_remind:
 			getFragmentManager().beginTransaction()
-			.add(R.id.container, new DetailRemindFragment()).commit();
+					.replace(R.id.container, new DetailRemindFragment())
+					.commit();
 			break;
 		case R.id.action_item_delete:
 			getFragmentManager().beginTransaction()
-			.add(R.id.container, new DetailDeleteFragment()).commit();
+					.replace(R.id.container, new DetailDeleteFragment())
+					.commit();
 			break;
 		case R.id.action_item_read:
 			getFragmentManager().beginTransaction()
-			.add(R.id.container, new DetailReadFragment()).commit();
-		default:
-			break;
-
+					.replace(R.id.container, new DetailReadFragment()).commit();
+		default: 			 
+			return super.onOptionsItemSelected(item);  //如果没有这条语句，Fragment下的菜单将不会被执行
 		}
 
-		item.setChecked(true);  
+		item.setChecked(true);
 		return super.onOptionsItemSelected(item);
 	}
-	
-	//浏览模式
+
+	// 浏览模式
 	public static class DetailReadFragment extends Fragment {
-		private UserBean user;
-		private MyApplication app;
-		
 		private TextView txtSubjectBody;
+		private ListView lvDefault;
 		private EditText txtNew;
-		
-		
-		
+
+		private ListAdapter listAdapter;
+		private List<SubjectBean> subjectList;
+
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.detail_read, container,
 					false);
-			
-			txtSubjectBody = (TextView)rootView.findViewById(R.id.subject_body);
-			txtNew = (EditText) rootView.findViewById(R.id.txtNew);
-			
-			txtNew_setOnKeyListener(); 
-			
+
+			// 追加评论这部分，还没有想好该怎么处理，贸然的添加该共功能，容易给用户造成理解上的困扰？
+
+			// 1. ui
+			txtSubjectBody = (TextView) rootView
+					.findViewById(R.id.subject_body);
+			// lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
+			// txtNew = (EditText) rootView.findViewById(R.id.txtNew);
+
+			// data bindding
+			txtSubjectBody.setText(currentSubject.getBody());
+
+			// subjectList = new ArrayList<SubjectBean>();
+			// listAdapter = new ListAdapter(getActivity());
+			// lvDefault.setAdapter(listAdapter);
+
+			//
+			// subjectList = subjectDa.load_son_subjects(user.getUserId(),
+			// currentSubject.getId());
+			//
+			// if (currentSubject.getParentId() != 0) {
+			// SubjectBean subject = subjectDa.load_by_localId(
+			// user.getUserId(), currentSubject.getParentId());
+			// if (subject != null) {
+			// subjectList.add(0, subject);
+			// }
+			// }
+			// subjectList.add(0,currentSubject);
+			// listAdapter.notifyDataSetChanged();
+
+			// txtNew_setOnKeyListener();
+			// lvDefault_setOnItemClickListener(); 需要太多次后退才能到达？ Fragment 堆栈？
+
 			return rootView;
 		}
-		
+
 		private void txtNew_setOnKeyListener() {
 
 			txtNew.setOnKeyListener(new OnKeyListener() {
@@ -164,20 +196,27 @@ public class ItemDetailActivity extends Activity {
 							String content = txtNew.getText().toString().trim();
 							if (content.length() > 1) {
 
-//								user = app.getUser();
-//								Long subjectID = subjectDa.insert(user.getUserId(),
-//										content, parentSubject.getId());
+								// user = app.getUser();
+								// Long subjectID =
+								long pk_id = subjectDa.insert(user.getUserId(),
+										content, currentSubject.getId());
 
-//								SubjectBean subject = new SubjectBean();
-//								subject.setId(subjectID);
-//								subject.setUserId(user.getUserId());
-//								subject.setBody(txtNew.getText().toString().trim());
-//							 
+								SubjectBean sbean = subjectDa.load_by_localId(
+										user.getUserId(), pk_id);
+								subjectList.add(sbean);
+								listAdapter.notifyDataSetChanged();
+
+								// SubjectBean subject = new SubjectBean();
+								// subject.setId(subjectID);
+								// subject.setUserId(user.getUserId());
+								// subject.setBody(txtNew.getText().toString().trim());
+								//
 
 								// insert_new_item(subject, 0);
 
 								// show new item in ListView
-								// lvDefault.setAdapter(new ListAdapter(act, 0));
+								// lvDefault.setAdapter(new ListAdapter(act,
+								// 0));
 								txtNew.setText("");
 							}
 
@@ -190,22 +229,125 @@ public class ItemDetailActivity extends Activity {
 
 			});
 		}
+
+		private void lvDefault_setOnItemClickListener() {
+			// 单击，查看明细
+			lvDefault.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1,
+						int arg2, long arg3) {
+
+					SubjectBean subject = subjectList.get(arg2);
+
+					Intent detailIntent = new Intent(ctx,
+							ItemDetailActivity.class);
+					detailIntent.putExtra(ItemDetailActivity.SUBJECT_LOCAL_ID,
+							subject.getId());
+					startActivity(detailIntent);
+
+				}
+			});
+
+		}
+
+		private class ListAdapter extends BaseAdapter {
+			private LayoutInflater inflater1;
+			private int action_sort = 0;
+
+			public ListAdapter(Context ctx1) {
+				this.inflater1 = LayoutInflater.from(ctx1);
+
+			}
+
+			@Override
+			public int getCount() {
+				// TODO Auto-generated method stub
+				return subjectList.size();
+			}
+
+			@Override
+			public Object getItem(int position) {
+				return position;
+			}
+
+			@Override
+			public long getItemId(int position) {
+				return position;
+			}
+
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				SubjectBean subject = subjectList.get(position);
+				convertView = inflater1.inflate(R.layout.listview_item, null);
+				TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
+				tv.setText("" + subject.getBody());
+
+				// if(currentSubject.getId() == subject.getId() ){
+				// convertView.setBackgroundColor();
+				// }
+
+				return convertView;
+
+			}
+
+		}
+
 	}
-	
-	//文本编辑模式
-	public static class DetailEditFragment extends Fragment { 
+
+	// 文本编辑模式
+	public static class DetailEditFragment extends Fragment {
+		private EditText txtEdit;
+
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
+			
+			
 			View rootView = inflater.inflate(R.layout.detail_edit, container,
 					false);
 			
+			
+			
+			
+			
+			txtEdit = (EditText) rootView.findViewById(R.id.txtEdit);
+			txtEdit.setText(currentSubject.getBody());
+			
+			//txtEdit.setVisibility(View.INVISIBLE);
+			
+			setHasOptionsMenu(true); 
+
 			return rootView;
 		}
+
+		@Override
+		public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+			menu.clear(); 
+			inflater.inflate(R.menu.item_edit, menu); 
+		}
+		 
+
+		@Override
+		public boolean onOptionsItemSelected(MenuItem item) {
+			
+			int id = item.getItemId(); 
+			Log.i("onOptionsItemSelected",String.valueOf(id));
+
+			switch (id) {
+			case R.id.action_item_save1:
+				ctx.setTitle(txtEdit.getText().toString().trim() );
+				Log.i("onOptionsItemSelected","action_item_save");
+				break;
+			case R.id.action_item_cancel1:
+				Log.i("onOptionsItemSelected","action_item_cancel");
+				break; 
+			}
+			return super.onOptionsItemSelected(item);
+		}
 	}
-	
-	//todo模式
-	public static class DetailTodoFragment extends Fragment { 
+
+	// todo模式
+	public static class DetailTodoFragment extends Fragment {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
@@ -214,9 +356,9 @@ public class ItemDetailActivity extends Activity {
 			return rootView;
 		}
 	}
-	
-	//提醒模式
-	public static class DetailRemindFragment extends Fragment { 
+
+	// 提醒模式
+	public static class DetailRemindFragment extends Fragment {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
@@ -225,9 +367,9 @@ public class ItemDetailActivity extends Activity {
 			return rootView;
 		}
 	}
-	
-	//删除模式
-	public static class DetailDeleteFragment extends Fragment { 
+
+	// 删除模式
+	public static class DetailDeleteFragment extends Fragment {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
@@ -236,5 +378,5 @@ public class ItemDetailActivity extends Activity {
 			return rootView;
 		}
 	}
-	
+
 }

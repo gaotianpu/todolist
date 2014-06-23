@@ -7,6 +7,8 @@ public class SubjectBean {
 	
 	private long pk_id;
 	private long remote_id;
+	private long parent_id=0;
+	
 	private long user_id;
 	private String body;
 	private String creation_date;
@@ -21,6 +23,13 @@ public class SubjectBean {
 	}
 	public void setId(long id) {
 		this.pk_id = id;
+	}
+	
+	public long getParentId() {
+		return parent_id;
+	}
+	public void setParentId(long parent_id) {
+		this.parent_id = parent_id;
 	}
 	
 	public long getUserId() {
