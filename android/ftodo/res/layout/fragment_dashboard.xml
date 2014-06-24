@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" >
 
     <TextView
         android:id="@+id/subject_body"
@@ -11,7 +11,14 @@
         android:lineSpacingExtra="4dp"
         android:lineSpacingMultiplier="1.2"
         android:padding="8dip"
-        android:text="当前网络不可用"
+        android:text="@string/app_not_available"
+        android:visibility="gone"
         android:textSize="16sp" />
+
+    <ListView
+        android:id="@+id/lvDefault"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </ListView>
 
 </RelativeLayout>

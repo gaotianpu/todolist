@@ -57,6 +57,7 @@ public class SubjectDa {
 		}
 		return buf.toString();
 	}
+	
 	public long insert2(long user_id, long remote_id, String content,
 			String creation_date, int last_update, int last_sync,int is_del) {
 		ContentValues values = new ContentValues();
@@ -501,5 +502,24 @@ public class SubjectDa {
 		db.close();
 		// }
 
+	}
+	
+	public List<String> load_days_count(long user_id){
+		
+		db = dbHelper.getWritableDatabase();
+		Cursor cursor = db.query("subjects", new String[]{"date(creation_date) as day,count(*) as count"}, 
+				"user_id=?", new String[] { String.valueOf(user_id) }, 
+				"date(creation_date)", null, "creation_date desc"); 
+		
+		List<String> l = new ArrayList<String>();
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {	
+			Log.i("days_count" , cursor.getString(0) + "," + cursor.getString(1));
+			l.add( cursor.getString(0) + "," +   cursor.getString(1) );
+			cursor.moveToNext();
+		}
+		db.close();
+		
+		return l;
 	}
 }
