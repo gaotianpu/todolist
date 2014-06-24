@@ -124,15 +124,16 @@ CREATE TABLE `subjects` (
   `local_id` bigint(20) DEFAULT NULL,
   `app_created_date` datetime NOT NULL,
   `is_todo` int(11) NOT NULL DEFAULT '0',
-  `is_alert` int(11) NOT NULL DEFAULT '0',
+  `is_remind` int(11) NOT NULL DEFAULT '0',
   `parent_id` bigint(20) NOT NULL DEFAULT '0',
-  `alert_datetime` datetime DEFAULT NULL,
-  `alert_frequency` int(11) DEFAULT '0',
-  `alert_next` datetime DEFAULT NULL,
+  `remind_datetime` datetime DEFAULT NULL,
+  `remind_frequency` int(11) DEFAULT '0',
+  `remind_next` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`pk_id`),
   KEY `ix_user_id` (`user_id`) USING BTREE,
   KEY `ix_plan_start_date` (`plan_start_date`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=857 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=858 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -281,4 +282,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-06-18 15:15:39
+-- Dump completed on 2014-06-24 14:34:30

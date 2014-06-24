@@ -92,13 +92,14 @@ public class SubjectDa {
 		return subjectID;
 	}
 
-	public void set_remoteId(long local_id, long remote_id, long user_id) {
+	public void set_remoteId(long local_id, long remote_id, long user_id,int serverVersion) {
 
 		// update sqlite's remote_id
 
 		ContentValues values = new ContentValues();
 		values.put("remote_id", remote_id);
 		values.put("user_id", user_id);
+		values.put("server_version", serverVersion);
 	 
 		values.put("last_sync", 1); //
 
@@ -237,7 +238,7 @@ public class SubjectDa {
 			subject.setIsTodo(cursor.getInt(6) == 1 ? true : false);
 			subject.setIsRemind(cursor.getInt(7) == 1 ? true : false);
 			subject.setParentId(cursor.getLong(8));
-			subject.setUpdateVersion(cursor.getInt(9));
+			subject.setLocalVersion(cursor.getInt(9));
 			
 			subjectList.add(subject);
 			cursor.moveToNext();
