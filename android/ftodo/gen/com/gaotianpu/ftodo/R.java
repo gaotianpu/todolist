@@ -102,71 +102,75 @@ public final class R {
         public static final int main=0x7f090004;
     }
     public static final class string {
-        public static final int action_forgot_password=0x7f060023;
-        public static final int action_item_cancel=0x7f060002;
-        public static final int action_item_delete=0x7f060007;
-        public static final int action_item_edit=0x7f060004;
-        public static final int action_item_read=0x7f060003;
-        public static final int action_item_remind=0x7f060006;
-        public static final int action_item_save=0x7f060001;
-        public static final int action_item_todo=0x7f060005;
-        public static final int action_normal=0x7f06000c;
-        public static final int action_remind=0x7f06000b;
-        public static final int action_search=0x7f060008;
-        public static final int action_settings=0x7f060009;
-        public static final int action_sign_in_register=0x7f060021;
-        public static final int action_sign_in_short=0x7f060022;
-        public static final int action_todo=0x7f06000a;
+        public static final int action_forgot_password=0x7f060027;
+        public static final int action_item_cancel=0x7f060006;
+        public static final int action_item_delete=0x7f06000b;
+        public static final int action_item_edit=0x7f060008;
+        public static final int action_item_read=0x7f060007;
+        public static final int action_item_remind=0x7f06000a;
+        public static final int action_item_save=0x7f060005;
+        public static final int action_item_todo=0x7f060009;
+        public static final int action_normal=0x7f060010;
+        public static final int action_remind=0x7f06000f;
+        public static final int action_search=0x7f06000c;
+        public static final int action_settings=0x7f06000d;
+        public static final int action_sign_in_register=0x7f060025;
+        public static final int action_sign_in_short=0x7f060026;
+        public static final int action_todo=0x7f06000e;
         public static final int app_name=0x7f060000;
-        public static final int app_not_available=0x7f06001c;
-        public static final int append_post_hint=0x7f060011;
-        public static final int current_user=0x7f060012;
-        public static final int drawer_close=0x7f06001b;
-        public static final int drawer_open=0x7f06001a;
-        public static final int error_field_required=0x7f060028;
-        public static final int error_incorrect_password=0x7f060027;
-        public static final int error_invalid_email=0x7f060025;
-        public static final int error_invalid_password=0x7f060026;
-        public static final int load_more_data=0x7f06000d;
-        public static final int loading_data=0x7f06000e;
-        public static final int login_progress_signing_in=0x7f060024;
-        public static final int newpost_hint=0x7f060010;
-        public static final int no_more_data=0x7f06000f;
-        public static final int pref_default_display_name=0x7f06002e;
-        public static final int pref_description_social_recommendations=0x7f06002c;
+        public static final int app_not_available=0x7f060020;
+        public static final int append_post_hint=0x7f060015;
+        public static final int current_user=0x7f060016;
+        public static final int dialog_delete_cancel=0x7f060004;
+        public static final int dialog_delete_message=0x7f060002;
+        public static final int dialog_delete_sure=0x7f060003;
+        public static final int dialog_delete_title=0x7f060001;
+        public static final int drawer_close=0x7f06001f;
+        public static final int drawer_open=0x7f06001e;
+        public static final int error_field_required=0x7f06002c;
+        public static final int error_incorrect_password=0x7f06002b;
+        public static final int error_invalid_email=0x7f060029;
+        public static final int error_invalid_password=0x7f06002a;
+        public static final int load_more_data=0x7f060011;
+        public static final int loading_data=0x7f060012;
+        public static final int login_progress_signing_in=0x7f060028;
+        public static final int newpost_hint=0x7f060014;
+        public static final int no_more_data=0x7f060013;
+        public static final int pref_default_display_name=0x7f060032;
+        public static final int pref_description_social_recommendations=0x7f060030;
         /**  Example settings for Data & Sync 
          */
-        public static final int pref_header_data_sync=0x7f060030;
+        public static final int pref_header_data_sync=0x7f060034;
         /**  Strings related to Settings 
  Example General settings 
          */
-        public static final int pref_header_general=0x7f06002a;
+        public static final int pref_header_general=0x7f06002e;
         /**  Example settings for Notifications 
          */
-        public static final int pref_header_notifications=0x7f060033;
-        public static final int pref_ringtone_silent=0x7f060036;
-        public static final int pref_title_add_friends_to_messages=0x7f06002f;
-        public static final int pref_title_display_name=0x7f06002d;
-        public static final int pref_title_new_message_notifications=0x7f060034;
-        public static final int pref_title_ringtone=0x7f060035;
-        public static final int pref_title_social_recommendations=0x7f06002b;
-        public static final int pref_title_sync_frequency=0x7f060031;
-        public static final int pref_title_system_sync_settings=0x7f060032;
-        public static final int pref_title_vibrate=0x7f060037;
+        public static final int pref_header_notifications=0x7f060037;
+        public static final int pref_ringtone_silent=0x7f06003a;
+        public static final int pref_title_add_friends_to_messages=0x7f060033;
+        public static final int pref_title_display_name=0x7f060031;
+        public static final int pref_title_new_message_notifications=0x7f060038;
+        public static final int pref_title_ringtone=0x7f060039;
+        public static final int pref_title_social_recommendations=0x7f06002f;
+        public static final int pref_title_sync_frequency=0x7f060035;
+        public static final int pref_title_system_sync_settings=0x7f060036;
+        public static final int pref_title_vibrate=0x7f06003b;
         /**  Strings related to login 
          */
-        public static final int prompt_email=0x7f06001f;
-        public static final int prompt_password=0x7f060020;
-        public static final int search_hint=0x7f060017;
-        public static final int search_label=0x7f060018;
-        public static final int settings_description=0x7f060019;
-        public static final int tab_all=0x7f060014;
-        public static final int tab_remind=0x7f060016;
-        public static final int tab_todo=0x7f060015;
-        public static final int title_activity_item_detail=0x7f06001d;
-        public static final int title_activity_login=0x7f06001e;
-        public static final int title_activity_main=0x7f060013;
-        public static final int title_activity_settings=0x7f060029;
+        public static final int prompt_email=0x7f060023;
+        public static final int prompt_password=0x7f060024;
+        public static final int search_hint=0x7f06001b;
+        public static final int search_label=0x7f06001c;
+        public static final int settings_description=0x7f06001d;
+        public static final int tab_all=0x7f060018;
+        public static final int tab_remind=0x7f06001a;
+        public static final int tab_todo=0x7f060019;
+        public static final int title_activity_item_detail=0x7f060021;
+        public static final int title_activity_login=0x7f060022;
+        public static final int title_activity_main=0x7f060017;
+        public static final int title_activity_settings=0x7f06002d;
     }
     public static final class style {
         /** 

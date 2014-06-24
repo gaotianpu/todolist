@@ -15,13 +15,7 @@ public class SubjectDa {
 
 	public SubjectDa(Context context) {
 		dbHelper = new SQLiteHelper(context, "ftodo", null, 1);
-	}
-
-	// public static SQLiteDatabase getDb(Context context) {
-	// SQLiteHelper dbHelper = new SQLiteHelper(context, "ftodo", null, 1);
-	// SQLiteDatabase db = dbHelper.getWritableDatabase();
-	// return db;
-	// }
+	} 
 
 	public long insert(long user_id, String content, long parent_id) {
 		ContentValues values = new ContentValues();
@@ -92,6 +86,17 @@ public class SubjectDa {
 				new String[] { String.valueOf(local_id) });
 		db.close();
 
+	}
+	
+	public void delete(long local_id) {
+		ContentValues values = new ContentValues();
+		values.put("is_del", 1);
+		values.put("is_sync", 0);
+
+		db = dbHelper.getWritableDatabase();
+		db.update("subjects", values, "pk_id=?",
+				new String[] { String.valueOf(local_id) });
+		db.close();
 	}
 
 	public void set_todo(long local_id, boolean todo) {
@@ -180,7 +185,7 @@ public class SubjectDa {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		db = dbHelper.getWritableDatabase();
 		try {
-			String sqlwhere = "(user_id=? or user_id=0) and (is_sync=0 or remote_id=0) ";
+			String sqlwhere = "(user_id=? or user_id=0) and (is_sync=0 or remote_id=0) and is_del=0 ";
 			Cursor cursor = db.query("subjects", list_selected_fields,
 					sqlwhere, new String[] { String.valueOf(user_id) }, null,
 					null, "pk_id desc");
@@ -203,7 +208,7 @@ public class SubjectDa {
 			Cursor cursor = db.query(
 					"subjects",
 					list_selected_fields,
-					"(user_id=? or user_id=0) and parent_id=? ",
+					"(user_id=? or user_id=0) and parent_id=? and is_del=0 ",
 					new String[] { String.valueOf(user_id),
 							String.valueOf(parent_id) }, null, null,
 					"pk_id desc");
@@ -232,6 +237,7 @@ public class SubjectDa {
 			} else {
 				sqlwhere = "(user_id=? or user_id=0) and (is_sync=0 or remote_id=0) ";
 			}
+			sqlwhere = sqlwhere + " and is_del=0 ";
 
 			Cursor cursor = db.query("subjects", list_selected_fields,
 					sqlwhere, new String[] { String.valueOf(user_id) }, null,

@@ -6,10 +6,15 @@
     <string-array name="drawer_menu_items">
         <item>登录或注册</item>
         <item>全部</item>
-        <item>待办</item>
-        <item>提醒</item>
+       <!--  <item>待办</item>
+        <item>提醒</item> -->
         <item>设置</item>
     </string-array>
+    
+    <string name="dialog_delete_title">删除</string>    
+    <string name="dialog_delete_message">确认要删除吗？</string>  
+    <string name="dialog_delete_sure">确定</string>    
+    <string name="dialog_delete_cancel">取消</string> 
     
     <string name="action_item_save">保存</string>    
     <string name="action_item_cancel">取消</string>

@@ -143,7 +143,7 @@ public class MainActivity extends Activity {
 		// If the nav drawer is open, hide action items related to the content
 		// view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		//menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+		menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
 		//menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -203,14 +203,14 @@ public class MainActivity extends Activity {
 
 			break;
 		case 1: // 全部
-		case 2: // 待办
-		case 3: // 提醒
+//		case 2: // 待办
+//		case 3: // 提醒
 			fragment = new ListFragment();
 			Bundle args0 = new Bundle();			
 			args0.putInt(ListFragment.LIST_SORT, position);
 			fragment.setArguments(args0);
 			break;
-		case 4:
+		case 2:
 		default:
 			fragment = new SettingFragment();
 			break;

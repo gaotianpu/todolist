@@ -178,8 +178,8 @@ public class ListFragment extends Fragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// onCreateView setHasOptionsMenu(true);
-		menu.clear();
-		inflater.inflate(R.menu.list, menu);
+		//menu.clear();
+		//inflater.inflate(R.menu.list, menu);
 
 	}
 
@@ -440,7 +440,7 @@ public class ListFragment extends Fragment {
 			}
 
 			TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
-			tv.setText("" + subject.getBody());
+			tv.setText("" + subject.getBody().replaceAll("\n", ""));
 
 			return convertView;
 

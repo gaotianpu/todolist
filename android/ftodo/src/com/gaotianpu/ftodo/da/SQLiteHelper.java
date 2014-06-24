@@ -21,7 +21,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "creation_date  datetime default CURRENT_TIMESTAMP,"
 				+ "last_update  datetime default CURRENT_TIMESTAMP,"
 				+ "last_sync  datetime  ," 
-				+ "is_del INTEGER NOT NULL,"				
+				+ "is_del INTEGER NOT NULL default 0,"				
 				+ "is_sync  INTEGER NOT NULL," 
 				+ "parent_id INTEGER NOT NULL default 0,"
 				+ "is_todo INTEGER NOT NULL default 0,"

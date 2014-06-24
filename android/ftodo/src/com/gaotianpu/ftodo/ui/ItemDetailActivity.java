@@ -13,8 +13,10 @@ import com.gaotianpu.ftodo.da.UserBean;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.Instrumentation;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -38,6 +40,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 public class ItemDetailActivity extends Activity {
 
@@ -104,6 +107,7 @@ public class ItemDetailActivity extends Activity {
 
 		switch (id) {
 		case R.id.action_item_edit:
+			item.setChecked(true);
 			getFragmentManager().beginTransaction()
 					.replace(R.id.container, new DetailEditFragment()).commit();
 			break;
@@ -117,22 +121,44 @@ public class ItemDetailActivity extends Activity {
 		// .commit();
 		// break;
 		case R.id.action_item_delete:
-			new AlertDialog.Builder(ctx) 
-			.setTitle("确认")
-			.setMessage("确定吗？")
-			.setPositiveButton("是", null)
-			.setNegativeButton("否", null)
-			.show();
+			delete();
 			break;
 		case R.id.action_item_read:
+			item.setChecked(true);
 			getFragmentManager().beginTransaction()
 					.replace(R.id.container, new DetailReadFragment()).commit();
 		default:
 			return super.onOptionsItemSelected(item); // 如果没有这条语句，Fragment下的菜单将不会被执行
 		}
 
-		item.setChecked(true);
+		
 		return super.onOptionsItemSelected(item);
+	}
+	
+	
+	
+	private void delete(){
+		new AlertDialog.Builder(ctx)
+		.setTitle(R.string.dialog_delete_title)
+		.setMessage(R.string.dialog_delete_message)
+		.setPositiveButton(R.string.dialog_delete_sure,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog,
+							int i) { 
+						//subjectDa.delete(currentSubject.getId());
+						//goback?
+						Log.i("dialog", "ok");
+					}
+				})
+		.setNegativeButton(R.string.dialog_delete_cancel,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog,
+							int i) {
+						//Log.i("dialog", "cancel"); 
+					}
+				}).show();
 	}
 
 	// 浏览模式
@@ -313,11 +339,11 @@ public class ItemDetailActivity extends Activity {
 			txtEdit.setText(currentSubject.getBody());
 			txtEdit.setSelection(currentSubject.getBody().length());
 			txtEdit.requestFocus();
-			
-			//自动开启软键盘
-			 imm = (InputMethodManager) ctx
+
+			// 自动开启软键盘
+			imm = (InputMethodManager) ctx
 					.getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);   
+			imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 
 			setHasOptionsMenu(true);
 			return rootView;
@@ -331,9 +357,9 @@ public class ItemDetailActivity extends Activity {
 
 		@Override
 		public boolean onOptionsItemSelected(MenuItem item) {
-			//隐藏键盘
-			imm.hideSoftInputFromWindow(txtEdit.getWindowToken(), 0);  
-			
+			// 隐藏键盘
+			imm.hideSoftInputFromWindow(txtEdit.getWindowToken(), 0);
+
 			int id = item.getItemId();
 			switch (id) {
 			case R.id.action_item_save:
@@ -341,7 +367,7 @@ public class ItemDetailActivity extends Activity {
 				ctx.setTitle(newTxt);
 				currentSubject.setBody(newTxt);
 				subjectDa.edit_content(currentSubject.getId(), newTxt);
-				
+
 				getFragmentManager().beginTransaction()
 						.replace(R.id.container, new DetailReadFragment())
 						.commit();
