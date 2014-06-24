@@ -6,27 +6,25 @@
     <string-array name="drawer_menu_items">
         <item>登录或注册</item>
         <item>全部</item>
-       <!--  <item>待办</item>
-        <item>提醒</item> -->
+        <!--
+        <item>待办</item>
+        <item>提醒</item>
+        -->
         <item>设置</item>
     </string-array>
-    
-    <string name="dialog_delete_title">删除</string>    
-    <string name="dialog_delete_message">确认要删除吗？</string>  
-    <string name="dialog_delete_sure">确定</string>    
-    <string name="dialog_delete_cancel">取消</string> 
-    
-    <string name="action_item_save">保存</string>    
-    <string name="action_item_cancel">取消</string>
-    
-     <string name="action_item_read">浏览</string>
-     <string name="action_item_edit">编辑</string>
-     <string name="action_item_todo">待办</string>
-     <string name="action_item_remind">提醒</string>
-     <string name="action_item_delete">删除</string>
-     
-      <string name="dashboard_title">每日数据统计</string> 
 
+    <string name="dialog_delete_title">删除</string>
+    <string name="dialog_delete_message">确认要删除吗？</string>
+    <string name="dialog_delete_sure">确定</string>
+    <string name="dialog_delete_cancel">取消</string>
+    <string name="action_item_save">保存</string>
+    <string name="action_item_cancel">取消</string>
+    <string name="action_item_read">浏览</string>
+    <string name="action_item_edit">编辑</string>
+    <string name="action_item_todo">待办</string>
+    <string name="action_item_remind">提醒</string>
+    <string name="action_item_delete">删除</string>
+    <string name="dashboard_title">每日数据统计</string>
     <string name="action_search">Web search</string>
     <string name="action_settings">设置</string>
     <string name="action_todo">待办</string>
@@ -49,5 +47,8 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
     <string name="title_activity_item_detail">ItemDetailActivity</string>
+    <string name="title_activity_search">Search</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="network_failed">网络未连接</string>
 
 </resources>

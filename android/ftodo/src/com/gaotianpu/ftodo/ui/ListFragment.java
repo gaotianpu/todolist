@@ -52,7 +52,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TabHost;
+ 
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 
@@ -70,14 +70,12 @@ public class ListFragment extends Fragment {
 	private long cust_id = 0;
 	private String device_type;
 	private String deviceId;
-	private String queryStr = "";
+	 
 
 	private SubjectDa subjectDa;
 	private FTDClient ftd;
 	private List<SubjectBean> subjectList;
-	private ListAdapter listAdapter;
-
-	private TabHost tabHost;
+	private ListAdapter listAdapter; 
 
 	private View rootView;
 	private ListView lvDefault;
@@ -118,14 +116,7 @@ public class ListFragment extends Fragment {
 		ftd = new FTDClient(act);
 
 		// 2.控件相关
-		Intent intent = act.getIntent();
-		// 搜索
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			queryStr = intent.getStringExtra(SearchManager.QUERY);
-			getActivity().setTitle("搜索:" + queryStr);
-			// Log.i("search",queryStr);
-			moreView.setVisibility(0);
-		}
+
 
 		rootView = inflater.inflate(R.layout.fragment_list, container, false);
 		lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
@@ -161,12 +152,8 @@ public class ListFragment extends Fragment {
 		subjectList = new ArrayList<SubjectBean>();
 		listAdapter = new ListAdapter(act, 0);
 		lvDefault.setAdapter(listAdapter); 
-		if (queryStr == "") {
-			load_new_data();
-		} else {
-			this.search();
-		}
-		 
+		
+		load_new_data(); 
 
 		// 4.事件绑定
 		txtNew_setOnKeyListener(); // 提交新subject
@@ -454,59 +441,7 @@ public class ListFragment extends Fragment {
 
 	// ///////////////////
 
-	private void search() {
-		// Log.i(TAG,"download");
-		user = app.getUser();
-		if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
-			return;
-		}
-
-		Log.i("search", queryStr);
-		// max_remote_id_in_sqlite = 500;
-
-		ftd.search(user.getUserId(), user.getAccessToken(), this.queryStr,
-				new JsonHttpResponseHandler() {
-					@Override
-					public void onSuccess(JSONObject result) {
-						Log.i("search", "search onSuccess");
-						try {
-
-							// 这行代码可以继续封装到 FTDClient.load_by_custId方法中去，？
-							subjectList = FTDClient.Json2SubjectList(result);
-
-							Log.i("search", String.valueOf(subjectList.size()));
-
-						} catch (Exception e) {
-							Log.e("search", e.toString());
-
-						} finally {
-							swipeLayout.setRefreshing(false);
-							listAdapter.notifyDataSetChanged();
-						}
-
-					}
-
-					@Override
-					public void onFailure(int statusCode, Throwable e,
-							JSONObject errorResponse) {
-
-						Log.i("search", "search onFailure");
-
-						if (statusCode == 401) {
-							// add code here
-							app.set_token_failure();
-						}
-
-						swipeLayout.setRefreshing(false);
-						listAdapter.notifyDataSetChanged();
-
-					}
-
-				});
-
-		// 何时终止？
-
-	}
+	
 
 	private void download() {
 		// Log.i(TAG,"download");

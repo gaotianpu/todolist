@@ -1,48 +1,37 @@
 package com.gaotianpu.ftodo.ui;
 
-import java.io.IOException;
-import java.util.ArrayList;
+ 
 import java.util.List;
-
 import com.gaotianpu.ftodo.MainActivity;
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
-
 import com.gaotianpu.ftodo.da.SubjectBean;
 import com.gaotianpu.ftodo.da.SubjectDa;
 import com.gaotianpu.ftodo.da.UserBean;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.Instrumentation;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-
 import android.util.Log;
 import android.view.KeyEvent;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.view.View.OnKeyListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.EditText; 
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Toast;
+ 
 
 public class ItemDetailActivity extends Activity {
 
