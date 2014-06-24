@@ -50,6 +50,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "has_download  INTEGER NOT NULL DEFAULT 0 "
 				+ ");");
 		db.execSQL("CREATE UNIQUE INDEX uniq_ix ON download_records (user_id, offset);");
+		
+		//全文检索
+		db.execSQL("create virtual table seachIX using fts3(local_id INTEGER PRIMARY KEY, user_id INTEGER, content text); ");
 	}
 
 	@Override

@@ -32,11 +32,30 @@ public class SubjectDa {
 		// 每次都要构造SQLiteDatabase， 对性能影响有多大？
 		db = dbHelper.getWritableDatabase();
 		long subjectID = db.insert("subjects", "pk_id", values);
+		
+		//失败的尝试
+		//sqlite全文索引，可以考虑加入事务机制
+//		ContentValues ixValues = new ContentValues();
+//		ixValues.put("local_id", subjectID);
+//		ixValues.put("user_id", user_id);		
+//		ixValues.put("content", addblank(content));  		
+//		db.insert("seachIX", "local_id", ixValues);
+		
 		db.close();
 
 		return subjectID;
 	}
 
+	private String addblank(String content){
+		char[] array = content.toCharArray();
+		int arraySize = array.length;		 
+        StringBuffer buf = new StringBuffer();  
+		for(int i=0;i<arraySize;i++){
+			 buf.append(array[i]); 
+			 buf.append(" ");
+		}
+		return buf.toString();
+	}
 	public long insert2(long user_id, long remote_id, String content,
 			String creation_date, int last_update, int last_sync) {
 		ContentValues values = new ContentValues();
@@ -155,6 +174,30 @@ public class SubjectDa {
 
 		return subject;
 	}
+	
+	//失败的尝试，
+	public List<SubjectBean> search(long user_id,String query){
+		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
+		
+		db = dbHelper.getWritableDatabase();
+		Cursor cursor = db.query("seachIX", new String[]{"local_id","content"},
+				"user_id=? and content match ?", new String[] { String.valueOf(user_id), this.addblank(query) }, null,
+				null, null);
+		
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) { //&& (cursor.getString(1) != null
+			SubjectBean subject = new SubjectBean();
+			subject.setId(cursor.getLong(0));			 
+			subject.setBody(cursor.getString(1));
+			 
+			subjectList.add(subject);
+			cursor.moveToNext();
+		}
+		
+		db.close();
+
+		return subjectList ; 
+	}
 
 	private final String[] list_selected_fields = new String[] { "pk_id",
 			"user_id", "body", "creation_date", "last_update", "remote_id",
@@ -163,7 +206,7 @@ public class SubjectDa {
 	private List<SubjectBean> load_list(Cursor cursor) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		cursor.moveToFirst();
-		while (!cursor.isAfterLast() && (cursor.getString(1) != null)) {
+		while (!cursor.isAfterLast()) { //&& (cursor.getString(1) != null)
 			SubjectBean subject = new SubjectBean();
 			subject.setId(cursor.getLong(0));
 			subject.setUserId(cursor.getLong(1));

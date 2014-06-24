@@ -93,10 +93,11 @@ public class ListFragment extends Fragment {
 			Bundle savedInstanceState) {
 		// 0.外部传入参数
 		// list sort
-		 
-		int drawer_item_position = getArguments()!=null ? getArguments().getInt(LIST_SORT) : 1;  
+
+		int drawer_item_position = getArguments() != null ? getArguments()
+				.getInt(LIST_SORT) : 1;
 		list_sort = drawer_item_position - 1; //
-		//Log.i("list_sort", String.valueOf(drawer_item_position));
+		// Log.i("list_sort", String.valueOf(drawer_item_position));
 
 		// 1.系统全局
 		act = this.getActivity();
@@ -144,27 +145,28 @@ public class ListFragment extends Fragment {
 				.findViewById(R.id.pb_load_progress);
 
 		// lvDefault.addFooterView(moreView); // 设置列表底部视图
-		// moreView.setVisibility(View.GONE); 
+		// moreView.setVisibility(View.GONE);
 
 		action_menu_checked_menu = R.id.action_list_normal;
-		
+
 		String[] mDrawerItems = getResources().getStringArray(
 				R.array.drawer_menu_items);
-		act.setTitle(mDrawerItems[drawer_item_position]); 
+		act.setTitle(mDrawerItems[drawer_item_position]);
 
 		// 定义可选菜单
 		setHasOptionsMenu(true);
 
 		// 3.数据加载
+		 
 		subjectList = new ArrayList<SubjectBean>();
 		listAdapter = new ListAdapter(act, 0);
-		lvDefault.setAdapter(listAdapter);
-
+		lvDefault.setAdapter(listAdapter); 
 		if (queryStr == "") {
 			load_new_data();
 		} else {
 			this.search();
 		}
+		 
 
 		// 4.事件绑定
 		txtNew_setOnKeyListener(); // 提交新subject
@@ -178,8 +180,8 @@ public class ListFragment extends Fragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// onCreateView setHasOptionsMenu(true);
-		//menu.clear();
-		//inflater.inflate(R.menu.list, menu);
+		// menu.clear();
+		// inflater.inflate(R.menu.list, menu);
 
 	}
 
@@ -215,16 +217,17 @@ public class ListFragment extends Fragment {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void load_new_data() {
+	private void load_new_data() { 
 		// 从sqlite中读取数据，展示在listview中
-		subjectList = subjectDa.load_not_uploaded_subjects(cust_id, list_sort); // 加载未上传的
-		add_data(0, 100);
+		 subjectList = subjectDa.load_not_uploaded_subjects(cust_id,
+		 list_sort); // 加载未上传的
+		 add_data(0, 100);
 	}
 
 	private void add_data(int offset, int limit) {
 		List<SubjectBean> list = subjectDa.load(cust_id, list_sort, offset,
 				limit);
-		
+
 		Log.i("localdata", String.valueOf(list.size()));
 		for (SubjectBean s : list) {
 			subjectList.add(s);
@@ -354,7 +357,8 @@ public class ListFragment extends Fragment {
 							user = app.getUser();
 							cust_id = user.getUserId();
 
-							Long subjectID = subjectDa.insert(cust_id, content,0);
+							Long subjectID = subjectDa.insert(cust_id, content,
+									0);
 
 							SubjectBean subject = new SubjectBean();
 							subject.setId(subjectID);
