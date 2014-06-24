@@ -21,14 +21,15 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "creation_date  datetime default CURRENT_TIMESTAMP,"
 				+ "last_update  datetime default CURRENT_TIMESTAMP,"
 				+ "last_sync  datetime  ," 
-				+ "is_del INTEGER NOT NULL default 0,"				
-				+ "is_sync  INTEGER NOT NULL," 
+				+ "is_del INTEGER NOT NULL default 0,"	
 				+ "parent_id INTEGER NOT NULL default 0,"
 				+ "is_todo INTEGER NOT NULL default 0,"
 				+ "is_remind INTEGER NOT NULL default 0 ,"
 				+ "remind_datetime datetime ,"
 				+ "remind_frequency INTEGER NOT NULL default 0,"
 				+ "remind_next datetime ,"
+				+ "local_version INTEGER NOT NULL default 0,"	
+				+ "server_version INTEGER NOT NULL default 0,"	
 				+ "remote_id  INTEGER NOT NULL default 0)");
 		
 		db.execSQL("CREATE INDEX  ix_remote_id ON subjects (remote_id DESC)");

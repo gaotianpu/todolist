@@ -17,6 +17,15 @@ public class SubjectBean {
 	private boolean is_todo=false;
 	private boolean is_remind=false; 
 	
+	private int updateVersion=0;
+	
+	public long getUpdateVersion() {
+		return updateVersion;
+	}
+	public void setUpdateVersion(int updateVersion) {
+		this.updateVersion = updateVersion;
+	}
+	
 	
 	public long getId() {
 		return pk_id;

@@ -23,11 +23,12 @@ public class SubjectDa {
 		values.put("user_id", user_id);
 		values.put("parent_id", parent_id);
 		values.put("is_del", 0);
-		values.put("is_sync", 0);
+		 
 		values.put("remote_id", 0);
 		values.put("last_sync", 0);
 		values.put("is_todo", 0);
-		values.put("is_remind", 0);
+		values.put("is_remind", 0); //
+		values.put("local_version", 0);
 
 		// 每次都要构造SQLiteDatabase， 对性能影响有多大？
 		db = dbHelper.getWritableDatabase();
@@ -65,8 +66,10 @@ public class SubjectDa {
 		values.put("last_update", last_update);
 		values.put("last_sync", last_sync);
 		values.put("is_del", 0);
-		values.put("is_sync", 1);
+		 
 		values.put("remote_id", remote_id);
+		values.put("local_version", 0);
+		values.put("server_version", 0);
 
 		// 检查sqlite 是否有remote_id, 无
 		db = dbHelper.getWritableDatabase();
@@ -96,58 +99,75 @@ public class SubjectDa {
 		ContentValues values = new ContentValues();
 		values.put("remote_id", remote_id);
 		values.put("user_id", user_id);
-		values.put("is_sync", 1);
+	 
 		values.put("last_sync", 1); //
 
 		db = dbHelper.getWritableDatabase();
 
 		db.update("subjects", values, "pk_id=?",
-				new String[] { String.valueOf(local_id) });
+				new String[] { String.valueOf(local_id) }); 
+		
 		db.close();
+		
+		
 
 	}
 	
 	public void delete(long local_id) {
 		ContentValues values = new ContentValues();
 		values.put("is_del", 1);
-		values.put("is_sync", 0);
+	 
 
 		db = dbHelper.getWritableDatabase();
 		db.update("subjects", values, "pk_id=?",
 				new String[] { String.valueOf(local_id) });
+		
+		//累加版本号
+		update_version(db,local_id);
+		
 		db.close();
 	}
 
 	public void set_todo(long local_id, boolean todo) {
 		ContentValues values = new ContentValues();
 		values.put("is_todo", todo);
-		values.put("is_sync", 0);
+	 
 
 		db = dbHelper.getWritableDatabase();
 		db.update("subjects", values, "pk_id=?",
 				new String[] { String.valueOf(local_id) });
+		update_version(db,local_id);
 		db.close();
+	}
+	
+	private void update_version(SQLiteDatabase db,long local_id){
+		//累加版本号
+		db.execSQL("update subjects set local_version=local_version+1 where pk_id="+ String.valueOf(local_id));
 	}
 
 	public void set_remind(long local_id, boolean remind) {
 		ContentValues values = new ContentValues();
 		values.put("is_remind", remind);
-		values.put("is_sync", 0);
+		 
 
 		db = dbHelper.getWritableDatabase();
 		db.update("subjects", values, "pk_id=?",
 				new String[] { String.valueOf(local_id) });
+		update_version(db,local_id);
 		db.close();
 	}
 
 	public void edit_content(long local_id, String content) {
 		ContentValues values = new ContentValues();
 		values.put("body", content);
-		values.put("is_sync", 0);
+		 
 
 		db = dbHelper.getWritableDatabase();
 		db.update("subjects", values, "pk_id=?",
 				new String[] { String.valueOf(local_id) });
+		
+		update_version(db,local_id);
+		
 		db.close();
 
 	}
@@ -201,7 +221,7 @@ public class SubjectDa {
 
 	private final String[] list_selected_fields = new String[] { "pk_id",
 			"user_id", "body", "creation_date", "last_update", "remote_id",
-			"is_todo", "is_remind", "parent_id" };
+			"is_todo", "is_remind", "parent_id","local_version" };
 
 	private List<SubjectBean> load_list(Cursor cursor) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
@@ -217,6 +237,8 @@ public class SubjectDa {
 			subject.setIsTodo(cursor.getInt(6) == 1 ? true : false);
 			subject.setIsRemind(cursor.getInt(7) == 1 ? true : false);
 			subject.setParentId(cursor.getLong(8));
+			subject.setUpdateVersion(cursor.getInt(9));
+			
 			subjectList.add(subject);
 			cursor.moveToNext();
 		}
@@ -228,7 +250,7 @@ public class SubjectDa {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		db = dbHelper.getWritableDatabase();
 		try {
-			String sqlwhere = "(user_id=? or user_id=0) and (is_sync=0 or remote_id=0) and is_del=0 ";
+			String sqlwhere = "(user_id=? or user_id=0) and (local_version>server_version or remote_id=0)";
 			Cursor cursor = db.query("subjects", list_selected_fields,
 					sqlwhere, new String[] { String.valueOf(user_id) }, null,
 					null, "pk_id desc");
@@ -274,11 +296,11 @@ public class SubjectDa {
 		try {
 			String sqlwhere;
 			if (list_sort == 1) { // 待办
-				sqlwhere = "(user_id=? or user_id=0) and (is_sync=0 or remote_id=0) and is_todo=1";
+				sqlwhere = "(user_id=? or user_id=0) and remote_id=0 and is_todo=1";
 			} else if (list_sort == 2) { // 提醒
-				sqlwhere = "(user_id=? or user_id=0) and (is_sync=0 or remote_id=0) and is_remind=1";
+				sqlwhere = "(user_id=? or user_id=0) and remote_id=0 and is_remind=1";
 			} else {
-				sqlwhere = "(user_id=? or user_id=0) and (is_sync=0 or remote_id=0) ";
+				sqlwhere = "(user_id=? or user_id=0) and remote_id=0 ";
 			}
 			sqlwhere = sqlwhere + " and is_del=0 ";
 
