@@ -15,7 +15,7 @@ public class SubjectDa {
 
 	public SubjectDa(Context context) {
 		dbHelper = new SQLiteHelper(context, "ftodo", null, 1);
-	} 
+	}
 
 	public long insert(long user_id, String content, long parent_id) {
 		ContentValues values = new ContentValues();
@@ -23,7 +23,7 @@ public class SubjectDa {
 		values.put("user_id", user_id);
 		values.put("parent_id", parent_id);
 		values.put("is_del", 0);
-		 
+
 		values.put("remote_id", 0);
 		values.put("last_sync", 0);
 		values.put("is_todo", 0);
@@ -33,33 +33,33 @@ public class SubjectDa {
 		// 每次都要构造SQLiteDatabase， 对性能影响有多大？
 		db = dbHelper.getWritableDatabase();
 		long subjectID = db.insert("subjects", "pk_id", values);
-		
-		//失败的尝试
-		//sqlite全文索引，可以考虑加入事务机制
-//		ContentValues ixValues = new ContentValues();
-//		ixValues.put("local_id", subjectID);
-//		ixValues.put("user_id", user_id);		
-//		ixValues.put("content", addblank(content));  		
-//		db.insert("seachIX", "local_id", ixValues);
-		
+
+		// 失败的尝试
+		// sqlite全文索引，可以考虑加入事务机制
+		// ContentValues ixValues = new ContentValues();
+		// ixValues.put("local_id", subjectID);
+		// ixValues.put("user_id", user_id);
+		// ixValues.put("content", addblank(content));
+		// db.insert("seachIX", "local_id", ixValues);
+
 		db.close();
 
 		return subjectID;
 	}
 
-	private String addblank(String content){
+	private String addblank(String content) {
 		char[] array = content.toCharArray();
-		int arraySize = array.length;		 
-        StringBuffer buf = new StringBuffer();  
-		for(int i=0;i<arraySize;i++){
-			 buf.append(array[i]); 
-			 buf.append(" ");
+		int arraySize = array.length;
+		StringBuffer buf = new StringBuffer();
+		for (int i = 0; i < arraySize; i++) {
+			buf.append(array[i]);
+			buf.append(" ");
 		}
 		return buf.toString();
 	}
-	
+
 	public long insert2(long user_id, long remote_id, String content,
-			String creation_date, int last_update, int last_sync,int is_del) {
+			String creation_date, int last_update, int last_sync, int is_del) {
 		ContentValues values = new ContentValues();
 		values.put("user_id", user_id);
 		values.put("body", content);
@@ -67,7 +67,7 @@ public class SubjectDa {
 		values.put("last_update", last_update);
 		values.put("last_sync", last_sync);
 		values.put("is_del", is_del);
-		 
+
 		values.put("remote_id", remote_id);
 		values.put("local_version", 0);
 		values.put("server_version", 0);
@@ -93,7 +93,8 @@ public class SubjectDa {
 		return subjectID;
 	}
 
-	public void set_remoteId(long local_id, long remote_id, long user_id,int serverVersion) {
+	public void set_remoteId(long local_id, long remote_id, long user_id,
+			int serverVersion) {
 
 		// update sqlite's remote_id
 
@@ -101,75 +102,70 @@ public class SubjectDa {
 		values.put("remote_id", remote_id);
 		values.put("user_id", user_id);
 		values.put("server_version", serverVersion);
-	 
+
 		values.put("last_sync", 1); //
 
 		db = dbHelper.getWritableDatabase();
 
 		db.update("subjects", values, "pk_id=?",
-				new String[] { String.valueOf(local_id) }); 
-		
+				new String[] { String.valueOf(local_id) });
+
 		db.close();
-		
-		
 
 	}
-	
+
 	public void delete(long local_id) {
 		ContentValues values = new ContentValues();
 		values.put("is_del", 1);
-	 
 
 		db = dbHelper.getWritableDatabase();
 		db.update("subjects", values, "pk_id=?",
 				new String[] { String.valueOf(local_id) });
-		
-		//累加版本号
-		update_version(db,local_id);
-		
+
+		// 累加版本号
+		update_version(db, local_id);
+
 		db.close();
 	}
 
 	public void set_todo(long local_id, boolean todo) {
 		ContentValues values = new ContentValues();
 		values.put("is_todo", todo);
-	 
 
 		db = dbHelper.getWritableDatabase();
 		db.update("subjects", values, "pk_id=?",
 				new String[] { String.valueOf(local_id) });
-		update_version(db,local_id);
+		update_version(db, local_id);
 		db.close();
 	}
-	
-	private void update_version(SQLiteDatabase db,long local_id){
-		//累加版本号
-		db.execSQL("update subjects set local_version=local_version+1 where pk_id="+ String.valueOf(local_id));
+
+	private void update_version(SQLiteDatabase db, long local_id) {
+		// 累加版本号
+		db.execSQL("update subjects set local_version=local_version+1 where pk_id="
+				+ String.valueOf(local_id));
 	}
 
 	public void set_remind(long local_id, boolean remind) {
 		ContentValues values = new ContentValues();
 		values.put("is_remind", remind);
-		 
 
 		db = dbHelper.getWritableDatabase();
 		db.update("subjects", values, "pk_id=?",
 				new String[] { String.valueOf(local_id) });
-		update_version(db,local_id);
+		update_version(db, local_id);
 		db.close();
 	}
 
 	public void edit_content(long local_id, String content) {
 		ContentValues values = new ContentValues();
 		values.put("body", content);
-		 
 
 		db = dbHelper.getWritableDatabase();
 		db.update("subjects", values, "pk_id=?",
 				new String[] { String.valueOf(local_id) });
-		
-		update_version(db,local_id);
-		
+
+		update_version(db, local_id);
+
 		db.close();
 
 	}
@@ -178,14 +174,14 @@ public class SubjectDa {
 		SubjectBean subject = new SubjectBean();
 		db = dbHelper.getWritableDatabase();
 		try {
-			Cursor cursor = db
-					.query("subjects",
-							list_selected_fields,
-							"pk_id=? and (user_id=? or user_id=0) ", 
-							new String[] { String.valueOf(local_id),
-									String.valueOf(user_id) }, null, null, null);
+			Cursor cursor = db.query(
+					"subjects",
+					list_selected_fields,
+					"pk_id=? and (user_id=? or user_id=0) ",
+					new String[] { String.valueOf(local_id),
+							String.valueOf(user_id) }, null, null, null);
 			List<SubjectBean> list = load_list(cursor);
-			if(list.size()>0){
+			if (list.size() > 0) {
 				subject = list.get(0);
 			}
 		} catch (IllegalArgumentException e) {
@@ -196,39 +192,40 @@ public class SubjectDa {
 
 		return subject;
 	}
-	
-	//失败的尝试，
-	public List<SubjectBean> search(long user_id,String query){
+
+	// 失败的尝试，
+	public List<SubjectBean> search(long user_id, String query) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
-		
+
 		db = dbHelper.getWritableDatabase();
-		Cursor cursor = db.query("seachIX", new String[]{"local_id","content"},
-				"user_id=? and content match ?", new String[] { String.valueOf(user_id), this.addblank(query) }, null,
-				null, null);
-		
+		Cursor cursor = db.query("seachIX", new String[] { "local_id",
+				"content" }, "user_id=? and content match ?", new String[] {
+				String.valueOf(user_id), this.addblank(query) }, null, null,
+				null);
+
 		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) { //&& (cursor.getString(1) != null
+		while (!cursor.isAfterLast()) { // && (cursor.getString(1) != null
 			SubjectBean subject = new SubjectBean();
-			subject.setId(cursor.getLong(0));			 
+			subject.setId(cursor.getLong(0));
 			subject.setBody(cursor.getString(1));
-			 
+
 			subjectList.add(subject);
 			cursor.moveToNext();
 		}
-		
+
 		db.close();
 
-		return subjectList ; 
+		return subjectList;
 	}
 
 	private final String[] list_selected_fields = new String[] { "pk_id",
 			"user_id", "body", "creation_date", "last_update", "remote_id",
-			"is_todo", "is_remind", "parent_id","local_version","is_del" };
+			"is_todo", "is_remind", "parent_id", "local_version", "is_del" };
 
 	private List<SubjectBean> load_list(Cursor cursor) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) { //&& (cursor.getString(1) != null)
+		while (!cursor.isAfterLast()) { // && (cursor.getString(1) != null)
 			SubjectBean subject = new SubjectBean();
 			subject.setId(cursor.getLong(0));
 			subject.setUserId(cursor.getLong(1));
@@ -241,13 +238,12 @@ public class SubjectDa {
 			subject.setParentId(cursor.getLong(8));
 			subject.setLocalVersion(cursor.getInt(9));
 			subject.setIsDel(cursor.getInt(10));
-			
-			
+
 			subjectList.add(subject);
 			cursor.moveToNext();
 		}
 
-		return subjectList ;
+		return subjectList;
 	}
 
 	public List<SubjectBean> load_changed_but_not_uploaded(long user_id) {
@@ -307,8 +303,8 @@ public class SubjectDa {
 				sqlwhere = "(user_id=? or user_id=0) and remote_id=0 ";
 			}
 			sqlwhere = sqlwhere + " and is_del=0 ";
-			
-		//	Log.i("sqlwhere",sqlwhere);
+
+			// Log.i("sqlwhere",sqlwhere);
 
 			Cursor cursor = db.query("subjects", list_selected_fields,
 					sqlwhere, new String[] { String.valueOf(user_id) }, null,
@@ -340,10 +336,10 @@ public class SubjectDa {
 			} else {
 				sqlwhere = "user_id=? and remote_id<>0";
 			}
-		
+
 			sqlwhere = sqlwhere + " and is_del=0 ";
-			
-			Log.i("sqlwhere",sqlwhere);
+
+			Log.i("sqlwhere", sqlwhere);
 
 			Cursor cursor = db.query("subjects", list_selected_fields,
 					sqlwhere, new String[] { String.valueOf(user_id) }, null,
@@ -503,23 +499,25 @@ public class SubjectDa {
 		// }
 
 	}
-	
-	public List<String> load_days_count(long user_id){
-		
+
+	public List<ReportBean> load_days_count(long user_id) {
+
 		db = dbHelper.getWritableDatabase();
-		Cursor cursor = db.query("subjects", new String[]{"date(creation_date) as day,count(*) as count"}, 
-				"user_id=?", new String[] { String.valueOf(user_id) }, 
-				"date(creation_date)", null, "creation_date desc"); 
-		
-		List<String> l = new ArrayList<String>();
+		Cursor cursor = db
+				.query("subjects",
+						new String[] { "date(creation_date) as day,count(*) as count" },
+						"user_id=?", new String[] { String.valueOf(user_id) },
+						"date(creation_date)", null, "creation_date desc");
+
+		List<ReportBean> list = new ArrayList<ReportBean>();
+
 		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {	
-			Log.i("days_count" , cursor.getString(0) + "," + cursor.getString(1));
-			l.add( cursor.getString(0) + "," +   cursor.getString(1) );
+		while (!cursor.isAfterLast()) {
+			list.add(new ReportBean(cursor.getString(0), cursor.getInt(1)));
 			cursor.moveToNext();
 		}
 		db.close();
-		
-		return l;
+
+		return list;
 	}
 }

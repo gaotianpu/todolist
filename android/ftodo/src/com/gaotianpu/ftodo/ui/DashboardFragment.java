@@ -5,8 +5,10 @@ import java.util.List;
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
 import com.gaotianpu.ftodo.R.layout;
+import com.gaotianpu.ftodo.da.ReportBean;
+import com.gaotianpu.ftodo.da.SubjectBean;
 import com.gaotianpu.ftodo.da.SubjectDa;
-import com.gaotianpu.ftodo.da.UserBean;
+import com.gaotianpu.ftodo.da.UserBean; 
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -20,7 +22,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class DashboardFragment extends Fragment {
 	private View rootView;
@@ -31,7 +35,10 @@ public class DashboardFragment extends Fragment {
 	private ConnectivityManager cm;
 	private MyApplication app;
 	private UserBean user;
-	private LoadReportTask reportTask;
+	private LoadReportTask reportTask; 
+	
+	private ListAdapter listAdapter;
+	private List<ReportBean> reportList;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,19 +52,22 @@ public class DashboardFragment extends Fragment {
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		user = app.getUser();
-		act.setTitle(user.getEmail());
+		act.setTitle( R.string.dashboard_title  );
 
 		lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
+		
 		SubjectDa subjectDa = new SubjectDa(act);
-		List<String> x = subjectDa.load_days_count(user.getUserId());
-		String[] str = new String[x.size()];
-		str = x.toArray(str);
+		reportList = subjectDa.load_days_count(user.getUserId());	
+		listAdapter = new ListAdapter(act);
+		lvDefault.setAdapter(listAdapter); 
+		
+//		String[] str = new String[x.size()];
+//		str = x.toArray(str);
+//		lvDefault.setAdapter(new ArrayAdapter<String>(act,
+//				android.R.layout.simple_list_item_1, str));
 
-		lvDefault.setAdapter(new ArrayAdapter<String>(act,
-				android.R.layout.simple_list_item_1, str));
-
-		// reportTask = new LoadReportTask();
-		// reportTask.execute((Void) null);
+//		 reportTask = new LoadReportTask();
+//		 reportTask.execute((Void) null);
 
 		// NetworkInfo info = cm.getActiveNetworkInfo();
 		// if (info != null && info.isConnected()) {
@@ -73,16 +83,62 @@ public class DashboardFragment extends Fragment {
 
 		return rootView;
 	}
+	
+	private class ListAdapter extends BaseAdapter {
+		private LayoutInflater inflater1; 
+
+		public ListAdapter(Context ctx1) {
+			this.inflater1 = LayoutInflater.from(ctx1); 
+		}
+
+		@Override
+		public int getCount() {			 
+			return reportList.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return position;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			ReportBean item = reportList.get(position);
+			convertView = inflater1.inflate(R.layout.dashboard_listview_item, null);
+			
+			TextView tv = (TextView) convertView.findViewById(R.id.tvK);
+			tv.setText(item.getK());
+			
+			TextView tvV = (TextView) convertView.findViewById(R.id.tvV);
+			tvV.setText(String.valueOf( item.getV()  ) );
+
+			// if(currentSubject.getId() == subject.getId() ){
+			// convertView.setBackgroundColor();
+			// }
+
+			return convertView;
+
+		}
+
+	}
+
 
 	public class LoadReportTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 
-			SubjectDa subjectDa = new SubjectDa(act);
-			List<String> strs = subjectDa.load_days_count(user.getUserId());
-			lvDefault.setAdapter(new ArrayAdapter<String>(act,
-					android.R.layout.simple_list_item_1, (String[]) strs
-							.toArray()));
+//			SubjectDa subjectDa = new SubjectDa(act);
+//			List<String> x = subjectDa.load_days_count(user.getUserId());		 
+//			String[] str = new String[x.size()];
+//			str = x.toArray(str);
+//
+//			lvDefault.setAdapter(new ArrayAdapter<String>(act,
+//					android.R.layout.simple_list_item_1, str));
 
 			return true;
 		}
