@@ -1,8 +1,10 @@
 package com.gaotianpu.ftodo.ui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gaotianpu.ftodo.MainActivity;
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
 
@@ -146,8 +148,21 @@ public class ItemDetailActivity extends Activity {
 					@Override
 					public void onClick(DialogInterface dialog,
 							int i) { 
-						//subjectDa.delete(currentSubject.getId());
-						//goback?
+						
+						 
+							subjectDa.delete(currentSubject.getId());
+							
+							Intent intent=new Intent();
+							intent.setClass(getApplicationContext(), MainActivity.class);
+							startActivity(intent);
+							finish();
+
+							
+							//goback?
+//							Runtime runtime = Runtime.getRuntime();
+//							runtime.exec("input keyevent " + KeyEvent.KEYCODE_BACK);
+						 
+						
 						Log.i("dialog", "ok");
 					}
 				})

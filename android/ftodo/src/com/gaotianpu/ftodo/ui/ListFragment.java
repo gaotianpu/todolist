@@ -555,7 +555,7 @@ public class ListFragment extends Fragment {
 										s.getUserId(), s.getRemoteId(),
 										s.getBody(),
 										String.valueOf(s.getCreationDate()), 1,
-										1);
+										1,s.getIsDel() );
 
 								s.setId(local_id);
 								// insert_new_item(s, 0);

@@ -58,14 +58,14 @@ public class SubjectDa {
 		return buf.toString();
 	}
 	public long insert2(long user_id, long remote_id, String content,
-			String creation_date, int last_update, int last_sync) {
+			String creation_date, int last_update, int last_sync,int is_del) {
 		ContentValues values = new ContentValues();
 		values.put("user_id", user_id);
 		values.put("body", content);
 		values.put("creation_date", creation_date); //
 		values.put("last_update", last_update);
 		values.put("last_sync", last_sync);
-		values.put("is_del", 0);
+		values.put("is_del", is_del);
 		 
 		values.put("remote_id", remote_id);
 		values.put("local_version", 0);
@@ -222,7 +222,7 @@ public class SubjectDa {
 
 	private final String[] list_selected_fields = new String[] { "pk_id",
 			"user_id", "body", "creation_date", "last_update", "remote_id",
-			"is_todo", "is_remind", "parent_id","local_version" };
+			"is_todo", "is_remind", "parent_id","local_version","is_del" };
 
 	private List<SubjectBean> load_list(Cursor cursor) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
@@ -239,6 +239,8 @@ public class SubjectDa {
 			subject.setIsRemind(cursor.getInt(7) == 1 ? true : false);
 			subject.setParentId(cursor.getLong(8));
 			subject.setLocalVersion(cursor.getInt(9));
+			subject.setIsDel(cursor.getInt(10));
+			
 			
 			subjectList.add(subject);
 			cursor.moveToNext();
@@ -304,6 +306,8 @@ public class SubjectDa {
 				sqlwhere = "(user_id=? or user_id=0) and remote_id=0 ";
 			}
 			sqlwhere = sqlwhere + " and is_del=0 ";
+			
+		//	Log.i("sqlwhere",sqlwhere);
 
 			Cursor cursor = db.query("subjects", list_selected_fields,
 					sqlwhere, new String[] { String.valueOf(user_id) }, null,
@@ -335,6 +339,10 @@ public class SubjectDa {
 			} else {
 				sqlwhere = "user_id=? and remote_id<>0";
 			}
+		
+			sqlwhere = sqlwhere + " and is_del=0 ";
+			
+			Log.i("sqlwhere",sqlwhere);
 
 			Cursor cursor = db.query("subjects", list_selected_fields,
 					sqlwhere, new String[] { String.valueOf(user_id) }, null,

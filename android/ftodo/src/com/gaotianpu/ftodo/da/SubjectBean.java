@@ -89,4 +89,12 @@ public class SubjectBean {
 		this.is_remind = r;
 	}
 	//
+	
+	private int isDel=0;
+	public int getIsDel() {
+		return isDel;
+	}
+	public void setIsDel(int isDel) {
+		this.isDel = isDel;
+	}
 }
