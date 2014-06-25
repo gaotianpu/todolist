@@ -52,7 +52,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
- 
+
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 
@@ -70,12 +70,11 @@ public class ListFragment extends Fragment {
 	private long cust_id = 0;
 	private String device_type;
 	private String deviceId;
-	 
 
 	private SubjectDa subjectDa;
 	private FTDClient ftd;
 	private List<SubjectBean> subjectList;
-	private ListAdapter listAdapter; 
+	private ListAdapter listAdapter;
 
 	private View rootView;
 	private ListView lvDefault;
@@ -117,7 +116,6 @@ public class ListFragment extends Fragment {
 
 		// 2.控件相关
 
-
 		rootView = inflater.inflate(R.layout.fragment_list, container, false);
 		lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
 		txtNew = (EditText) rootView.findViewById(R.id.txtNew);
@@ -148,12 +146,12 @@ public class ListFragment extends Fragment {
 		setHasOptionsMenu(true);
 
 		// 3.数据加载
-		 
+
 		subjectList = new ArrayList<SubjectBean>();
 		listAdapter = new ListAdapter(act, 0);
-		lvDefault.setAdapter(listAdapter); 
-		
-		load_new_data(); 
+		lvDefault.setAdapter(listAdapter);
+
+		load_new_data();
 
 		// 4.事件绑定
 		txtNew_setOnKeyListener(); // 提交新subject
@@ -162,6 +160,12 @@ public class ListFragment extends Fragment {
 		swipeLayout_setOnRefreshListener(); // 下拉刷新
 
 		return rootView;
+	}
+
+	@Override
+	public void onResume() {
+		listAdapter.notifyDataSetChanged();
+		super.onResume();
 	}
 
 	@Override
@@ -204,11 +208,10 @@ public class ListFragment extends Fragment {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void load_new_data() { 
+	private void load_new_data() {
 		// 从sqlite中读取数据，展示在listview中
-		 subjectList = subjectDa.load_not_uploaded_subjects(cust_id,
-		 list_sort); // 加载未上传的
-		 add_data(0, 100);
+		subjectList = subjectDa.load_not_uploaded_subjects(cust_id, list_sort); // 加载未上传的
+		add_data(0, 100);
 	}
 
 	private void add_data(int offset, int limit) {
@@ -284,8 +287,8 @@ public class ListFragment extends Fragment {
 					// Log.i("onScroll", "loading..."+
 					// String.valueOf(view.getLastVisiblePosition()) +","+
 					// String.valueOf(view.getCount()) );
-					
-					//txtNew.setVisibility(View.GONE);
+
+					// txtNew.setVisibility(View.GONE);
 
 				}
 			}
@@ -293,9 +296,9 @@ public class ListFragment extends Fragment {
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
-				
-				//txtNew.setVisibility(View.VISIBLE);
-				
+
+				// txtNew.setVisibility(View.VISIBLE);
+
 				// Log.i("onScroll",
 				// "firstVisibleItem:" + String.valueOf(firstVisibleItem)
 				// + ",visibleItemCount:"
@@ -446,8 +449,6 @@ public class ListFragment extends Fragment {
 
 	// ///////////////////
 
-	
-
 	private void download() {
 		// Log.i(TAG,"download");
 		user = app.getUser();
@@ -495,7 +496,7 @@ public class ListFragment extends Fragment {
 										s.getUserId(), s.getRemoteId(),
 										s.getBody(),
 										String.valueOf(s.getCreationDate()), 1,
-										1,s.getIsDel() );
+										1, s.getIsDel());
 
 								s.setId(local_id);
 								// insert_new_item(s, 0);
