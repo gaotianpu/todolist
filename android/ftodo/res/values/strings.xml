@@ -50,5 +50,6 @@
     <string name="title_activity_search">Search</string>
     <string name="hello_world">Hello world!</string>
     <string name="network_failed">网络未连接</string>
+    <string name="user_unlogin">用户未登录</string>
 
 </resources>

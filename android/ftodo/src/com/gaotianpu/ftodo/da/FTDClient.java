@@ -114,7 +114,7 @@ public class FTDClient {
 
 	}
 	
-	public void search(long user_id,String access_token,String query, AsyncHttpResponseHandler responseHandler){
+	public void search(long user_id,String access_token,String query, long offset, int size, AsyncHttpResponseHandler responseHandler){
 		//public void update_task(long user_id,String access_token,long remote_id,String content,AsyncHttpResponseHandler responseHandler){
 		String url = RES_BASE_URL + "search";
 		
@@ -122,6 +122,8 @@ public class FTDClient {
 		params.put("user_id", String.valueOf(user_id));
 		params.put("access_token", access_token);
 		params.put("query", query); 
+		params.put("offset", String.valueOf(offset));
+		params.put("size", String.valueOf(size));
 		client.get(url, params, responseHandler);
 		return;
 	 

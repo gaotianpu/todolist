@@ -104,8 +104,8 @@ import search
 class Search:
     @validate_token
     def GET(self):
-        i = web.input(query="")         
-        rows = search.search(self.token.user_id,i.query)
+        i = web.input(query="",offset=0,size=100)         
+        rows = search.search(self.token.user_id,i.query,i.offset,i.size)
         r = {'code':1,'list':rows,'user_id':self.token.user_id}
         return  json.dumps(r,cls=CJsonEncoder)
 

@@ -192,6 +192,29 @@ public class SubjectDa {
 
 		return subject;
 	}
+	
+	public SubjectBean load_by_remoteId(long user_id, long remote_id) {
+		SubjectBean subject = new SubjectBean();
+		db = dbHelper.getWritableDatabase();
+		try {
+			Cursor cursor = db.query(
+					"subjects",
+					list_selected_fields,
+					"remote_id=? and (user_id=? or user_id=0) ",
+					new String[] { String.valueOf(remote_id),
+							String.valueOf(user_id) }, null, null, null);
+			List<SubjectBean> list = load_list(cursor);
+			if (list.size() > 0) {
+				subject = list.get(0);
+			}
+		} catch (IllegalArgumentException e) {
+			Log.e("SQLiteOp", e.toString());
+		} finally {
+			db.close();
+		}
+
+		return subject;
+	}
 
 	// 失败的尝试，
 	public List<SubjectBean> search(long user_id, String query) {
