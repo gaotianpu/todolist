@@ -14,6 +14,9 @@ import com.gaotianpu.ftodo.da.UserBean;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
@@ -21,6 +24,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,6 +54,8 @@ public class SearchActivity extends Activity {
 	private ListView lvDefault;
 	private TextView txtTips;
 	private SubjectDa subjectDa;
+	private View mStatusView;
+	private TextView mStatusMessageView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +70,8 @@ public class SearchActivity extends Activity {
 
 		lvDefault = (ListView) findViewById(R.id.lvDefault);
 		txtTips = (TextView) findViewById(R.id.txtTips);
+		mStatusView = findViewById(R.id.status);
+		mStatusMessageView = (TextView) findViewById(R.id.status_message);
 		
 		Intent intent = getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -88,16 +96,51 @@ public class SearchActivity extends Activity {
 		txtTips.setVisibility(View.GONE);
 		subjectList = new ArrayList<SubjectBean>();
 		listAdapter = new ListAdapter(this);
-		lvDefault.setAdapter(listAdapter);
-
+		lvDefault.setAdapter(listAdapter); 
+		
+		
+		 
 		load_search_results(0,100); 
 
 		lvDefault_setOnItemClickListener();
 		//lvDefault_setOnScrollListener();
 
 	}
+	
+	/**
+	 * Shows the progress UI and hides the login form.
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	private void showProgress(final boolean show) {
+		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+		// for very easy animations. If available, use these APIs to fade-in
+		// the progress spinner.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+			int shortAnimTime = getResources().getInteger(
+					android.R.integer.config_shortAnimTime);
+
+			mStatusView.setVisibility(View.VISIBLE);
+			mStatusView.animate().setDuration(shortAnimTime)
+					.alpha(show ? 1 : 0)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							mStatusView.setVisibility(show ? View.VISIBLE
+									: View.GONE);
+						}
+					});
+
+			 
+		} else {
+			// The ViewPropertyAnimator APIs are not available, so simply show
+			// and hide the relevant UI components.
+			mStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+			 
+		}
+	}
 
 	private void load_search_results(long offset, int size) { 
+		showProgress(true);
 
 		ftd.search(user.getUserId(), user.getAccessToken(), this.query,offset,size,
 				new JsonHttpResponseHandler() {
@@ -116,6 +159,7 @@ public class SearchActivity extends Activity {
 						} finally {
 							// swipeLayout.setRefreshing(false);
 							listAdapter.notifyDataSetChanged();
+							showProgress(false);
 						}
 
 					}
@@ -130,8 +174,8 @@ public class SearchActivity extends Activity {
 							// add code here
 							app.set_token_failure();
 						}
-
-						// swipeLayout.setRefreshing(false); 
+						
+						showProgress(false);
 
 					}
 

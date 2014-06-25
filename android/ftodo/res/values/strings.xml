@@ -51,5 +51,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="network_failed">网络未连接</string>
     <string name="user_unlogin">用户未登录</string>
+    <string name="loading">加载中...</string>
 
 </resources>
