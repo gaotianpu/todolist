@@ -5,7 +5,10 @@ import com.gaotianpu.ftodo.da.UserBean;
 import com.gaotianpu.ftodo.da.UserDa;
 
 import android.app.Application;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 public class MyApplication extends Application {
@@ -28,7 +31,7 @@ public class MyApplication extends Application {
 	public UserBean changeUser() {
 		// Log.i(TAG, "changeUser");
 		user = userDa.load_current_user();
-		if(user==null){
+		if (user == null) {
 			return new UserBean();
 		}
 		return user;
@@ -47,15 +50,24 @@ public class MyApplication extends Application {
 	public UserBean logout() {
 		userDa.update_token_status(user.getUserId(), 0);
 		userDa.update_active(user.getUserId(), 0);
-		
+
 		return changeUser();
 	}
-	
-	public String get_channel_no(){
+
+	public boolean network_available() {
+		NetworkInfo info = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))
+				.getActiveNetworkInfo();
+		if (info != null && info.isConnected()) {
+			return true;
+		}
+		return false;
+	}
+
+	public String get_channel_no() {
 		return "dev";
 	}
-	
-	public String get_version_no(){
+
+	public String get_version_no() {
 		return "0.0.0.1"; //
 	}
 

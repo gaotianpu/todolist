@@ -16,8 +16,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -42,7 +41,7 @@ public class AsyncService extends Service {
 
 	public static final String TAG = "AsyncService";
 	private Handler mHandler;
-	private ConnectivityManager cm;
+	 
 
 	private String devie_no;
 	private String device_type;
@@ -65,8 +64,7 @@ public class AsyncService extends Service {
 
 		mHandler = new Handler();
 
-		cm = (ConnectivityManager) this
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
+ 
 
 		context = this;
 		subjectDa = new SubjectDa(this);
@@ -79,8 +77,8 @@ public class AsyncService extends Service {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				NetworkInfo info = cm.getActiveNetworkInfo();
-				if (info != null && info.isConnected()) {
+			 
+				if ( app.network_available() ) {
 					user = app.getUser();
 					// Log.i("onStartCommand",
 					// String.valueOf(user.getUserId()) + ","

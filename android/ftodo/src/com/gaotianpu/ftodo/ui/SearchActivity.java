@@ -21,21 +21,19 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+
+
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
+
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
@@ -45,7 +43,7 @@ public class SearchActivity extends Activity {
 	private List<SubjectBean> subjectList;
 
 	private MyApplication app;
-	private ConnectivityManager cm;
+
 	private Activity act;
 	private UserBean user;
 	private String query;
@@ -55,14 +53,13 @@ public class SearchActivity extends Activity {
 	private TextView txtTips;
 	private SubjectDa subjectDa;
 	private View mStatusView;
-	private TextView mStatusMessageView;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
 
-		act =this;
+		act = this;
 		app = (MyApplication) getApplicationContext();
 
 		ftd = new FTDClient(this);
@@ -71,8 +68,7 @@ public class SearchActivity extends Activity {
 		lvDefault = (ListView) findViewById(R.id.lvDefault);
 		txtTips = (TextView) findViewById(R.id.txtTips);
 		mStatusView = findViewById(R.id.status);
-		mStatusMessageView = (TextView) findViewById(R.id.status_message);
-		
+
 		Intent intent = getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			query = intent.getStringExtra(SearchManager.QUERY);
@@ -83,12 +79,9 @@ public class SearchActivity extends Activity {
 		if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
 			txtTips.setText(R.string.user_unlogin);
 			return;
-		}
-
-		ConnectivityManager cm = (ConnectivityManager) this
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo info = cm.getActiveNetworkInfo();
-		if (info == null  || !info.isConnected()) {
+		} 
+	 
+		if (app.network_available()) {
 			txtTips.setText(R.string.network_failed);
 			return;
 		}
@@ -96,17 +89,15 @@ public class SearchActivity extends Activity {
 		txtTips.setVisibility(View.GONE);
 		subjectList = new ArrayList<SubjectBean>();
 		listAdapter = new ListAdapter(this);
-		lvDefault.setAdapter(listAdapter); 
-		
-		
-		 
-		load_search_results(0,100); 
+		lvDefault.setAdapter(listAdapter);
+
+		load_search_results(0, 100);
 
 		lvDefault_setOnItemClickListener();
-		//lvDefault_setOnScrollListener();
+		// lvDefault_setOnScrollListener();
 
 	}
-	
+
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
@@ -130,34 +121,29 @@ public class SearchActivity extends Activity {
 						}
 					});
 
-			 
 		} else {
 			// The ViewPropertyAnimator APIs are not available, so simply show
 			// and hide the relevant UI components.
 			mStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
-			 
+
 		}
 	}
 
-	private void load_search_results(long offset, int size) { 
+	private void load_search_results(long offset, int size) {
 		showProgress(true);
 
-		ftd.search(user.getUserId(), user.getAccessToken(), this.query,offset,size,
-				new JsonHttpResponseHandler() {
+		ftd.search(user.getUserId(), user.getAccessToken(), this.query, offset,
+				size, new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(JSONObject result) {
-						Log.i("search", "search onSuccess");
+						// Log.i("search", "search onSuccess");
 						try {
-							// 这行代码可以继续封装到 FTDClient.load_by_custId方法中去，？
-							subjectList = FTDClient.Json2SubjectList(result);
-
-							Log.i("search", String.valueOf(subjectList.size()));
-
+							subjectList.addAll(FTDClient
+									.Json2SubjectList(result));
 						} catch (Exception e) {
 							Log.e("search", e.toString());
 
 						} finally {
-							// swipeLayout.setRefreshing(false);
 							listAdapter.notifyDataSetChanged();
 							showProgress(false);
 						}
@@ -168,13 +154,13 @@ public class SearchActivity extends Activity {
 					public void onFailure(int statusCode, Throwable e,
 							JSONObject errorResponse) {
 
-						Log.i("search", "search onFailure");
+						// Log.i("search", "search onFailure");
 
 						if (statusCode == 401) {
 							// add code here
 							app.set_token_failure();
 						}
-						
+
 						showProgress(false);
 
 					}
@@ -193,9 +179,10 @@ public class SearchActivity extends Activity {
 					long arg3) {
 
 				SubjectBean subject = subjectList.get(arg2);
-				
-				subject = subjectDa.load_by_remoteId(subject.getUserId(),subject.getRemoteId());
-				
+
+				subject = subjectDa.load_by_remoteId(subject.getUserId(),
+						subject.getRemoteId());
+
 				Intent detailIntent = new Intent(act, ItemDetailActivity.class);
 				detailIntent.putExtra(ItemDetailActivity.SUBJECT_LOCAL_ID,
 						subject.getId());
@@ -213,20 +200,20 @@ public class SearchActivity extends Activity {
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
 				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE
 						&& view.getLastVisiblePosition() == view.getCount() - 1) {
-//					pb_load_progress.setVisibility(View.VISIBLE);
-//					tv_load_more.setText(R.string.loading_data);
+					// pb_load_progress.setVisibility(View.VISIBLE);
+					// tv_load_more.setText(R.string.loading_data);
 
-					load_search_results(view.getCount(), 100);  
+					load_search_results(view.getCount(), 100);
 				}
 			}
 
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) { 
+					int visibleItemCount, int totalItemCount) {
 			}
 		});
 	}
-	
+
 	private class ListAdapter extends BaseAdapter {
 		private LayoutInflater inflater1;
 

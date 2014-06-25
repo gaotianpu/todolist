@@ -14,14 +14,14 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+ 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.ArrayAdapter;
+ 
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -69,8 +69,8 @@ public class DashboardFragment extends Fragment {
 //		 reportTask = new LoadReportTask();
 //		 reportTask.execute((Void) null);
 
-		// NetworkInfo info = cm.getActiveNetworkInfo();
-		// if (info != null && info.isConnected()) {
+	
+		// if (app.network_available()) {
 		// webview = new WebView(act);
 		// // webview.getSettings().setJavaScriptEnabled(true);
 		// String url = "http://ftodo.sinaapp.com/api/dashboard?user_id="

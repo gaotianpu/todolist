@@ -7,9 +7,7 @@ import org.json.JSONObject;
 
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
-import com.gaotianpu.ftodo.R.id;
-import com.gaotianpu.ftodo.R.layout;
-import com.gaotianpu.ftodo.R.string;
+ 
 import com.gaotianpu.ftodo.da.FTDClient;
 import com.gaotianpu.ftodo.da.SubjectBean;
 import com.gaotianpu.ftodo.da.SubjectDa;
@@ -18,25 +16,24 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.SearchManager;
+ 
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.telephony.TelephonyManager;
+ 
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SubMenu;
+ 
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnKeyListener;
@@ -48,7 +45,7 @@ import android.widget.EditText;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import android.widget.CheckBox;
+
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -63,8 +60,7 @@ public class ListFragment extends Fragment {
 
 	private int list_sort = 0; // 1全部,2待办,3提醒
 
-	private MyApplication app;
-	private ConnectivityManager cm;
+	private MyApplication app; 
 	private Activity act;
 	private UserBean user;
 	private long cust_id = 0;
@@ -99,8 +95,7 @@ public class ListFragment extends Fragment {
 		act = this.getActivity();
 		app = (MyApplication) act.getApplicationContext();
 
-		cm = (ConnectivityManager) act
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
+ 
 		
 		user = app.getUser();
 		cust_id = user.getUserId();
@@ -311,8 +306,8 @@ public class ListFragment extends Fragment {
 					public void onRefresh() {
 						new Handler().postDelayed(new Runnable() {
 							public void run() {
-								NetworkInfo info = cm.getActiveNetworkInfo();
-								if (info != null && info.isConnected()) {
+								
+								if (app.network_available()) {
 									download();
 								} else {
 									swipeLayout.setRefreshing(false);
