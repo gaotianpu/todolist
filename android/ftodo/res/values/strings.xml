@@ -8,7 +8,7 @@
         <item>全部</item>
         <!--
         <item>待办</item>
-        <item>提醒</item>
+        <item>提醒</item>
         -->
         <item>设置</item>
     </string-array>
@@ -52,5 +52,6 @@
     <string name="network_failed">网络未连接</string>
     <string name="user_unlogin">用户未登录</string>
     <string name="loading">加载中...</string>
+    <string name="title_activity_setting_detail">SettingDetailActivity</string>
 
 </resources>
