@@ -35,7 +35,7 @@ def generate_access_token():
     return hashlib.md5(str(uuid.uuid1())).hexdigest() 
      
 
-def get_access_token(user_id,device_no,device_type,os_type): 
+def get_access_token(user_id,device_no,device_type,os_type,channel,version): 
     result = list(dbr.select('user_devices',
         what="user_id,device_no,access_token,device_type,os_type",
         where="user_id=$user_id",vars=locals()))
@@ -45,6 +45,8 @@ def get_access_token(user_id,device_no,device_type,os_type):
         dbw.insert('user_devices',user_id=user_id,device_no=device_no, 
         device_type=device_type,os_type=os_type,
         access_token=access_token,
+        channel=channel,
+        version=version,
         creation_date=web.SQLLiteral('now()'),
         last_update=web.SQLLiteral('now()'))
 
@@ -56,6 +58,8 @@ def get_access_token(user_id,device_no,device_type,os_type):
             device_no=device_no, 
             device_type=device_type,os_type=os_type,
             access_token=access_token,
+            channel=channel,
+            version=version,
             last_update=web.SQLLiteral('now()'),
             where="user_id=$user_id",vars=locals())
         result[0].access_token = access_token 

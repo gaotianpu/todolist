@@ -50,6 +50,14 @@ public class MyApplication extends Application {
 		
 		return changeUser();
 	}
+	
+	public String get_channel_no(){
+		return "dev";
+	}
+	
+	public String get_version_no(){
+		return "0.0.0.1"; //
+	}
 
 	private SQLiteHelper dbHelper;
 

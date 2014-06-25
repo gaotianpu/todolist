@@ -178,6 +178,8 @@ public class FTDClient {
 
 	public void login_or_register(String name, String password,
 			String device_no, String device_type, String os_type,
+			String channel_no,
+			String version_no,
 			AsyncHttpResponseHandler responseHandler) {
 
 		RequestParams params = new RequestParams();
@@ -186,6 +188,8 @@ public class FTDClient {
 		params.put("device_no", device_no);
 		params.put("device_type", device_type);
 		params.put("os_type", os_type);
+		params.put("channel", channel_no);
+		params.put("version", version_no);
 
 		client.post(AUTH_URL, params, responseHandler);
 	} 

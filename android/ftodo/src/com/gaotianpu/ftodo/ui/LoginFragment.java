@@ -3,7 +3,6 @@ package com.gaotianpu.ftodo.ui;
 import org.json.JSONException;
 import org.json.JSONObject;
 
- 
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
 import com.gaotianpu.ftodo.R.array;
@@ -12,7 +11,6 @@ import com.gaotianpu.ftodo.R.layout;
 import com.gaotianpu.ftodo.R.string;
 import com.gaotianpu.ftodo.da.FTDClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
- 
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -22,10 +20,9 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
- 
+
 import android.os.Build;
 import android.os.Bundle;
- 
 
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -50,20 +47,20 @@ public class LoginFragment extends Fragment {
 	/**
 	 * The default email to populate the email field with.
 	 */
-	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
+	public static final String EXTRA_MOBILE = "com.gaotianpu.ftodo.ui.EMAIL";
 
 	// Values for email and password at the time of the login attempt.
-	private String mEmail;
+	private String mMobile;
 	private String mPassword;
 
 	// UI references.
-	private EditText mEmailView;
+	private EditText mMobileView;
 	private EditText mPasswordView;
 	private View mLoginFormView;
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
 
-	//private Context ctx;
+	// private Context ctx;
 	private View rootView;
 	private Activity act;
 	private MyApplication app;
@@ -72,18 +69,20 @@ public class LoginFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_login, container, false);
-		
-		Log.i("login","1");
 
-		//ctx = this.getActivity();
 		act = this.getActivity();
-		Log.i("login","2");
-		app = (MyApplication)act.getApplicationContext();
-		Log.i("login","3");
-		
+		app = (MyApplication) act.getApplicationContext();
+
+		// ui
+		mMobileView = (EditText) rootView.findViewById(R.id.mobile);
+		mPasswordView = (EditText) rootView.findViewById(R.id.password);
+		mLoginFormView = rootView.findViewById(R.id.login_form);
+		mLoginStatusView = rootView.findViewById(R.id.login_status);
+		mLoginStatusMessageView = (TextView) rootView
+				.findViewById(R.id.login_status_message);
+
 		init();
-		Log.i("login","4");
-		
+
 		getActivity().setTitle("登录或注册");
 		return rootView;
 	}
@@ -91,11 +90,9 @@ public class LoginFragment extends Fragment {
 	private void init() {
 		// Set up the login form.
 
-		mEmail = this.getActivity().getIntent().getStringExtra(EXTRA_EMAIL);
-		mEmailView = (EditText) rootView.findViewById(R.id.email);
-		mEmailView.setText(mEmail);
+		mMobile = act.getIntent().getStringExtra(EXTRA_MOBILE);
+		mMobileView.setText(mMobile);
 
-		mPasswordView = (EditText) rootView.findViewById(R.id.password);
 		mPasswordView
 				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 					@Override
@@ -109,11 +106,6 @@ public class LoginFragment extends Fragment {
 					}
 				});
 
-		mLoginFormView = rootView.findViewById(R.id.login_form);
-		mLoginStatusView = rootView.findViewById(R.id.login_status);
-		mLoginStatusMessageView = (TextView) rootView
-				.findViewById(R.id.login_status_message);
-
 		rootView.findViewById(R.id.sign_in_button).setOnClickListener(
 				new View.OnClickListener() {
 					@Override
@@ -124,20 +116,15 @@ public class LoginFragment extends Fragment {
 		//
 	}
 
-	/**
-	 * Attempts to sign in or register the account specified by the login form.
-	 * If there are form errors (invalid email, missing fields, etc.), the
-	 * errors are presented and no actual login attempt is made.
-	 */
 	public void attemptLogin() {
 		// 检测网络条件
 
 		// Reset errors.
-		mEmailView.setError(null);
+		mMobileView.setError(null);
 		mPasswordView.setError(null);
 
 		// Store values at the time of the login attempt.
-		mEmail = mEmailView.getText().toString();
+		mMobile = mMobileView.getText().toString();
 		mPassword = mPasswordView.getText().toString();
 
 		boolean cancel = false;
@@ -155,16 +142,11 @@ public class LoginFragment extends Fragment {
 		}
 
 		// Check for a valid email address.
-		if (TextUtils.isEmpty(mEmail)) {
-			mEmailView.setError(getString(R.string.error_field_required));
-			focusView = mEmailView;
+		if (TextUtils.isEmpty(mMobile)) {
+			mMobileView.setError(getString(R.string.error_field_required));
+			focusView = mMobileView;
 			cancel = true;
 		}
-		// else if (!mEmail.contains("@")) {
-		// mEmailView.setError(getString(R.string.error_invalid_email));
-		// focusView = mEmailView;
-		// cancel = true;
-		// }
 
 		if (cancel) {
 			// There was an error; don't attempt login and focus the first
@@ -180,14 +162,15 @@ public class LoginFragment extends Fragment {
 					.getSystemService(Context.TELEPHONY_SERVICE);
 			String deviceId = tm.getDeviceId();
 			String device_type = android.os.Build.MODEL;
-			String os_type = "android." + android.os.Build.VERSION.RELEASE; 
+			String os_type = "android." + android.os.Build.VERSION.RELEASE;
 
 			FTDClient client = new FTDClient(act);
-			client.login_or_register(mEmail, mPassword, deviceId, device_type,
-					os_type, new JsonHttpResponseHandler() {
+			client.login_or_register(mMobile, mPassword, deviceId, device_type,
+					os_type, app.get_channel_no(), app.get_version_no(),
+					new JsonHttpResponseHandler() {
 						@Override
-						public void onSuccess(JSONObject result) { 
-							try { 
+						public void onSuccess(JSONObject result) {
+							try {
 								int code = result.getInt("code");
 								if (code != 1) {
 									Log.e("login", "code is not 1");
@@ -196,11 +179,10 @@ public class LoginFragment extends Fragment {
 								}
 
 								JSONObject data = result.getJSONObject("data");
-								
+
 								app.login(data.getLong("user_id"),
 										data.getString("name"),
 										data.getString("access_token"));
-								
 
 								showProgress(false);
 
@@ -212,41 +194,43 @@ public class LoginFragment extends Fragment {
 										.replace(R.id.content_frame, fragment)
 										.commit();
 								String[] mPlanetTitles = getResources()
-										.getStringArray(R.array.drawer_menu_items);
+										.getStringArray(
+												R.array.drawer_menu_items);
 								ListView mDrawerList = (ListView) act
 										.findViewById(R.id.left_drawer);
-								
+
 								mPlanetTitles[0] = data.getString("name");
-								ArrayAdapter<String> adapter = new ArrayAdapter<String>(act,
-										R.layout.drawer_list_item, mPlanetTitles);
+								ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+										act, R.layout.drawer_list_item,
+										mPlanetTitles);
 								mDrawerList.setAdapter(adapter);
-								
+
 								mDrawerList.setItemChecked(position, true);
-								
-								//登录后立刻改变左侧菜单的选项？
-								//mDrawerList.getItemAtPosition(0);
-								//mDrawerList.getAdapter().notifyDataSetChanged();
-								
-							//	act.setTitle(mPlanetTitles[position]);
-								
-								//ListView lvDefault = (ListView) act.findViewById(R.id.lvDefault); 
-				
-								
+
+								// 登录后立刻改变左侧菜单的选项？
+								// mDrawerList.getItemAtPosition(0);
+								// mDrawerList.getAdapter().notifyDataSetChanged();
+
+								// act.setTitle(mPlanetTitles[position]);
+
+								// ListView lvDefault = (ListView)
+								// act.findViewById(R.id.lvDefault);
+
 							} catch (JSONException e) {
 								Log.e("login", e.toString());
 								login_failed();
 							}
 
 						}
-						
+
 						@Override
-						public void onFailure(int statusCode, Throwable e, JSONObject errorResponse){
+						public void onFailure(int statusCode, Throwable e,
+								JSONObject errorResponse) {
 							login_failed();
 							Log.e("login", e.toString());
-							
-						} 
 
-						 
+						}
+
 					});
 
 		}

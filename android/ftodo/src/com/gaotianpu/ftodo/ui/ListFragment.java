@@ -68,8 +68,7 @@ public class ListFragment extends Fragment {
 	private Activity act;
 	private UserBean user;
 	private long cust_id = 0;
-	private String device_type;
-	private String deviceId;
+	
 
 	private SubjectDa subjectDa;
 	private FTDClient ftd;
@@ -102,12 +101,7 @@ public class ListFragment extends Fragment {
 
 		cm = (ConnectivityManager) act
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		// 获得设备的相关信息
-		TelephonyManager tm = (TelephonyManager) act
-				.getSystemService(Context.TELEPHONY_SERVICE);
-		deviceId = tm.getDeviceId();
-		device_type = android.os.Build.MODEL;
-
+		
 		user = app.getUser();
 		cust_id = user.getUserId();
 

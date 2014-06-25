@@ -54,7 +54,6 @@ public final class R {
         public static final int container=0x7f0a0000;
         public static final int content_frame=0x7f0a0002;
         public static final int drawer_layout=0x7f0a0001;
-        public static final int email=0x7f0a0012;
         public static final int icon=0x7f0a0019;
         public static final int left_drawer=0x7f0a0003;
         public static final int list_tab_all=0x7f0a001a;
@@ -65,6 +64,7 @@ public final class R {
         public static final int login_status=0x7f0a000f;
         public static final int login_status_message=0x7f0a0010;
         public static final int lvDefault=0x7f0a0005;
+        public static final int mobile=0x7f0a0012;
         public static final int password=0x7f0a0013;
         public static final int pb_load_progress=0x7f0a000c;
         public static final int sign_in_button=0x7f0a0015;

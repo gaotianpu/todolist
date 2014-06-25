@@ -55,7 +55,7 @@ class Register:
     def GET(self):
         return 
     def POST(self):
-        i = web.input(name='',password='',device_no='0',device_type='',os_type='')
+        i = web.input(name='',password='',device_no='0',device_type='',os_type='',channel="",version="")
         encPass = encrypt_password(i.name,i.password)
         try:
             result = da.user.load_by_name(i.name)            
@@ -67,7 +67,7 @@ class Register:
                 return json.dumps({'code':-1,'data':"name and password is not match"})    
             else:
                 user_id = result.pk_id
-            token = da.user.get_access_token(user_id,i.device_no,i.device_type,i.os_type)  
+            token = da.user.get_access_token(user_id,i.device_no,i.device_type,i.os_type,i.channel,i.version)  
             token.name = i.name
             return json.dumps({'code':1,'data':token}) 
         except Exception,ex:
