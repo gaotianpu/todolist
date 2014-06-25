@@ -8,6 +8,7 @@ import com.gaotianpu.ftodo.R;
 
 import com.gaotianpu.ftodo.da.ReportBean;
 import com.gaotianpu.ftodo.da.SettingBean;
+import com.gaotianpu.ftodo.da.SubjectBean;
 import com.gaotianpu.ftodo.da.UserBean;
  
  
@@ -16,14 +17,17 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class SettingFragment extends Fragment {
 	private View rootView;
@@ -56,18 +60,38 @@ public class SettingFragment extends Fragment {
 		if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
 			//rootView.findViewById(R.id.btnLogout).setVisibility(View.GONE);
 		} 
+		
+		lvDefault_setOnItemClickListener();
 
 		return rootView;
 	}
 	
 	private List<SettingBean> load_data(){
 		List<SettingBean> l = new ArrayList<SettingBean>();
-		l.add(new SettingBean("账号(手机号)","138****509" ) );
-		l.add(new SettingBean("密码","强" ) );
-		l.add(new SettingBean("电子邮箱","gtp@163.com" ) );		
-		l.add(new SettingBean("关于","0.1.1.1" ) );		 
-		l.add(new SettingBean("退出","" ) );
+		l.add(new SettingBean("mobile","账号(手机号)","138****509" ) );
+		l.add(new SettingBean("password","密码","强" ) );
+		l.add(new SettingBean("email","电子邮箱","gtp@163.com" ) );		
+		l.add(new SettingBean("about","关于","0.1.1.1" ) );		 
+		l.add(new SettingBean("logout","退出","" ) );
 		return l;
+	}
+	
+	private void lvDefault_setOnItemClickListener() {
+		// 单击，查看明细
+		lvDefault.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+
+				SettingBean item = reportList.get(arg2); 
+
+				Intent intent = new Intent(act, SettingDetailActivity.class);
+				intent.putExtra(SettingDetailActivity.SETTING_ITEM_ID,
+						item.getId());
+				startActivity(intent);
+			}
+		});
+
 	}
 	
 	private class ListAdapter extends BaseAdapter {
