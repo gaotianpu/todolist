@@ -284,6 +284,8 @@ public class ListFragment extends Fragment {
 					// Log.i("onScroll", "loading..."+
 					// String.valueOf(view.getLastVisiblePosition()) +","+
 					// String.valueOf(view.getCount()) );
+					
+					//txtNew.setVisibility(View.GONE);
 
 				}
 			}
@@ -291,6 +293,9 @@ public class ListFragment extends Fragment {
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
+				
+				//txtNew.setVisibility(View.VISIBLE);
+				
 				// Log.i("onScroll",
 				// "firstVisibleItem:" + String.valueOf(firstVisibleItem)
 				// + ",visibleItemCount:"
