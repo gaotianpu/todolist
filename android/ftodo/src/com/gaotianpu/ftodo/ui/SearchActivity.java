@@ -73,7 +73,7 @@ public class SearchActivity extends Activity {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			query = intent.getStringExtra(SearchManager.QUERY);
 			setTitle(query);
-		}
+		} 
 
 		user = app.getUser();
 		if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
@@ -81,7 +81,7 @@ public class SearchActivity extends Activity {
 			return;
 		} 
 	 
-		if (app.network_available()) {
+		if (!app.network_available()) {
 			txtTips.setText(R.string.network_failed);
 			return;
 		}
