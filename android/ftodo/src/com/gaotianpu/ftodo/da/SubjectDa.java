@@ -536,13 +536,23 @@ public class SubjectDa {
 						"date(creation_date)", null, "creation_date desc");
 
 		List<ReportBean> list = new ArrayList<ReportBean>();
-
+		
+		int sum_count=0;
+		int max_count=0;
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			list.add(new ReportBean(cursor.getString(0), cursor.getInt(1)));
+			int count =  cursor.getInt(1);
+			if(count>max_count){
+				max_count =  count;
+			}
+			sum_count = sum_count + count;
+			list.add(new ReportBean(cursor.getString(0), count));
 			cursor.moveToNext();
 		}
 		db.close();
+		
+		list.add(0, new ReportBean("最多每天", max_count)); //cn
+		list.add(0, new ReportBean("总计", sum_count));
 
 		return list;
 	}
