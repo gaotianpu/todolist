@@ -10,8 +10,6 @@ import com.gaotianpu.ftodo.bean.ReportBean;
 import com.gaotianpu.ftodo.bean.SettingBean;
 import com.gaotianpu.ftodo.bean.SubjectBean;
 import com.gaotianpu.ftodo.bean.UserBean;
- 
- 
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -35,7 +33,7 @@ public class SettingFragment extends Fragment {
 	private Activity act;
 	private MyApplication app;
 	private UserBean user;
-	
+
 	private ListView lvDefault;
 	private ListAdapter listAdapter;
 	private List<SettingBean> reportList;
@@ -45,37 +43,39 @@ public class SettingFragment extends Fragment {
 			Bundle savedInstanceState) {
 		rootView = inflater
 				.inflate(R.layout.fragment_setting, container, false);
-		 
 
 		act = getActivity();
 		app = (MyApplication) act.getApplicationContext();
 		user = app.getUser();
-		
+
 		lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
-		
+
 		reportList = load_data();
 		listAdapter = new ListAdapter(act);
-		lvDefault.setAdapter(listAdapter); 
+		lvDefault.setAdapter(listAdapter);
 
-		if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
-			//rootView.findViewById(R.id.btnLogout).setVisibility(View.GONE);
-		} 
-		
-		lvDefault_setOnItemClickListener();
+		if (app.network_available()) {
+			lvDefault_setOnItemClickListener();
+		}
 
 		return rootView;
 	}
-	
-	private List<SettingBean> load_data(){
+
+	private List<SettingBean> load_data() {
 		List<SettingBean> l = new ArrayList<SettingBean>();
-		l.add(new SettingBean("mobile","账号(手机号)", String.valueOf(  user.getMobile() ) ) );
-		l.add(new SettingBean("password","密码","强" ) );
-		l.add(new SettingBean("email","电子邮箱", user.getEmail() ) );		
-		l.add(new SettingBean("about","关于", app.get_version_no() ) );		 
-		l.add(new SettingBean("logout","退出","" ) );
+		if (user.getUserId() != 0 && user.getTokenStatus() != 0) {
+			l.add(new SettingBean("mobile", "账号(手机号)", String.valueOf(user
+					.getMobile())));
+			l.add(new SettingBean("password", "密码", ""));
+			l.add(new SettingBean("email", "电子邮箱", user.getEmail()));
+			l.add(new SettingBean("about", "关于", app.get_version_no()));
+			l.add(new SettingBean("logout", "退出", ""));
+		} else {
+			l.add(new SettingBean("about", "关于", app.get_version_no()));
+		}
 		return l;
 	}
-	
+
 	private void lvDefault_setOnItemClickListener() {
 		// 单击，查看明细
 		lvDefault.setOnItemClickListener(new OnItemClickListener() {
@@ -83,26 +83,30 @@ public class SettingFragment extends Fragment {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 
-				SettingBean item = reportList.get(arg2); 
+				SettingBean item = reportList.get(arg2);
+				if (item.getId() == "logout") {
+					logout();
+				} else {
+					Intent intent = new Intent(act, SettingDetailActivity.class);
+					intent.putExtra(SettingDetailActivity.SETTING_ITEM_ID,
+							item.getId());
+					startActivity(intent);
+				}
 
-				Intent intent = new Intent(act, SettingDetailActivity.class);
-				intent.putExtra(SettingDetailActivity.SETTING_ITEM_ID,
-						item.getId());
-				startActivity(intent);
 			}
 		});
 
 	}
-	
+
 	private class ListAdapter extends BaseAdapter {
-		private LayoutInflater inflater1; 
+		private LayoutInflater inflater1;
 
 		public ListAdapter(Context ctx1) {
-			this.inflater1 = LayoutInflater.from(ctx1); 
+			this.inflater1 = LayoutInflater.from(ctx1);
 		}
 
 		@Override
-		public int getCount() {			 
+		public int getCount() {
 			return reportList.size();
 		}
 
@@ -119,13 +123,14 @@ public class SettingFragment extends Fragment {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			SettingBean item = reportList.get(position);
-			convertView = inflater1.inflate(R.layout.setting_listview_item, null);
-			
+			convertView = inflater1.inflate(R.layout.setting_listview_item,
+					null);
+
 			TextView tv = (TextView) convertView.findViewById(R.id.tvK);
 			tv.setText(item.getK());
-			
+
 			TextView tvV = (TextView) convertView.findViewById(R.id.tvV);
-			tvV.setText( item.getV() );
+			tvV.setText(item.getV());
 
 			// if(currentSubject.getId() == subject.getId() ){
 			// convertView.setBackgroundColor();
@@ -137,10 +142,9 @@ public class SettingFragment extends Fragment {
 
 	}
 
-
 	private void logout() {
 		user = app.logout();
-		
+
 		// 转至login页
 		Fragment fragment = new LoginFragment();
 		FragmentManager fragmentManager = getFragmentManager();
