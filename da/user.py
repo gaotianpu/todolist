@@ -84,5 +84,8 @@ def validate_token(user_id,access_token):
         vars=locals()))
     return result 
 
+def load_user(user_id):
+    return True
+
 if __name__ == "__main__":
     register('gao@g.com','1222')

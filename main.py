@@ -21,7 +21,8 @@ urls = (
     '/done', 'Done',  
     '/segment', 'Segment',
     '/words', 'Words',  
-    '/wordlist','WordList',     
+    '/wordlist','WordList',   
+    '/about','About',  
     '/', 'Index',
 )
 
@@ -182,6 +183,10 @@ class WordList:
         r = {"code":1,"data":subjects}
         return json.dumps(r) 
 
+class About:
+    def GET(self):
+        i = web.input(os='android')
+        return "<h1>About</h1>"
 
 if __name__ == "__main__":
     # da.subject.load_page(1,10)

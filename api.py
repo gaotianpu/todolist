@@ -13,7 +13,8 @@ urls = (
     "/list3","List3",
     "/total","Total",
     "/android_page","AndroidPage",
-    "/search","Search")
+    "/search","Search",
+    "/profile","Profile")
 
 #register, mobile + sms_validate_code
 #login, mobile + password_encryption
@@ -93,15 +94,7 @@ class List3:
         total_count = da.subject.load_count(self.token.user_id)
 
         r = {'code':1,'list':rows,'total':total_count,'user_id':self.token.user_id}
-        return json.dumps(r,cls=CJsonEncoder)
-
-class AndroidPage:
-    @validate_token
-    def GET(self):
-        web.header('Content-Type', 'text/html; charset=utf-8')
-        i = web.input(module="",item="")
-        #self.token.user_id
-        return  "<h1>hello,world</h1>"
+        return json.dumps(r,cls=CJsonEncoder) 
 
 import search
 class Search:
@@ -111,6 +104,21 @@ class Search:
         rows = search.search(self.token.user_id,i.query,i.offset,i.size)
         r = {'code':1,'list':rows,'user_id':self.token.user_id}
         return  json.dumps(r,cls=CJsonEncoder)
+
+class Profile:
+    @validate_token
+    def GET(self): 
+        profile = da.user.load_user(self.token.user_id)
+        r = {'code':1,'data':profile}
+        return  json.dumps(r,cls=CJsonEncoder)
+
+class AndroidPage:
+    @validate_token
+    def GET(self):
+        web.header('Content-Type', 'text/html; charset=utf-8')
+        i = web.input(module="",item="")
+        #self.token.user_id
+        return  "<h1>Coming soon</h1>"
 
 def api_loadhook():
     # 如果把login剔除api，所有资源访问都可以加上user_id+device_no+access_token?

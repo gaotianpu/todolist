@@ -32,10 +32,10 @@ public class SettingDetailActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_setting_detail);
-		
+
 		// 0.外部传入参数
 		Intent intent = getIntent();
-		setting_item_id = intent.getStringExtra(SETTING_ITEM_ID); // .getIntExtra(SETTING_ITEM_ID, 0);
+		setting_item_id = intent.getStringExtra(SETTING_ITEM_ID);  
 		
 		this.setTitle(intent.getStringExtra(SETTING_ITEM_TITLE));
 
@@ -49,15 +49,19 @@ public class SettingDetailActivity extends Activity {
 			// webview.getSettings().setJavaScriptEnabled(true);
 			String url = "http://ftodo.sinaapp.com/api/android_page?user_id="
 					+ String.valueOf(user.getUserId()) + "&access_token="
-					+ user.getAccessToken() +"&item="+setting_item_id + "&module=setting";
+					+ user.getAccessToken() + "&item=" + setting_item_id
+					+ "&module=setting";
+
+			if (setting_item_id.equals( "about")) { //java 判断字符串相等，不能使用==
+				url = "http://ftodo.sinaapp.com/about";
+			}
+			
 			webview.loadUrl(url);
 			setContentView(webview);
 
 			return;
 		}
 
-		
-		
 	}
 
 	@Override
