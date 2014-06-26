@@ -148,7 +148,12 @@ public class ListFragment extends Fragment {
 
 		return rootView;
 	}
-
+	
+	@Override
+	public void onResume() {
+		listAdapter.notifyDataSetChanged();
+		super.onResume();
+	}
 	
 
 	@Override
