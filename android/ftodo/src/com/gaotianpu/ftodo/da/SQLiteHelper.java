@@ -37,7 +37,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		//create user tables
 		db.execSQL("CREATE TABLE IF NOT EXISTS  users("
 				+ "user_id  INTEGER NOT NULL,"
-				+ "account  NVARCHAR(50),"
+				+ "mobile  NVARCHAR(50),"
+				+ "email  NVARCHAR(50),"
+				+ "password_level  NVARCHAR(50),"
 				+ "access_token  NVARCHAR(50),"
 				+ "token_status  INTEGER,"
 				+ "current_active  INTEGER,"

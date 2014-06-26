@@ -1,5 +1,7 @@
 package com.gaotianpu.ftodo.da;
 
+import com.gaotianpu.ftodo.bean.UserBean;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -19,31 +21,35 @@ public class UserDa {
 
 		db = dbHelper.getWritableDatabase();
 		Cursor cursor = db.query("users",
-				new String[] { "user_id", "account", "access_token",
+				new String[] { "user_id", "mobile","email","password_level", "access_token",
 						"token_status", "current_active", "last_update" },
 				"current_active=1", null, null, null, null);
 
 		cursor.moveToFirst();
 		if (!cursor.isAfterLast()) {
 			user.setUserId(cursor.getLong(0));
-			user.setEmail(cursor.getString(1));
-			user.setMobile(cursor.getInt(1));
-			user.setAccessToken(cursor.getString(2));
-			user.setTokenStatus(cursor.getInt(3));
+			user.setMobile(cursor.getLong(1));
+			user.setEmail(cursor.getString(2));	
+			//password_level?
+			//mobile_vaidate?
+			//email_vaildate?
+			user.setAccessToken(cursor.getString(4));
+			user.setTokenStatus(cursor.getInt(5));
 		}
 
+		//Log.i("user", user.toString() );
 		db.close();
 
 		return user;
 	}
 
-	public void login(long user_id, String user_name, String access_token) {
+	public void login(long user_id, String mobile, String access_token) {
 		db = dbHelper.getWritableDatabase();
 		db.beginTransaction(); // 手动设置开始事务
 		try {
 			ContentValues values = new ContentValues();
 			values.put("user_id", user_id);
-			values.put("account", user_name); //
+			values.put("mobile", mobile); //
 			values.put("access_token", access_token);
 			values.put("token_status", 1); // token_status
 			values.put("current_active", 1); // current_active

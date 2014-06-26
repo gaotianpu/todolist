@@ -8,10 +8,10 @@ import org.json.JSONObject;
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
  
+import com.gaotianpu.ftodo.bean.SubjectBean;
+import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.FTDClient;
-import com.gaotianpu.ftodo.da.SubjectBean;
 import com.gaotianpu.ftodo.da.SubjectDa;
-import com.gaotianpu.ftodo.da.UserBean;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Activity;
@@ -93,9 +93,7 @@ public class ListFragment extends Fragment {
 
 		// 1.系统全局
 		act = this.getActivity();
-		app = (MyApplication) act.getApplicationContext();
-
- 
+		app = (MyApplication) act.getApplicationContext(); 
 		
 		user = app.getUser();
 		cust_id = user.getUserId();
@@ -151,11 +149,7 @@ public class ListFragment extends Fragment {
 		return rootView;
 	}
 
-	@Override
-	public void onResume() {
-		listAdapter.notifyDataSetChanged();
-		super.onResume();
-	}
+	
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

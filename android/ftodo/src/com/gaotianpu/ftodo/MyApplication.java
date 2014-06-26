@@ -1,7 +1,7 @@
 package com.gaotianpu.ftodo;
 
+import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.SQLiteHelper;
-import com.gaotianpu.ftodo.da.UserBean;
 import com.gaotianpu.ftodo.da.UserDa;
 
 import android.app.Application;
@@ -37,8 +37,8 @@ public class MyApplication extends Application {
 		return user;
 	}
 
-	public UserBean login(long user_id, String user_name, String access_token) {
-		userDa.login(user_id, user_name, access_token);
+	public UserBean login(long user_id, String mobile, String access_token) {
+		userDa.login(user_id, mobile, access_token);
 		return changeUser();
 	}
 

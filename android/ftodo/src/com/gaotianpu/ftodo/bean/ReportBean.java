@@ -1,4 +1,4 @@
-package com.gaotianpu.ftodo.da;
+package com.gaotianpu.ftodo.bean;
 
 public class ReportBean {
 	private String _k = "";

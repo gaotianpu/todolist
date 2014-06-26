@@ -7,10 +7,10 @@ import org.json.JSONObject;
 
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
+import com.gaotianpu.ftodo.bean.SubjectBean;
+import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.FTDClient;
-import com.gaotianpu.ftodo.da.SubjectBean;
 import com.gaotianpu.ftodo.da.SubjectDa;
-import com.gaotianpu.ftodo.da.UserBean;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 

@@ -24,7 +24,7 @@
     <string name="action_item_todo">待办</string>
     <string name="action_item_remind">提醒</string>
     <string name="action_item_delete">删除</string>
-    <string name="dashboard_title">每日数据统计</string>
+    <string name="dashboard_title">数据统计</string>
     <string name="action_search">Web search</string>
     <string name="action_settings">设置</string>
     <string name="action_todo">待办</string>

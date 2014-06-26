@@ -1,4 +1,4 @@
-package com.gaotianpu.ftodo.da;
+package com.gaotianpu.ftodo.bean;
 
 public class SubjectBean {
 	public static final String PK_ID = "pk_id";

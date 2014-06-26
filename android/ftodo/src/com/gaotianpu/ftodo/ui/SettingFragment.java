@@ -6,10 +6,10 @@ import java.util.List;
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
 
-import com.gaotianpu.ftodo.da.ReportBean;
-import com.gaotianpu.ftodo.da.SettingBean;
-import com.gaotianpu.ftodo.da.SubjectBean;
-import com.gaotianpu.ftodo.da.UserBean;
+import com.gaotianpu.ftodo.bean.ReportBean;
+import com.gaotianpu.ftodo.bean.SettingBean;
+import com.gaotianpu.ftodo.bean.SubjectBean;
+import com.gaotianpu.ftodo.bean.UserBean;
  
  
 
@@ -68,10 +68,10 @@ public class SettingFragment extends Fragment {
 	
 	private List<SettingBean> load_data(){
 		List<SettingBean> l = new ArrayList<SettingBean>();
-		l.add(new SettingBean("mobile","账号(手机号)","138****509" ) );
+		l.add(new SettingBean("mobile","账号(手机号)", String.valueOf(  user.getMobile() ) ) );
 		l.add(new SettingBean("password","密码","强" ) );
-		l.add(new SettingBean("email","电子邮箱","gtp@163.com" ) );		
-		l.add(new SettingBean("about","关于","0.1.1.1" ) );		 
+		l.add(new SettingBean("email","电子邮箱", user.getEmail() ) );		
+		l.add(new SettingBean("about","关于", app.get_version_no() ) );		 
 		l.add(new SettingBean("logout","退出","" ) );
 		return l;
 	}

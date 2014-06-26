@@ -1,7 +1,7 @@
 package com.gaotianpu.ftodo;
 
 import com.gaotianpu.ftodo.R;
-import com.gaotianpu.ftodo.da.UserBean;
+import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.ui.DashboardFragment;
 import com.gaotianpu.ftodo.ui.ListFragment;
 import com.gaotianpu.ftodo.ui.LoginFragment;
@@ -71,7 +71,7 @@ public class MainActivity extends Activity {
 		mDrawerItems = getResources().getStringArray(
 				R.array.drawer_menu_items);
 		if (user.getUserId() != 0 && user.getTokenStatus() != 0) {
-			mDrawerItems[0] = user.getEmail();
+			mDrawerItems[0] = String.valueOf( user.getMobile() ) ;
 		}
 		
 		 
@@ -124,7 +124,7 @@ public class MainActivity extends Activity {
 		user = app.getUser(); // UserDa.load_current_user(this);
 		if ( user.getUserId() != 0) {
 			// 菜单显示 未登录...
-			mDrawerItems[0] = user.getEmail();
+			mDrawerItems[0] = String.valueOf( user.getMobile() );
 			adapter.notifyDataSetChanged();
 		}
 	}

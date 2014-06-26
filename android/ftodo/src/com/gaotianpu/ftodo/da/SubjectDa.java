@@ -3,6 +3,9 @@ package com.gaotianpu.ftodo.da;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gaotianpu.ftodo.bean.ReportBean;
+import com.gaotianpu.ftodo.bean.SubjectBean;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

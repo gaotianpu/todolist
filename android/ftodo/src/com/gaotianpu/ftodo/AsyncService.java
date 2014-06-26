@@ -5,10 +5,10 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.gaotianpu.ftodo.bean.SubjectBean;
+import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.FTDClient;
-import com.gaotianpu.ftodo.da.SubjectBean;
 import com.gaotianpu.ftodo.da.SubjectDa;
-import com.gaotianpu.ftodo.da.UserBean;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Service;
@@ -58,13 +58,7 @@ public class AsyncService extends Service {
 		app = (MyApplication) getApplicationContext();
 		ftd = new FTDClient(context);
 
-		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-		devie_no = tm.getDeviceId();
-		device_type = android.os.Build.MODEL;
-
-		mHandler = new Handler();
-
- 
+		mHandler = new Handler(); 
 
 		context = this;
 		subjectDa = new SubjectDa(this);

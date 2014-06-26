@@ -3,8 +3,8 @@ package com.gaotianpu.ftodo.ui;
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
 import com.gaotianpu.ftodo.R.layout;
+import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.SubjectDa;
-import com.gaotianpu.ftodo.da.UserBean;
 
 import android.app.Activity;
 import android.content.Intent;
