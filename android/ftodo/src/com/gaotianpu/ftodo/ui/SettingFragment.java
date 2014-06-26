@@ -62,11 +62,12 @@ public class SettingFragment extends Fragment {
 	}
 
 	private List<SettingBean> load_data() {
+		//cn
 		List<SettingBean> l = new ArrayList<SettingBean>();
 		if (user.getUserId() != 0 && user.getTokenStatus() != 0) {
 			l.add(new SettingBean("mobile", "账号(手机号)", String.valueOf(user
 					.getMobile())));
-			l.add(new SettingBean("password", "密码", ""));
+			l.add(new SettingBean("password", "密码", user.getPasswordLevel()));
 			l.add(new SettingBean("email", "电子邮箱", user.getEmail()));
 			l.add(new SettingBean("about", "关于", app.get_version_no()));
 			l.add(new SettingBean("logout", "退出", ""));

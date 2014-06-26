@@ -30,6 +30,7 @@ public class UserDa {
 			user.setUserId(cursor.getLong(0));
 			user.setMobile(cursor.getLong(1));
 			user.setEmail(cursor.getString(2));	
+			user.setPasswordLevel(cursor.getString(3));	
 			//password_level?
 			//mobile_vaidate?
 			//email_vaildate?
@@ -43,17 +44,20 @@ public class UserDa {
 		return user;
 	}
 
-	public void login(long user_id, String mobile, String access_token) {
+	public void login(long user_id, String mobile, String access_token,String email,String passwordLevel) {
 		db = dbHelper.getWritableDatabase();
 		db.beginTransaction(); // 手动设置开始事务
 		try {
 			ContentValues values = new ContentValues();
 			values.put("user_id", user_id);
 			values.put("mobile", mobile); //
+			values.put("email", email);
+			values.put("password_level", passwordLevel);
 			values.put("access_token", access_token);
 			values.put("token_status", 1); // token_status
 			values.put("current_active", 1); // current_active
-			values.put("last_update", 0);
+			values.put("last_update", 0); 
+			
 			db.replace("users", "user_id", values);
 
 			// update users set current_active=0 where user_id<>?

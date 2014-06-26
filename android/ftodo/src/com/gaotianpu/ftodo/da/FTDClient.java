@@ -194,5 +194,15 @@ public class FTDClient {
 
 		client.post(AUTH_URL, params, responseHandler);
 	} 
+	
+	public void load_user_profile(long user_id,String access_token,
+			AsyncHttpResponseHandler responseHandler) {
+
+		RequestParams params = new RequestParams();
+		params.put("user_id", String.valueOf(user_id));
+		params.put("access_token", access_token);
+
+		client.post(RES_BASE_URL+"profile", params, responseHandler);
+	} 
 
 }

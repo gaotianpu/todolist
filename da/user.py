@@ -28,7 +28,21 @@ def register(name,password):
 def load_by_name(name):
     result = list(dbr.select(tname,what="pk_id,nick_name,password",where="mobile=$name or email=$name",vars=locals()))     
     return result[0] if result else False
- 
+
+def load_user(user_id):
+    users = list(dbr.select(tname,what="pk_id,mobile,email,nick_name,password",where="pk_id=$user_id",vars=locals()))  
+    tokens = list(dbr.select('user_devices',
+        what="user_id,device_no,access_token,device_type,os_type",
+        where="user_id=$user_id",vars=locals()))   
+    if users and tokens:
+        users[0].device_no = tokens[0].device_no
+        users[0].access_token = tokens[0].access_token
+        users[0].device_type = tokens[0].device_type
+        users[0].os_type = tokens[0].os_type
+        users[0].password =u'high'
+        users[0].user_id = tokens[0].user_id
+        return users[0] 
+    return False 
 
 import uuid,hashlib 
 def generate_access_token():
@@ -64,7 +78,7 @@ def get_access_token(user_id,device_no,device_type,os_type,channel,version):
             where="user_id=$user_id",vars=locals())
         result[0].access_token = access_token 
     
-    return result[0] 
+    return load_user(result[0].user_id)
 
 
 def auth(name,password,deive_no,device_type):
@@ -84,8 +98,7 @@ def validate_token(user_id,access_token):
         vars=locals()))
     return result 
 
-def load_user(user_id):
-    return True
+
 
 if __name__ == "__main__":
     register('gao@g.com','1222')

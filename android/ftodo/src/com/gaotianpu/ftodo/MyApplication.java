@@ -37,10 +37,10 @@ public class MyApplication extends Application {
 		return user;
 	}
 
-	public UserBean login(long user_id, String mobile, String access_token) {
-		userDa.login(user_id, mobile, access_token);
-		return changeUser();
-	}
+//	public UserBean login(long user_id, String mobile, String access_token) {
+//		userDa.login(user_id, mobile, access_token);
+//		return changeUser();
+//	}
 
 	public void set_token_failure() {
 		userDa.update_token_status(user.getUserId(), 0);
@@ -68,7 +68,7 @@ public class MyApplication extends Application {
 	}
 
 	public String get_version_no() {
-		return "0.0.0.1"; //
+		return "0.0.0.2"; //
 	}
 
 	private SQLiteHelper dbHelper;

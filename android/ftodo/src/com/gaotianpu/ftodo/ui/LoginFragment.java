@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R; 
 import com.gaotianpu.ftodo.da.FTDClient;
+import com.gaotianpu.ftodo.da.UserDa;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.animation.Animator;
@@ -174,11 +175,14 @@ public class LoginFragment extends Fragment {
 									return;
 								}
 
-								JSONObject data = result.getJSONObject("data");
-
-								app.login(data.getLong("user_id"),
+								JSONObject data = result.getJSONObject("data"); 
+								 
+								(new UserDa(act)).login(data.getLong("user_id"),
 										data.getString("name"),
-										data.getString("access_token"));
+										data.getString("access_token"),
+										data.getString("email"),
+										data.getString("password")); 
+								app.changeUser();
 
 								showProgress(false);
 

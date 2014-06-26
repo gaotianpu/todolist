@@ -8,6 +8,7 @@ public class UserBean {
 	private String display_name="";
 	private String access_token="";
 	private int token_status=0;
+	private String _passwordLevel="";
 	 
 
 	public long getUserId() {
@@ -27,7 +28,7 @@ public class UserBean {
 	}
 
 	public String getEmail() {
-		return email;
+		return email==null ? "" :email ;
 	}
 
 	public void setEmail(String email) {
@@ -56,6 +57,14 @@ public class UserBean {
 
 	public void setTokenStatus(int token_status) {
 		this.token_status = token_status;
+	}
+	
+	public void setPasswordLevel(String passwordLevel) {
+		this._passwordLevel = passwordLevel;
+	}
+
+	public String getPasswordLevel() {
+		return _passwordLevel;
 	}
 
 }
