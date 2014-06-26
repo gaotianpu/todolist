@@ -1,6 +1,7 @@
 package com.gaotianpu.ftodo.ui;
 
  
+import java.io.IOException;
 import java.util.List;
 import com.gaotianpu.ftodo.MainActivity;
 import com.gaotianpu.ftodo.MyApplication;
@@ -90,11 +91,24 @@ public class ItemDetailActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		int id = item.getItemId();
-
-		if (item.isChecked()) {
+		int id = item.getItemId();  
+		
+//		Log.i("back", String.valueOf( KeyEvent.KEYCODE_HOME ));
+//		 
+//		//goback?
+// 		Runtime runtime = Runtime.getRuntime();
+// 		try {
+// 			Log.i("back", String.valueOf( item.getItemId() )  );
+//			runtime.exec("input keyevent " + KeyEvent.KEYCODE_BACK);
+//			return true;
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+ 		
+ 		if (item.isChecked()) {			
 			return true;
-		}
+		} 
 
 		switch (id) {
 		case R.id.action_item_edit:

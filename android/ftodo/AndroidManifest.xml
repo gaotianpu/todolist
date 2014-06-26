@@ -64,7 +64,11 @@
 
         <activity
             android:name="com.gaotianpu.ftodo.ui.SettingDetailActivity"
-            android:label="@string/title_activity_setting_detail" >
+            android:label="@string/title_activity_setting_detail" 
+            android:parentActivityName="com.gaotianpu.ftodo.MainActivity">
+             <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
     </application>
 

@@ -90,6 +90,10 @@ public class SettingFragment extends Fragment {
 					Intent intent = new Intent(act, SettingDetailActivity.class);
 					intent.putExtra(SettingDetailActivity.SETTING_ITEM_ID,
 							item.getId());
+					
+					intent.putExtra(SettingDetailActivity.SETTING_ITEM_TITLE,
+							item.getK());
+					
 					startActivity(intent);
 				}
 
