@@ -12,7 +12,7 @@ urls = (
     "/list","List",
     "/list3","List3",
     "/total","Total",
-    "/dashboard","Dashboard",
+    "/android_page","AndroidPage",
     "/search","Search")
 
 #register, mobile + sms_validate_code
@@ -95,8 +95,11 @@ class List3:
         r = {'code':1,'list':rows,'total':total_count,'user_id':self.token.user_id}
         return json.dumps(r,cls=CJsonEncoder)
 
-class Dashboard:
+class AndroidPage:
+    @validate_token
     def GET(self):
+        web.header('Content-Type', 'text/html; charset=utf-8')
+        i = web.input(module="",item="")
         #self.token.user_id
         return  "<h1>hello,world</h1>"
 
