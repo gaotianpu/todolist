@@ -67,7 +67,7 @@ public class MyApplication extends Application {
 	}
 
 	public String get_channel_no() {
-		return "dev";
+		return "360"; //dev,360,
 	}
 
 	public String get_version_no() {

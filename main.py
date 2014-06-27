@@ -192,7 +192,8 @@ class WordList:
 class About:
     def GET(self):
         i = web.input(os='android')
-        return "<h1>About</h1>"
+        r1 = web.template.render('templates/android',base='layout') 
+        return r1.about()
 
 if __name__ == "__main__":
     # da.subject.load_page(1,10)
