@@ -1,11 +1,19 @@
 package com.gaotianpu.ftodo;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.SQLiteHelper;
 import com.gaotianpu.ftodo.da.UserDa;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -37,11 +45,6 @@ public class MyApplication extends Application {
 		return user;
 	}
 
-//	public UserBean login(long user_id, String mobile, String access_token) {
-//		userDa.login(user_id, mobile, access_token);
-//		return changeUser();
-//	}
-
 	public void set_token_failure() {
 		userDa.update_token_status(user.getUserId(), 0);
 		changeUser();
@@ -68,8 +71,57 @@ public class MyApplication extends Application {
 	}
 
 	public String get_version_no() {
-		return "0.0.0.2"; //
+
+		try {
+			PackageInfo pi = this.getPackageManager().getPackageInfo(
+					this.getPackageName(), 0);
+			return pi.versionName; // pi.versionCode
+		} catch (NameNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "unkonwn";
+
 	}
+
+//	public void set_api_host() {
+//		SharedPreferences hostSp = getSharedPreferences("APIHost", 0);
+//		int last = hostSp.getInt("timestamp", 0);
+//		
+//		if (!network_available()) {
+//			return;
+//		}
+//
+//		if (true) {// last<curent- 5days
+//			AsyncHttpClient client = new AsyncHttpClient();
+//			client.setTimeout(20000);
+//			client.post("http://ftodo.sinaapp.com/host", null,
+//					new JsonHttpResponseHandler() {
+//						@Override
+//						public void onSuccess(JSONObject result) {
+//							int timestamp = 0;
+//							String host = "";
+//							try {
+//								host = result.getString("host");
+//							} catch (JSONException e) {
+//								Log.e("hosterr", e.toString());
+//							}
+//							SharedPreferences hostSp = getSharedPreferences(
+//									"APIHost", 0);
+//							hostSp.edit().putString("host", host).commit();
+//							hostSp.edit().putInt("timestamp", timestamp)
+//									.commit();
+//						}
+//					});
+//
+//		}
+//	}
+//
+//	public String get_api_host() {
+//		SharedPreferences hostSp = getSharedPreferences("APIHost", 0);
+//		return hostSp.getString("host", "ftodo.sinaapp.com");
+//	}
 
 	private SQLiteHelper dbHelper;
 

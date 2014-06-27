@@ -23,6 +23,7 @@ urls = (
     '/words', 'Words',  
     '/wordlist','WordList',   
     '/about','About',  
+    '/host',"Host",
     '/', 'Index',
 )
 
@@ -47,6 +48,11 @@ class Index:
             raise web.seeother("/login")
         render = web.template.frender('templates/index2.html')
         return render() 
+
+class Host:
+    def GET(self):
+        web.header('Content-Type', 'application/json; charset=utf-8')         
+        return  '{"code":1,"host":"ftodo.sinaapp.com"}' 
 
 import hashlib
 def encrypt_password(name,password): 
@@ -80,7 +86,7 @@ class Login:
         return render()
 
     def POST(self):
-        i = web.input(name='',password='',device_no='0',device_type='',os_type='')
+        i = web.input(name='',password='',device_no='0',device_type='',os_type='',channel="",version="")
         encPass = encrypt_password(i.name,i.password)
         print 'encPass:', encPass  
 
@@ -97,7 +103,7 @@ class Login:
             session.nick_name = result.nick_name
             web.seeother('/')
         
-        token = da.user.get_access_token(result.pk_id,i.device_no,i.device_type,i.os_type)  
+        token = da.user.get_access_token(result.pk_id,i.device_no,i.device_type,i.os_type,i.channel,i.version)  
         return json.dumps({'code':1,'data':token}) 
         
 

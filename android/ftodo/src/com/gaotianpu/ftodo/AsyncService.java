@@ -20,7 +20,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
-import android.telephony.TelephonyManager;
+
 import android.util.Log;
 
 public class AsyncService extends Service {

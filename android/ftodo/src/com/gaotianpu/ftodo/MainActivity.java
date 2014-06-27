@@ -111,7 +111,7 @@ public class MainActivity extends Activity {
 
 			public void onDrawerOpened(View drawerView) {
 				Log.i("title",mTitle.toString());
-				getActionBar().setTitle(mDrawerTitle);
+				getActionBar().setTitle(R.string.app_name);
 				invalidateOptionsMenu(); // creates call to
 											// onPrepareOptionsMenu()
 			}

@@ -5,10 +5,7 @@ import java.util.List;
 
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
-
-import com.gaotianpu.ftodo.bean.ReportBean;
 import com.gaotianpu.ftodo.bean.SettingBean;
-import com.gaotianpu.ftodo.bean.SubjectBean;
 import com.gaotianpu.ftodo.bean.UserBean;
 
 import android.app.Activity;

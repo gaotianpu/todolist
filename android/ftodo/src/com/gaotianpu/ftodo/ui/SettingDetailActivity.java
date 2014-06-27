@@ -4,16 +4,16 @@ import java.io.IOException;
 
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
-import com.gaotianpu.ftodo.R.layout;
+ 
 import com.gaotianpu.ftodo.bean.UserBean;
-import com.gaotianpu.ftodo.da.SubjectDa;
+ 
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
+ 
 import android.view.MenuItem;
 import android.webkit.WebView;
 

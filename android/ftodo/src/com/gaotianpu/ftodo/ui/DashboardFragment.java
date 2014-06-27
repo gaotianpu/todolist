@@ -4,39 +4,31 @@ import java.util.List;
 
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
-import com.gaotianpu.ftodo.R.layout;
 import com.gaotianpu.ftodo.bean.ReportBean;
-import com.gaotianpu.ftodo.bean.SubjectBean;
 import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.SubjectDa;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.net.ConnectivityManager;
- 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
- 
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class DashboardFragment extends Fragment {
 	private View rootView;
-	private WebView webview;
+
 	private ListView lvDefault;
 
 	private Activity act;
-	private ConnectivityManager cm;
+
 	private MyApplication app;
 	private UserBean user;
-	private LoadReportTask reportTask; 
-	
+
 	private ListAdapter listAdapter;
 	private List<ReportBean> reportList;
 
@@ -48,28 +40,25 @@ public class DashboardFragment extends Fragment {
 
 		act = getActivity();
 		app = (MyApplication) act.getApplicationContext();
-		cm = (ConnectivityManager) act
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		user = app.getUser();
-		act.setTitle( R.string.dashboard_title  );
+		act.setTitle(R.string.dashboard_title);
 
 		lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
-		
+
 		SubjectDa subjectDa = new SubjectDa(act);
-		reportList = subjectDa.load_days_count(user.getUserId());	
+		reportList = subjectDa.load_days_count(user.getUserId());
 		listAdapter = new ListAdapter(act);
-		lvDefault.setAdapter(listAdapter); 
-		
-//		String[] str = new String[x.size()];
-//		str = x.toArray(str);
-//		lvDefault.setAdapter(new ArrayAdapter<String>(act,
-//				android.R.layout.simple_list_item_1, str));
+		lvDefault.setAdapter(listAdapter);
 
-//		 reportTask = new LoadReportTask();
-//		 reportTask.execute((Void) null);
+		// String[] str = new String[x.size()];
+		// str = x.toArray(str);
+		// lvDefault.setAdapter(new ArrayAdapter<String>(act,
+		// android.R.layout.simple_list_item_1, str));
 
-	
+		// reportTask = new LoadReportTask();
+		// reportTask.execute((Void) null);
+
 		// if (app.network_available()) {
 		// webview = new WebView(act);
 		// // webview.getSettings().setJavaScriptEnabled(true);
@@ -83,16 +72,16 @@ public class DashboardFragment extends Fragment {
 
 		return rootView;
 	}
-	
+
 	private class ListAdapter extends BaseAdapter {
-		private LayoutInflater inflater1; 
+		private LayoutInflater inflater1;
 
 		public ListAdapter(Context ctx1) {
-			this.inflater1 = LayoutInflater.from(ctx1); 
+			this.inflater1 = LayoutInflater.from(ctx1);
 		}
 
 		@Override
-		public int getCount() {			 
+		public int getCount() {
 			return reportList.size();
 		}
 
@@ -109,13 +98,14 @@ public class DashboardFragment extends Fragment {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ReportBean item = reportList.get(position);
-			convertView = inflater1.inflate(R.layout.dashboard_listview_item, null);
-			
+			convertView = inflater1.inflate(R.layout.dashboard_listview_item,
+					null);
+
 			TextView tv = (TextView) convertView.findViewById(R.id.tvK);
 			tv.setText(item.getK());
-			
+
 			TextView tvV = (TextView) convertView.findViewById(R.id.tvV);
-			tvV.setText(String.valueOf( item.getV()  ) );
+			tvV.setText(String.valueOf(item.getV()));
 
 			// if(currentSubject.getId() == subject.getId() ){
 			// convertView.setBackgroundColor();
@@ -127,18 +117,17 @@ public class DashboardFragment extends Fragment {
 
 	}
 
-
 	public class LoadReportTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 
-//			SubjectDa subjectDa = new SubjectDa(act);
-//			List<String> x = subjectDa.load_days_count(user.getUserId());		 
-//			String[] str = new String[x.size()];
-//			str = x.toArray(str);
-//
-//			lvDefault.setAdapter(new ArrayAdapter<String>(act,
-//					android.R.layout.simple_list_item_1, str));
+			// SubjectDa subjectDa = new SubjectDa(act);
+			// List<String> x = subjectDa.load_days_count(user.getUserId());
+			// String[] str = new String[x.size()];
+			// str = x.toArray(str);
+			//
+			// lvDefault.setAdapter(new ArrayAdapter<String>(act,
+			// android.R.layout.simple_list_item_1, str));
 
 			return true;
 		}
