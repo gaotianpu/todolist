@@ -203,14 +203,14 @@ public class MainActivity extends Activity {
 
 			break;
 		case 1: // 全部
-//		case 2: // 待办
+		case 2: // 待办
 //		case 3: // 提醒
 			fragment = new ListFragment();
 			Bundle args0 = new Bundle();			
 			args0.putInt(ListFragment.LIST_SORT, position);
 			fragment.setArguments(args0);
 			break;
-		case 2:
+		case 3:
 		default:
 			fragment = new SettingFragment();
 			break;

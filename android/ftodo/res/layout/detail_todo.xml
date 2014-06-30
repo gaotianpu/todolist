@@ -1,33 +1,48 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:descendantFocusability="blocksDescendants" >
 
-    <TextView
-        android:id="@+id/subject_body"
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:includeFontPadding="false"
-        android:lineSpacingExtra="4dp"
-        android:lineSpacingMultiplier="1.2"
-        android:padding="8dip"
-        android:textSize="16sp" />
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="4dp"
+            android:lineSpacingMultiplier="1.2"
+            android:padding="8dip"
+            android:text="计划开始日期："
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/plan_stat_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="4dp"
+            android:lineSpacingMultiplier="1.2"
+            android:padding="8dip"
+            android:text="2014-6-30 今天"
+            android:textSize="16sp" />
+    </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/bottom"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/editbox_boder" >
+        android:layout_height="wrap_content" >
 
-        <EditText
-            android:id="@+id/txtNew"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/append_post_hint"
-            android:imeOptions="actionSend"
-            android:inputType="text" />
+        <ListView
+            android:id="@+id/lvDefault"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+        </ListView>
     </LinearLayout>
+    
+    
 
-</RelativeLayout>
+</LinearLayout>

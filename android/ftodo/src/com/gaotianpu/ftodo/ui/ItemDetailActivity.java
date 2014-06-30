@@ -1,14 +1,21 @@
 package com.gaotianpu.ftodo.ui;
 
- 
-
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import com.gaotianpu.ftodo.MainActivity;
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
+import com.gaotianpu.ftodo.bean.DateBean;
+import com.gaotianpu.ftodo.bean.SettingBean;
 import com.gaotianpu.ftodo.bean.SubjectBean;
 import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.SubjectDa;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -28,11 +35,13 @@ import android.view.View.OnKeyListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.EditText; 
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
- 
 
 public class ItemDetailActivity extends Activity {
 
@@ -40,7 +49,7 @@ public class ItemDetailActivity extends Activity {
 
 	public static final String FRAGMENT_SORT = "FRAGMENT_SORT";
 
-	private static Activity ctx;
+	private static Activity act;
 	private MyApplication app;
 	private static SubjectDa subjectDa;
 
@@ -59,8 +68,8 @@ public class ItemDetailActivity extends Activity {
 		subject_local_id = intent.getLongExtra(SUBJECT_LOCAL_ID, 0);
 
 		// 1 全局
-		ctx = this;
-		app = (MyApplication) ctx.getApplicationContext();
+		act = this;
+		app = (MyApplication) act.getApplicationContext();
 		user = app.getUser();
 		subjectDa = new SubjectDa(this);
 
@@ -91,24 +100,24 @@ public class ItemDetailActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		int id = item.getItemId();  
-		
-//		Log.i("back", String.valueOf( KeyEvent.KEYCODE_HOME ));
-//		 
-//		//goback?
-// 		Runtime runtime = Runtime.getRuntime();
-// 		try {
-// 			Log.i("back", String.valueOf( item.getItemId() )  );
-//			runtime.exec("input keyevent " + KeyEvent.KEYCODE_BACK);
-//			return true;
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
- 		
- 		if (item.isChecked()) {			
+		int id = item.getItemId();
+
+		// Log.i("back", String.valueOf( KeyEvent.KEYCODE_HOME ));
+		//
+		// //goback?
+		// Runtime runtime = Runtime.getRuntime();
+		// try {
+		// Log.i("back", String.valueOf( item.getItemId() ) );
+		// runtime.exec("input keyevent " + KeyEvent.KEYCODE_BACK);
+		// return true;
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+
+		if (item.isChecked()) {
 			return true;
-		} 
+		}
 
 		switch (id) {
 		case R.id.action_item_edit:
@@ -116,10 +125,11 @@ public class ItemDetailActivity extends Activity {
 			getFragmentManager().beginTransaction()
 					.replace(R.id.container, new DetailEditFragment()).commit();
 			break;
-		// case R.id.action_item_todo:
-		// getFragmentManager().beginTransaction()
-		// .replace(R.id.container, new DetailTodoFragment()).commit();
-		// break;
+		case R.id.action_item_todo:
+			item.setChecked(true);
+			getFragmentManager().beginTransaction()
+					.replace(R.id.container, new DetailTodoFragment()).commit();
+			break;
 		// case R.id.action_item_remind:
 		// getFragmentManager().beginTransaction()
 		// .replace(R.id.container, new DetailRemindFragment())
@@ -136,47 +146,41 @@ public class ItemDetailActivity extends Activity {
 			return super.onOptionsItemSelected(item); // 如果没有这条语句，Fragment下的菜单将不会被执行
 		}
 
-		
 		return super.onOptionsItemSelected(item);
 	}
-	
-	
-	
-	private void delete(){
-		new AlertDialog.Builder(ctx)
-		.setTitle(R.string.dialog_delete_title)
-		.setMessage(R.string.dialog_delete_message)
-		.setPositiveButton(R.string.dialog_delete_sure,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog,
-							int i) { 
-						
-						 
-							subjectDa.delete(currentSubject.getId());
-							
-							Intent intent=new Intent();
-							intent.setClass(getApplicationContext(), MainActivity.class);
-							startActivity(intent);
-							finish();
 
-							
-							//goback?
-//							Runtime runtime = Runtime.getRuntime();
-//							runtime.exec("input keyevent " + KeyEvent.KEYCODE_BACK);
-						 
-						
-						Log.i("dialog", "ok");
-					}
-				})
-		.setNegativeButton(R.string.dialog_delete_cancel,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog,
-							int i) {
-						//Log.i("dialog", "cancel"); 
-					}
-				}).show();
+	private void delete() {
+		new AlertDialog.Builder(act)
+				.setTitle(R.string.dialog_delete_title)
+				.setMessage(R.string.dialog_delete_message)
+				.setPositiveButton(R.string.dialog_delete_sure,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int i) {
+
+								subjectDa.delete(currentSubject.getId());
+
+								Intent intent = new Intent();
+								intent.setClass(getApplicationContext(),
+										MainActivity.class);
+								startActivity(intent);
+								finish();
+
+								// goback?
+								// Runtime runtime = Runtime.getRuntime();
+								// runtime.exec("input keyevent " +
+								// KeyEvent.KEYCODE_BACK);
+
+								Log.i("dialog", "ok");
+							}
+						})
+				.setNegativeButton(R.string.dialog_delete_cancel,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int i) {
+								// Log.i("dialog", "cancel");
+							}
+						}).show();
 	}
 
 	// 浏览模式
@@ -287,7 +291,7 @@ public class ItemDetailActivity extends Activity {
 
 					SubjectBean subject = subjectList.get(arg2);
 
-					Intent detailIntent = new Intent(ctx,
+					Intent detailIntent = new Intent(act,
 							ItemDetailActivity.class);
 					detailIntent.putExtra(ItemDetailActivity.SUBJECT_LOCAL_ID,
 							subject.getId());
@@ -359,7 +363,7 @@ public class ItemDetailActivity extends Activity {
 			txtEdit.requestFocus();
 
 			// 自动开启软键盘
-			imm = (InputMethodManager) ctx
+			imm = (InputMethodManager) act
 					.getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 
@@ -382,7 +386,7 @@ public class ItemDetailActivity extends Activity {
 			switch (id) {
 			case R.id.action_item_save:
 				String newTxt = txtEdit.getText().toString().trim();
-				ctx.setTitle(newTxt);
+				act.setTitle(newTxt);
 				currentSubject.setBody(newTxt);
 				subjectDa.edit_content(currentSubject.getId(), newTxt);
 
@@ -404,12 +408,126 @@ public class ItemDetailActivity extends Activity {
 
 	// todo模式
 	public static class DetailTodoFragment extends Fragment {
+		private List<DateBean> dates;
+		private ListView lvDefault;
+		private TextView plan_stat_date;
+		private PickDatesAdapter dtAdapter;
+
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.detail_todo, container,
 					false);
+
+			plan_stat_date = (TextView) rootView
+					.findViewById(R.id.plan_stat_date);
+			lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
+
+			dates = new ArrayList<DateBean>();
+
+			dates.add(new DateBean(getDateStr(0), getDateStr(0) + "今天", true));
+			dates.add(new DateBean(getDateStr(1), getDateStr(1) + " 明天", false));
+			dates.add(new DateBean(getDateStr(2), getDateStr(2) + " 后天", false));
+			dates.add(new DateBean(getDateStr(10), getDateStr(10) + " 10天后", false));
+
+			dtAdapter = new PickDatesAdapter(act);
+			lvDefault.setAdapter(dtAdapter);
+
+			lvDefault_setOnItemClickListener();
+
 			return rootView;
+		}
+
+		private String getDateStr(int days) {
+			Date date = new Date();// 取时间
+			Calendar calendar = new GregorianCalendar();
+			calendar.setTime(date);
+			calendar.add(calendar.DATE, days);
+			date = calendar.getTime();
+			SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+			// Date date = fmt.parse(szDate);
+			String tommorrow = fmt.format(calendar.getTime());
+			return tommorrow;
+		}
+
+		private void lvDefault_setOnItemClickListener() {
+			// 单击，查看明细
+			lvDefault.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1,
+						int arg2, long arg3) {
+
+					DateBean item = dates.get(arg2);
+					if (item.getV()) {
+						return;
+					}
+
+					item.setV(true);
+					for (DateBean d : dates) {
+						if (d.getId() != item.getId()) {
+							d.setV(false);
+						}
+					}
+					plan_stat_date.setText(item.getK());
+					dtAdapter.notifyDataSetChanged();
+
+					// 设置option菜单项？
+					// getFragmentManager().beginTransaction()
+					// .replace(R.id.container, new
+					// DetailReadFragment()).commit();
+
+				}
+			});
+
+		}
+
+		private class PickDatesAdapter extends BaseAdapter {
+			private LayoutInflater inflater1;
+			private int temp = -1;
+
+			public PickDatesAdapter(Context ctx1) {
+				this.inflater1 = LayoutInflater.from(ctx1);
+
+			}
+
+			@Override
+			public int getCount() {
+				// TODO Auto-generated method stub
+				return dates.size();
+			}
+
+			@Override
+			public Object getItem(int position) {
+				return position;
+			}
+
+			@Override
+			public long getItemId(int position) {
+				return position;
+			}
+
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				convertView = inflater1.inflate(
+						R.layout.detail_item_todo_dates_item, null);
+				DateBean item = dates.get(position);
+
+				// ui
+				TextView tv = (TextView) convertView.findViewById(R.id.tvK);
+				RadioButton picked = (RadioButton) convertView
+						.findViewById(R.id.radioDate);
+
+				tv.setText(item.getK());
+				picked.setChecked(item.getV());
+
+				// if(currentSubject.getId() == subject.getId() ){
+				// convertView.setBackgroundColor();
+				// }
+
+				return convertView;
+
+			}
+
 		}
 	}
 

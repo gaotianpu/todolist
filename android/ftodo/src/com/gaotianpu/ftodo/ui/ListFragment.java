@@ -159,8 +159,8 @@ public class ListFragment extends Fragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// onCreateView setHasOptionsMenu(true);
-		// menu.clear();
-		// inflater.inflate(R.menu.list, menu);
+		 menu.clear();
+		 inflater.inflate(R.menu.list, menu);
 
 	}
 
@@ -230,11 +230,11 @@ public class ListFragment extends Fragment {
 					subjectDa.set_todo(subject.getId(), subject.getIsTodo());
 					listAdapter.notifyDataSetInvalidated();
 					break;
-				case R.id.action_list_remind:
-					subject.setIsRemind(!subject.getIsRemind());
-					subjectDa.set_remind(subject.getId(), subject.getIsRemind());
-					listAdapter.notifyDataSetInvalidated();
-					break;
+//				case R.id.action_list_remind:
+//					subject.setIsRemind(!subject.getIsRemind());
+//					subjectDa.set_remind(subject.getId(), subject.getIsRemind());
+//					listAdapter.notifyDataSetInvalidated();
+//					break;
 				case R.id.action_list_normal:
 				default:
 					Intent detailIntent = new Intent(act,
@@ -406,14 +406,14 @@ public class ListFragment extends Fragment {
 					ic.setColorFilter(Color.RED);
 				}
 				break;
-			case R.id.action_list_remind:
-				convertView = inflater1.inflate(R.layout.listview_item_remind,
-						null);
-				ic = (ImageView) convertView.findViewById(R.id.icon);
-				if (subject.getIsRemind()) {
-					ic.setColorFilter(Color.RED);
-				}
-				break;
+//			case R.id.action_list_remind:
+//				convertView = inflater1.inflate(R.layout.listview_item_remind,
+//						null);
+//				ic = (ImageView) convertView.findViewById(R.id.icon);
+//				if (subject.getIsRemind()) {
+//					ic.setColorFilter(Color.RED);
+//				}
+//				break;
 			case R.id.action_list_normal:
 			default:
 				convertView = inflater1.inflate(R.layout.listview_item, null);
