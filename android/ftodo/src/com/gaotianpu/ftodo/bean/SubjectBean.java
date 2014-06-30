@@ -1,5 +1,7 @@
 package com.gaotianpu.ftodo.bean;
 
+import java.util.Date;
+
 public class SubjectBean {
 	public static final String PK_ID = "pk_id";
 	public static final String BODY = "body";
@@ -97,4 +99,14 @@ public class SubjectBean {
 	public void setIsDel(int isDel) {
 		this.isDel = isDel;
 	}
+	
+	private Date _plan_start_date;
+	public Date getPlanStartDate() {
+		return _plan_start_date;
+	}
+	public void setPlanStartDate(Date plan_start_date) {
+		this._plan_start_date = plan_start_date;
+	}
+	
+	
 }

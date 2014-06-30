@@ -24,6 +24,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "is_del INTEGER NOT NULL default 0,"	
 				+ "parent_id INTEGER NOT NULL default 0,"
 				+ "is_todo INTEGER NOT NULL default 0,"
+				+ "plan_start_date date ,"
 				+ "is_remind INTEGER NOT NULL default 0 ,"
 				+ "remind_datetime datetime ,"
 				+ "remind_frequency INTEGER NOT NULL default 0,"
