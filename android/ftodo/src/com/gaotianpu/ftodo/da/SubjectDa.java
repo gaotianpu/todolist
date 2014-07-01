@@ -1,6 +1,7 @@
 package com.gaotianpu.ftodo.da;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.gaotianpu.ftodo.bean.ReportBean;
@@ -61,19 +62,23 @@ public class SubjectDa {
 		return buf.toString();
 	}
 
-	public long insert2(long user_id, long remote_id, String content,
-			String creation_date, int last_update, int last_sync, int is_del) {
+	public long insert2(SubjectBean subject ) {
 		ContentValues values = new ContentValues();
-		values.put("user_id", user_id);
-		values.put("body", content);
-		values.put("creation_date", creation_date); //
-		values.put("last_update", last_update);
-		values.put("last_sync", last_sync);
-		values.put("is_del", is_del);
-
+		values.put("user_id", subject.getUserId() );
+		values.put("body", subject.getBody() );
+		values.put("creation_date", subject.getCreationDate()); //
+		values.put("last_update", subject.getUpdateDate());
+		values.put("last_sync", 1);
+		values.put("is_del", subject.getIsDel());
+		
+		long remote_id= subject.getRemoteId();
 		values.put("remote_id", remote_id);
-		values.put("local_version", 0);
-		values.put("server_version", 0);
+		values.put("local_version", subject.getLocalVersion());
+		values.put("server_version", subject.getLocalVersion()); //?
+		
+		values.put("is_todo", subject.getIsTodo());
+		values.put("is_remind", subject.getIsRemind()); //
+		values.put("plan_start_date", subject.getPlanStartDate()); //
 
 		// 检查sqlite 是否有remote_id, 无
 		db = dbHelper.getWritableDatabase();

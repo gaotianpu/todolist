@@ -100,11 +100,11 @@ public class SubjectBean {
 		this.isDel = isDel;
 	}
 	
-	private Date _plan_start_date;
-	public Date getPlanStartDate() {
+	private String _plan_start_date;
+	public String getPlanStartDate() {
 		return _plan_start_date;
 	}
-	public void setPlanStartDate(Date plan_start_date) {
+	public void setPlanStartDate(String plan_start_date) {
 		this._plan_start_date = plan_start_date;
 	}
 	

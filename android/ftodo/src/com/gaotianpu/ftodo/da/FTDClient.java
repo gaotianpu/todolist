@@ -172,7 +172,11 @@ public class FTDClient {
 				subject.setBody(item.getString("body"));
 				subject.setCreationDate(item.getString("created_date"));
 				subject.setIsDel(item.getInt("is_delete"));
-
+				
+				subject.setIsTodo(item.getInt("is_todo")==1 );
+				subject.setIsRemind(item.getInt("is_remind")==1);
+				 	
+				subject.setPlanStartDate( item.getString("plan_start_date") );
 				subjectList.add(subject);
 
 				// item.getString("created_date");

@@ -14,6 +14,7 @@ import com.gaotianpu.ftodo.bean.SettingBean;
 import com.gaotianpu.ftodo.bean.SubjectBean;
 import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.SubjectDa;
+import com.gaotianpu.ftodo.da.Util;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -425,10 +426,10 @@ public class ItemDetailActivity extends Activity {
 
 			dates = new ArrayList<DateBean>();
 
-			dates.add(new DateBean(getDateStr(0), getDateStr(0) + "今天", true));
-			dates.add(new DateBean(getDateStr(1), getDateStr(1) + " 明天", false));
-			dates.add(new DateBean(getDateStr(2), getDateStr(2) + " 后天", false));
-			dates.add(new DateBean(getDateStr(10), getDateStr(10) + " 10天后", false));
+			dates.add(new DateBean(Util.getDateStr(0), Util.getDateStr(0) + "今天", true));
+			dates.add(new DateBean(Util.getDateStr(1), Util.getDateStr(1) + " 明天", false));
+			dates.add(new DateBean(Util.getDateStr(2), Util.getDateStr(2) + " 后天", false));
+			dates.add(new DateBean(Util.getDateStr(10), Util.getDateStr(10) + " 10天后", false));
 
 			dtAdapter = new PickDatesAdapter(act);
 			lvDefault.setAdapter(dtAdapter);
@@ -438,17 +439,7 @@ public class ItemDetailActivity extends Activity {
 			return rootView;
 		}
 
-		private String getDateStr(int days) {
-			Date date = new Date();// 取时间
-			Calendar calendar = new GregorianCalendar();
-			calendar.setTime(date);
-			calendar.add(calendar.DATE, days);
-			date = calendar.getTime();
-			SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-			// Date date = fmt.parse(szDate);
-			String tommorrow = fmt.format(calendar.getTime());
-			return tommorrow;
-		}
+		
 
 		private void lvDefault_setOnItemClickListener() {
 			// 单击，查看明细

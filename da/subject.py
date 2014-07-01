@@ -89,7 +89,7 @@ def load_page(cust_id,offset,limit):
     
 def load_page2(cust_id,offset,limit): 
     rows = list(dbr.select(table_name,
-        what="pk_id,user_id,body,created_date,last_update,local_id,is_delete,is_todo,is_remind",
+        what="pk_id,user_id,body,created_date,last_update,local_id,is_delete,is_todo,is_remind,plan_start_date",
         where="user_id=$cust_id", 
         order="pk_id asc",
         offset=offset,limit=limit,
@@ -98,7 +98,7 @@ def load_page2(cust_id,offset,limit):
 
 def load_page3(cust_id,min_pk_id,limit): 
     rows = list(dbr.select(table_name,
-        what="pk_id,user_id,body,created_date,last_update,local_id,is_delete,is_todo,is_remind",
+        what="pk_id,user_id,body,created_date,last_update,local_id,is_delete,is_todo,is_remind,plan_start_date",
         where="user_id=$cust_id and pk_id>$min_pk_id", 
         order="pk_id",
         offset=0,limit=limit,

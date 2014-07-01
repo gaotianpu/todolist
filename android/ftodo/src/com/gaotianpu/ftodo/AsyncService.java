@@ -206,10 +206,7 @@ public class AsyncService extends Service {
 							for (SubjectBean s : subjectList) {
 								uid = s.getUserId();
 
-								subjectDa.insert2(s.getUserId(),
-										s.getRemoteId(), s.getBody(),
-										String.valueOf(s.getCreationDate()), 1,
-										1,s.getIsDel());
+								subjectDa.insert2(s );
 
 							}
 

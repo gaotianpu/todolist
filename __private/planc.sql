@@ -114,9 +114,9 @@ CREATE TABLE `subjects` (
   `task_status` tinyint(4) DEFAULT '0' COMMENT '尚未开始 NotBegun 0，已开始 Doing 10，结束Done2，Block3',
   `closed_date` datetime DEFAULT NULL,
   `is_delete` tinyint(4) DEFAULT '0',
-  `plan_start_date` datetime DEFAULT NULL,
-  `plan_closed_date` datetime DEFAULT NULL,
-  `start_date` datetime DEFAULT NULL,
+  `plan_start_date` date DEFAULT NULL,
+  `plan_closed_date` date DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
   `terms` varchar(3000) NOT NULL DEFAULT '',
   `tf_idf` varchar(3000) NOT NULL DEFAULT '',
   `device_type` varchar(200) DEFAULT NULL,
@@ -284,4 +284,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-06-27 11:15:06
+-- Dump completed on 2014-07-01 11:39:17

@@ -7,18 +7,20 @@ import org.json.JSONObject;
 
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
- 
+
 import com.gaotianpu.ftodo.bean.SubjectBean;
 import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.FTDClient;
 import com.gaotianpu.ftodo.da.SubjectDa;
+import com.gaotianpu.ftodo.da.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
- 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 
@@ -26,14 +28,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
- 
+
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
- 
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnKeyListener;
@@ -44,7 +46,6 @@ import android.widget.EditText;
 
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-
 
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -60,11 +61,10 @@ public class ListFragment extends Fragment {
 
 	private int list_sort = 0; // 1全部,2待办,3提醒
 
-	private MyApplication app; 
+	private MyApplication app;
 	private Activity act;
 	private UserBean user;
 	private long cust_id = 0;
-	
 
 	private SubjectDa subjectDa;
 	private FTDClient ftd;
@@ -93,8 +93,8 @@ public class ListFragment extends Fragment {
 
 		// 1.系统全局
 		act = this.getActivity();
-		app = (MyApplication) act.getApplicationContext(); 
-		
+		app = (MyApplication) act.getApplicationContext();
+
 		user = app.getUser();
 		cust_id = user.getUserId();
 
@@ -148,19 +148,18 @@ public class ListFragment extends Fragment {
 
 		return rootView;
 	}
-	
+
 	@Override
 	public void onResume() {
 		listAdapter.notifyDataSetChanged();
 		super.onResume();
 	}
-	
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// onCreateView setHasOptionsMenu(true);
-		 menu.clear();
-		 inflater.inflate(R.menu.list, menu);
+		menu.clear();
+		inflater.inflate(R.menu.list, menu);
 
 	}
 
@@ -226,15 +225,33 @@ public class ListFragment extends Fragment {
 
 				switch (action_menu_checked_menu) {
 				case R.id.action_list_todo:
-					subject.setIsTodo(!subject.getIsTodo());
-					subjectDa.set_todo(subject.getId(), subject.getIsTodo());
+					List dates = Util.getPickDates();
+					if(subject.getIsTodo()){
+						dates.add("非待办事项");
+					}
+					String[] pickdates = (String[])dates.toArray(new String[dates.size()]);
+					new AlertDialog.Builder(act)
+							.setTitle(subject.getBody())
+							//.setIcon(android.R.drawable.ic_dialog_info)
+							.setSingleChoiceItems(
+									pickdates, 0,
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											dialog.dismiss();
+										}
+									}).setNegativeButton("取消", null).show();
+
+					// subject.setIsTodo(!subject.getIsTodo());
+					// subjectDa.set_todo(subject.getId(), subject.getIsTodo());
 					listAdapter.notifyDataSetInvalidated();
 					break;
-//				case R.id.action_list_remind:
-//					subject.setIsRemind(!subject.getIsRemind());
-//					subjectDa.set_remind(subject.getId(), subject.getIsRemind());
-//					listAdapter.notifyDataSetInvalidated();
-//					break;
+				// case R.id.action_list_remind:
+				// subject.setIsRemind(!subject.getIsRemind());
+				// subjectDa.set_remind(subject.getId(), subject.getIsRemind());
+				// listAdapter.notifyDataSetInvalidated();
+				// break;
 				case R.id.action_list_normal:
 				default:
 					Intent detailIntent = new Intent(act,
@@ -305,7 +322,7 @@ public class ListFragment extends Fragment {
 					public void onRefresh() {
 						new Handler().postDelayed(new Runnable() {
 							public void run() {
-								
+
 								if (app.network_available()) {
 									download();
 								} else {
@@ -406,14 +423,14 @@ public class ListFragment extends Fragment {
 					ic.setColorFilter(Color.RED);
 				}
 				break;
-//			case R.id.action_list_remind:
-//				convertView = inflater1.inflate(R.layout.listview_item_remind,
-//						null);
-//				ic = (ImageView) convertView.findViewById(R.id.icon);
-//				if (subject.getIsRemind()) {
-//					ic.setColorFilter(Color.RED);
-//				}
-//				break;
+			// case R.id.action_list_remind:
+			// convertView = inflater1.inflate(R.layout.listview_item_remind,
+			// null);
+			// ic = (ImageView) convertView.findViewById(R.id.icon);
+			// if (subject.getIsRemind()) {
+			// ic.setColorFilter(Color.RED);
+			// }
+			// break;
 			case R.id.action_list_normal:
 			default:
 				convertView = inflater1.inflate(R.layout.listview_item, null);
@@ -480,11 +497,7 @@ public class ListFragment extends Fragment {
 
 							for (SubjectBean s : subjectList) {
 
-								long local_id = subjectDa.insert2(
-										s.getUserId(), s.getRemoteId(),
-										s.getBody(),
-										String.valueOf(s.getCreationDate()), 1,
-										1, s.getIsDel());
+								long local_id = subjectDa.insert2( s );
 
 								s.setId(local_id);
 								// insert_new_item(s, 0);
