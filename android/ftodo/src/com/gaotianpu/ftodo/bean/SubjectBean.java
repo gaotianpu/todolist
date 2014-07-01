@@ -1,8 +1,9 @@
 package com.gaotianpu.ftodo.bean;
 
-import java.sql.Date;
+import java.util.Date;
 
 import android.R;
+import android.util.Log;
 
 import com.gaotianpu.ftodo.da.Util;
  
@@ -114,7 +115,32 @@ public class SubjectBean {
 	}
 	
 	public int getPlanStartSort(){
-		//Date d = Util.str2Date(_plan_start_date);
+		Date d = Util.str2Date(_plan_start_date);
+		if(d==null){
+			return 0;
+		}
+		
+		//Log.i("getPlanStartSort",Util.getDateStr(0));
+		Log.i("getPlanStartSort",_plan_start_date);
+		
+		if(d.getTime() < Util.str2Date(Util.getDateStr(0)).getTime()){
+			return 1;
+		}
+		if(_plan_start_date.equals(Util.getDateStr(0))  ){
+			return 2;
+		}
+		
+		if(_plan_start_date.equals(Util.getDateStr(1))  ){
+			return 3;
+		}
+		
+		if(_plan_start_date.equals(Util.getDateStr(2))  ){
+			return 4;
+		}
+		
+		if(d.getTime() > Util.str2Date(Util.getDateStr(0)).getTime()){
+			return 5;
+		}
 		//this._plan_start_date
 		//未设置 0
 		//过期 1

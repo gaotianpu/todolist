@@ -44,6 +44,7 @@ public class ListTodoFragment extends Fragment {
 	private List<SubjectBean> taskList2 = new ArrayList<SubjectBean>();
 	private List<SubjectBean> taskList3 = new ArrayList<SubjectBean>();
 	private List<SubjectBean> taskList4 = new ArrayList<SubjectBean>();
+	private List<SubjectBean> taskList5 = new ArrayList<SubjectBean>();
 
 	private List<String> groups;
 
@@ -94,25 +95,38 @@ public class ListTodoFragment extends Fragment {
 			case 4:
 				taskList4.add(s);
 				break;
+			case 5:
+				taskList5.add(s);
+				break;
 			}
 		}
 
 		taskList = new ArrayList<Object>();
-		taskList.add(groups.get(0));
-		taskList.addAll(taskList0);
+		if (taskList0.size() > 0) {
+			taskList.add(groups.get(0));
+			taskList.addAll(taskList0);
+		}
 
-		taskList.add(groups.get(1));
-		taskList.addAll(taskList1);
-
-		taskList.add(groups.get(2));
-		taskList.addAll(taskList2);
-
-		taskList.add(groups.get(3));
-		taskList.addAll(taskList3);
-
-		taskList.add(groups.get(4));
-		taskList.addAll(taskList4);
-
+		if (taskList1.size() > 0) {
+			taskList.add(groups.get(1));
+			taskList.addAll(taskList1);
+		}
+		if (taskList2.size() > 0) {
+			taskList.add(groups.get(2));
+			taskList.addAll(taskList2);
+		}
+		if (taskList3.size() > 0) {
+			taskList.add(groups.get(3));
+			taskList.addAll(taskList3);
+		}
+		if (taskList4.size() > 0) {
+			taskList.add(groups.get(4));
+			taskList.addAll(taskList4);
+		}
+		if (taskList5.size() > 0) {
+			taskList.add(groups.get(5));
+			taskList.addAll(taskList5);
+		}
 		listAdapter.notifyDataSetChanged();
 
 	}

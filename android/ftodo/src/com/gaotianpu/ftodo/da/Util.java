@@ -37,7 +37,7 @@ public class Util {
 	}
 	
 	public static Date str2Date(String dateString) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			Date date = sdf.parse(dateString);
 			return date;
