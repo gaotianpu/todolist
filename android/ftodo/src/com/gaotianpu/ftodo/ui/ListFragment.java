@@ -219,7 +219,7 @@ public class ListFragment extends Fragment {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 
-				SubjectBean subject = subjectList.get(arg2);
+				final SubjectBean subject = subjectList.get(arg2);
 				// Log.i("setOnItemClickListener", String.valueOf(arg2) + ","
 				// + String.valueOf(subject.getId()));
 
@@ -234,18 +234,41 @@ public class ListFragment extends Fragment {
 							.setTitle(subject.getBody())
 							//.setIcon(android.R.drawable.ic_dialog_info)
 							.setSingleChoiceItems(
-									pickdates, 0,
+									pickdates, -1,
 									new DialogInterface.OnClickListener() {
 										public void onClick(
 												DialogInterface dialog,
 												int which) {
+											
+											switch(which){
+											case 0:
+											case 1:
+											case 2: 
+												String start_date = Util.getDateStr(which);
+												subjectDa.set_todo_start_date(subject.getId(), start_date);
+												subject.setIsTodo(true);
+												subject.setPlanStartDate(start_date);
+												break;
+											case 3:
+												
+												String start_date2 = Util.getDateStr(10);
+												subjectDa.set_todo_start_date(subject.getId(), start_date2);
+												subject.setIsTodo(true);
+												subject.setPlanStartDate(start_date2);
+												break;
+											case 4:
+												subject.setIsTodo(false);
+												subjectDa.set_todo(subject.getId(), false);
+												break;
+											} 
+											listAdapter.notifyDataSetInvalidated();
 											dialog.dismiss();
 										}
 									}).setNegativeButton("取消", null).show();
 
 					// subject.setIsTodo(!subject.getIsTodo());
 					// subjectDa.set_todo(subject.getId(), subject.getIsTodo());
-					listAdapter.notifyDataSetInvalidated();
+					
 					break;
 				// case R.id.action_list_remind:
 				// subject.setIsRemind(!subject.getIsRemind());
@@ -412,6 +435,9 @@ public class ListFragment extends Fragment {
 		public View getView(int position, View convertView, ViewGroup parent) {
 
 			SubjectBean subject = subjectList.get(position);
+			
+			
+			
 			ImageView ic;
 
 			switch (action_sort) {
@@ -421,6 +447,13 @@ public class ListFragment extends Fragment {
 				ic = (ImageView) convertView.findViewById(R.id.icon);
 				if (subject.getIsTodo()) {
 					ic.setColorFilter(Color.RED);
+				}
+				TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
+				//TextView tvStartDate = (TextView) convertView.findViewById(R.id.tvStartDate);
+				
+				tv.setText(subject.getBody().replaceAll("\n", ""));
+				if(subject.getIsTodo() && subject.getPlanStartDate()!=null){
+					//tvStartDate.setText("待办日期:" + subject.getPlanStartDate() ); 
 				}
 				break;
 			// case R.id.action_list_remind:
@@ -439,12 +472,12 @@ public class ListFragment extends Fragment {
 					// convertView.findViewById(R.id.cb);
 					// cb.setVisibility(View.VISIBLE);
 				}
-
+				TextView tv1 = (TextView) convertView.findViewById(R.id.tvBody);
+				tv1.setText(subject.getBody().replaceAll("\n", ""));
 				break;
 			}
 
-			TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
-			tv.setText("" + subject.getBody().replaceAll("\n", ""));
+			
 
 			return convertView;
 

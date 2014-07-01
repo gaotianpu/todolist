@@ -44,42 +44,40 @@ public class FTDClient {
 		// 单例模式？
 	}
 
-	public void update_task(long user_id, String access_token, long remote_id,
-			String content, AsyncHttpResponseHandler responseHandler) {
-		String url = RES_BASE_URL + "edit";
+//	public void update_task(long user_id, String access_token, long remote_id,
+//			String content, AsyncHttpResponseHandler responseHandler) {
+//		String url = RES_BASE_URL + "edit";
+//
+//		RequestParams params = new RequestParams();
+//		params.put("user_id", String.valueOf(user_id));
+//		params.put("remote_id", String.valueOf(remote_id));
+//		params.put("access_token", access_token);
+//		params.put("content", content);
+//		client.post(url, params, responseHandler);
+//		return;
+//	}
 
-		RequestParams params = new RequestParams();
-		params.put("user_id", String.valueOf(user_id));
-		params.put("remote_id", String.valueOf(remote_id));
-		params.put("access_token", access_token);
-		params.put("content", content);
-		client.post(url, params, responseHandler);
-		return;
-	}
-
-	public void post_task(long user_id, String access_token, long remote_id,
-			String content, String device_type, String devie_no, long local_id,
-			String creation_date, String last_update, boolean is_todo,
-			boolean is_remind, int local_version, int is_del,
+	public void post_task(long user_id, String access_token,SubjectBean subject, 
 			AsyncHttpResponseHandler responseHandler) {
 
-		String edit_or_new = (remote_id == 0) ? "new" : "edit";
-		String url = RES_BASE_URL + edit_or_new;
-
+		String edit_or_new = (subject.getRemoteId() == 0) ? "new" : "edit";
+		String url = RES_BASE_URL + edit_or_new; 
 		Log.i("AsyncService", url);
 
 		RequestParams params = new RequestParams();
 		params.put("user_id", String.valueOf(user_id));
 		params.put("access_token", access_token);
-		params.put("content", content);
-		params.put("creation_date", creation_date); //
-		params.put("last_update", last_update); //
-		params.put("is_todo", String.valueOf(is_todo ? 1 : 0));
-		params.put("is_remind", String.valueOf(is_remind ? 1 : 0));
-		params.put("local_id", String.valueOf(local_id));
-		params.put("remote_id", String.valueOf(remote_id));
-		params.put("local_version", String.valueOf(local_version));
-		params.put("is_del", String.valueOf(is_del));
+		params.put("content", subject.getBody());
+		params.put("creation_date", subject.getCreationDate()); //
+		params.put("last_update", subject.getUpdateDate()); //
+		params.put("is_todo", String.valueOf(subject.getIsTodo() ? 1 : 0));
+		params.put("is_remind", String.valueOf(subject.getIsRemind() ? 1 : 0));
+		params.put("local_id", String.valueOf(subject.getId()));
+		params.put("remote_id", String.valueOf(subject.getRemoteId()));
+		params.put("local_version", String.valueOf(subject.getLocalVersion()));
+		params.put("is_del", String.valueOf(subject.getIsDel()));
+		
+		params.put("plan_start_date", subject.getPlanStartDate());
 
 		Log.i("AsyncService", params.toString());
 
@@ -125,8 +123,7 @@ public class FTDClient {
 
 	public void search(long user_id, String access_token, String query,
 			long offset, int size, AsyncHttpResponseHandler responseHandler) {
-		// public void update_task(long user_id,String access_token,long
-		// remote_id,String content,AsyncHttpResponseHandler responseHandler){
+		 
 		String url = RES_BASE_URL + "search";
 
 		RequestParams params = new RequestParams();

@@ -146,6 +146,18 @@ public class SubjectDa {
 		update_version(db, local_id);
 		db.close();
 	}
+	
+	public void set_todo_start_date(long local_id, String start_date) {
+		ContentValues values = new ContentValues();
+		values.put("is_todo", 1);
+		values.put("plan_start_date", start_date);
+
+		db = dbHelper.getWritableDatabase();
+		db.update("subjects", values, "pk_id=?",
+				new String[] { String.valueOf(local_id) });
+		update_version(db, local_id);
+		db.close();
+	}
 
 	private void update_version(SQLiteDatabase db, long local_id) {
 		// 累加版本号
@@ -251,7 +263,7 @@ public class SubjectDa {
 
 	private final String[] list_selected_fields = new String[] { "pk_id",
 			"user_id", "body", "creation_date", "last_update", "remote_id",
-			"is_todo", "is_remind", "parent_id", "local_version", "is_del" };
+			"is_todo", "is_remind", "parent_id", "local_version", "is_del","plan_start_date" };
 
 	private List<SubjectBean> load_list(Cursor cursor) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
@@ -268,7 +280,8 @@ public class SubjectDa {
 			subject.setIsRemind(cursor.getInt(7) == 1 ? true : false);
 			subject.setParentId(cursor.getLong(8));
 			subject.setLocalVersion(cursor.getInt(9));
-			subject.setIsDel(cursor.getInt(10));
+			subject.setIsDel(cursor.getInt(10));			
+			subject.setPlanStartDate(cursor.getString( 11));
 
 			subjectList.add(subject);
 			cursor.moveToNext();

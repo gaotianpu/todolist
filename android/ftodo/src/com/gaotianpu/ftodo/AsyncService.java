@@ -97,11 +97,11 @@ public class AsyncService extends Service {
 	}
 
 	private void upload() {
-		 Log.i(TAG, "has_active_user " );
+		// Log.i(TAG, "has_active_user " );
 		// need changed?
 		List<SubjectBean> subjectList = subjectDa
 				.load_changed_but_not_uploaded(user.getUserId());
-		Log.i(TAG,  String.valueOf(subjectList.size() ) );
+		//Log.i(TAG,  String.valueOf(subjectList.size() ) );
 		if (subjectList.size() == 0) {
 			return;
 		}
@@ -120,14 +120,7 @@ public class AsyncService extends Service {
 			
 			Log.i(TAG, String.valueOf(subject.getRemoteId()));
 			
-			ftd.post_task(user_id, user.getAccessToken(),
-					subject.getRemoteId(), subject.getBody(), device_type,
-					devie_no, subject.getId(), subject.getCreationDate(),
-					subject.getUpdateDate(),
-					subject.getIsTodo(),
-					subject.getIsRemind(),
-					subject.getLocalVersion(),
-					subject.getIsDel(),
+			ftd.post_task(user_id, user.getAccessToken(), subject,
 					new JsonHttpResponseHandler() {
 						@Override
 						public void onSuccess(JSONObject result) {
