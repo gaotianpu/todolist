@@ -10,10 +10,11 @@ package com.gaotianpu.ftodo;
 public final class R {
     public static final class array {
         public static final int drawer_menu_items=0x7f070000;
-        public static final int pref_example_list_titles=0x7f070001;
-        public static final int pref_example_list_values=0x7f070002;
-        public static final int pref_sync_frequency_titles=0x7f070003;
-        public static final int pref_sync_frequency_values=0x7f070004;
+        public static final int pref_example_list_titles=0x7f070002;
+        public static final int pref_example_list_values=0x7f070003;
+        public static final int pref_sync_frequency_titles=0x7f070004;
+        public static final int pref_sync_frequency_values=0x7f070005;
+        public static final int todo_plan_date_sorts=0x7f070001;
     }
     public static final class attr {
     }
@@ -38,26 +39,27 @@ public final class R {
         public static final int ic_launcher=0x7f020006;
     }
     public static final class id {
-        public static final int action_forgot_password=0x7f0a0029;
-        public static final int action_item_cancel=0x7f0a0025;
-        public static final int action_item_delete=0x7f0a0023;
-        public static final int action_item_edit=0x7f0a0021;
-        public static final int action_item_read=0x7f0a0020;
-        public static final int action_item_save=0x7f0a0024;
-        public static final int action_item_todo=0x7f0a0022;
-        public static final int action_list_normal=0x7f0a0027;
-        public static final int action_list_todo=0x7f0a0028;
-        public static final int action_websearch=0x7f0a0026;
+        public static final int action_forgot_password=0x7f0a002a;
+        public static final int action_item_cancel=0x7f0a0026;
+        public static final int action_item_delete=0x7f0a0024;
+        public static final int action_item_edit=0x7f0a0022;
+        public static final int action_item_read=0x7f0a0021;
+        public static final int action_item_save=0x7f0a0025;
+        public static final int action_item_todo=0x7f0a0023;
+        public static final int action_list_normal=0x7f0a0028;
+        public static final int action_list_todo=0x7f0a0029;
+        public static final int action_websearch=0x7f0a0027;
         public static final int bottom=0x7f0a000d;
-        public static final int cb=0x7f0a001a;
+        public static final int cb=0x7f0a001b;
         public static final int container=0x7f0a0000;
         public static final int content_frame=0x7f0a0002;
         public static final int drawer_layout=0x7f0a0001;
-        public static final int icon=0x7f0a001c;
+        public static final int group_title=0x7f0a001a;
+        public static final int icon=0x7f0a001d;
         public static final int left_drawer=0x7f0a0003;
-        public static final int list_tab_all=0x7f0a001d;
-        public static final int list_tab_remind=0x7f0a001f;
-        public static final int list_tab_todo=0x7f0a001e;
+        public static final int list_tab_all=0x7f0a001e;
+        public static final int list_tab_remind=0x7f0a0020;
+        public static final int list_tab_todo=0x7f0a001f;
         public static final int login=0x7f0a0018;
         public static final int login_form=0x7f0a0015;
         public static final int login_status=0x7f0a0013;
@@ -73,7 +75,7 @@ public final class R {
         public static final int status_message=0x7f0a0006;
         public static final int subject_body=0x7f0a000c;
         public static final int swipe_container=0x7f0a0012;
-        public static final int tvBody=0x7f0a001b;
+        public static final int tvBody=0x7f0a001c;
         public static final int tvK=0x7f0a0008;
         public static final int tvV=0x7f0a0009;
         public static final int tv_load_more=0x7f0a0011;
@@ -97,13 +99,15 @@ public final class R {
         public static final int fragment_dashboard=0x7f03000c;
         public static final int fragment_item_detail=0x7f03000d;
         public static final int fragment_list=0x7f03000e;
-        public static final int fragment_login=0x7f03000f;
-        public static final int fragment_setting=0x7f030010;
-        public static final int listview_item=0x7f030011;
-        public static final int listview_item_remind=0x7f030012;
-        public static final int listview_item_todo=0x7f030013;
-        public static final int setting_listview_item=0x7f030014;
-        public static final int tabhost_list=0x7f030015;
+        public static final int fragment_list_todo=0x7f03000f;
+        public static final int fragment_login=0x7f030010;
+        public static final int fragment_setting=0x7f030011;
+        public static final int listview_group=0x7f030012;
+        public static final int listview_item=0x7f030013;
+        public static final int listview_item_remind=0x7f030014;
+        public static final int listview_item_todo=0x7f030015;
+        public static final int setting_listview_item=0x7f030016;
+        public static final int tabhost_list=0x7f030017;
     }
     public static final class menu {
         public static final int item=0x7f090000;

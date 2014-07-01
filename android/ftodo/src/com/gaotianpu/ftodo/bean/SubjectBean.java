@@ -1,4 +1,10 @@
 package com.gaotianpu.ftodo.bean;
+
+import java.sql.Date;
+
+import android.R;
+
+import com.gaotianpu.ftodo.da.Util;
  
 
 public class SubjectBean {
@@ -105,6 +111,21 @@ public class SubjectBean {
 	}
 	public void setPlanStartDate(String plan_start_date) {
 		this._plan_start_date = plan_start_date;
+	}
+	
+	public int getPlanStartSort(){
+		//Date d = Util.str2Date(_plan_start_date);
+		//this._plan_start_date
+		//未设置 0
+		//过期 1
+		//今天 2
+		//明天 3
+		//后天 4
+		//更晚 5
+		
+		//R.string.todo_plan_date_sort;
+		
+		return 0;
 	}
 	
 	

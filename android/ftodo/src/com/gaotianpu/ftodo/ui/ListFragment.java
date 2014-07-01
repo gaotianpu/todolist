@@ -454,6 +454,7 @@ public class ListFragment extends Fragment {
 				tv.setText(subject.getBody().replaceAll("\n", ""));
 				if(subject.getIsTodo() && subject.getPlanStartDate()!=null){
 					//tvStartDate.setText("待办日期:" + subject.getPlanStartDate() ); 
+					tv.setText(subject.getBody().replaceAll("\n", "") + " 待办日期:" + subject.getPlanStartDate());
 				}
 				break;
 			// case R.id.action_list_remind:

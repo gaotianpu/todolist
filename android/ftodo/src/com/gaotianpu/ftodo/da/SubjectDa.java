@@ -401,6 +401,32 @@ public class SubjectDa {
 
 		return subjectList;
 	}
+	
+	public List<SubjectBean> load_todo(long user_id, int offset, int size) {
+		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
+		db = dbHelper.getWritableDatabase();
+		try { 
+
+			String sqlwhere =  "(user_id=? or user_id=0) and is_todo=1 and is_del=0 ";
+
+			Log.i("sqlwhere", sqlwhere);
+
+			Cursor cursor = db.query("subjects", list_selected_fields,
+					sqlwhere, new String[] { String.valueOf(user_id) }, null,
+					null,
+					"plan_start_date limit " + String.valueOf(size)
+							+ " offset " + String.valueOf(offset));
+
+			subjectList = load_list(cursor);
+
+		} catch (IllegalArgumentException e) {
+			Log.e("SQLiteOp", e.toString());
+		} finally {
+			db.close();
+		}
+
+		return subjectList;
+	}
 
 	public void load_ids(long min_remote_id, long max_remote_id) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
@@ -500,6 +526,8 @@ public class SubjectDa {
 
 		}
 	}
+	
+	
 
 	public List<Long> load_not_download(long user_id) {
 		// select user_id,offset,has_download download_record where user_id=?

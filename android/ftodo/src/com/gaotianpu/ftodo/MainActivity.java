@@ -4,6 +4,7 @@ import com.gaotianpu.ftodo.R;
 import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.ui.DashboardFragment;
 import com.gaotianpu.ftodo.ui.ListFragment;
+import com.gaotianpu.ftodo.ui.ListTodoFragment;
 import com.gaotianpu.ftodo.ui.LoginFragment;
 import com.gaotianpu.ftodo.ui.SettingFragment;
 
@@ -203,13 +204,19 @@ public class MainActivity extends Activity {
 
 			break;
 		case 1: // 全部
-		case 2: // 待办
-//		case 3: // 提醒
 			fragment = new ListFragment();
 			Bundle args0 = new Bundle();			
 			args0.putInt(ListFragment.LIST_SORT, position);
 			fragment.setArguments(args0);
 			break;
+		case 2: // 待办
+			fragment = new ListTodoFragment();
+//			Bundle args1 = new Bundle();			
+//			args1.putInt(ListFragment.LIST_SORT, position);
+//			fragment.setArguments(args0);
+			break;
+//		case 3: // 提醒
+			
 		case 3:
 		default:
 			fragment = new SettingFragment();
