@@ -5,24 +5,30 @@ import java.util.List;
 
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
-import com.gaotianpu.ftodo.bean.SettingBean;
+
 import com.gaotianpu.ftodo.bean.SubjectBean;
 import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.SubjectDa;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
+
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.Color;
+
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -37,6 +43,8 @@ public class ListTodoFragment extends Fragment {
 
 	private ListView lvDefault;
 	private ListAdapter listAdapter;
+
+	private int action_menu_checked_menu;
 
 	private List<Object> taskList = new ArrayList<Object>(); // 合并后的数据
 	private List<SubjectBean> taskList0 = new ArrayList<SubjectBean>();
@@ -63,6 +71,9 @@ public class ListTodoFragment extends Fragment {
 		groups = java.util.Arrays.asList(act.getResources().getStringArray(
 				R.array.todo_plan_date_sorts));
 
+		setHasOptionsMenu(true);
+		action_menu_checked_menu = R.id.action_list_normal;
+
 		lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
 		Log.i("lvDefault", lvDefault.toString());
 
@@ -70,7 +81,7 @@ public class ListTodoFragment extends Fragment {
 		lvDefault.setAdapter(listAdapter);
 		load_data(0, 100);
 
-		// lvDefault_setOnItemClickListener();
+		lvDefault_setOnItemClickListener();
 
 		return rootView;
 	}
@@ -143,6 +154,44 @@ public class ListTodoFragment extends Fragment {
 
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		// onCreateView setHasOptionsMenu(true);
+		menu.clear();
+		inflater.inflate(R.menu.list, menu);
+
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		DrawerLayout mDrawerLayout = (DrawerLayout) act
+				.findViewById(R.id.drawer_layout);
+		ListView mDrawerList = (ListView) act.findViewById(R.id.left_drawer);
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+		if (drawerOpen) {
+			menu.clear();
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Log.i("menu_onOptionsItemSelected",
+		// String.valueOf(R.id.action_list_todo));
+
+		if (item.isChecked()) {
+			return true;
+		}
+
+		item.setChecked(true);
+
+		action_menu_checked_menu = item.getItemId();
+		// listAdapter = new ListAdapter(act);
+		// lvDefault.setAdapter(listAdapter);
+		listAdapter.notifyDataSetChanged();
+
+		return super.onOptionsItemSelected(item);
+	}
+
 	private class ListAdapter extends BaseAdapter {
 		private LayoutInflater inflater1;
 
@@ -176,16 +225,40 @@ public class ListTodoFragment extends Fragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+
 			Object item = taskList.get(position);
 			Log.i("listviewgetview", String.valueOf(item));
 
 			if (item.getClass() == SubjectBean.class) {
-				convertView = inflater1.inflate(R.layout.listview_item, null);
-				TextView text = (TextView) convertView
-						.findViewById(R.id.tvBody);
+				switch (action_menu_checked_menu) {
+				case R.id.action_list_todo:
+					convertView = inflater1.inflate(
+							R.layout.listview_item_todo, null);
+					SubjectBean subject = (SubjectBean) item;
+					ImageView ic = (ImageView) convertView
+							.findViewById(R.id.icon);
+					if (subject.getIsTodo()) {
+						ic.setColorFilter(Color.RED);
+					}
+					TextView tv = (TextView) convertView
+							.findViewById(R.id.tvBody);
+					tv.setText(subject.getBody().replaceAll("\n", ""));
+					if (subject.getIsTodo()
+							&& subject.getPlanStartDate() != null) {
+						tv.setText(subject.getBody().replaceAll("\n", "")
+								+ " 待办日期:" + subject.getPlanStartDate());
+					}
 
-				SubjectBean s = (SubjectBean) item;
-				text.setText(s.getBody());
+					break;
+				default:
+					convertView = inflater1.inflate(R.layout.listview_item,
+							null);
+					TextView text = (TextView) convertView
+							.findViewById(R.id.tvBody);
+					SubjectBean s = (SubjectBean) item;
+					text.setText(s.getBody());
+					break;
+				}
 
 			} else {
 				convertView = inflater1.inflate(R.layout.listview_group, null);
