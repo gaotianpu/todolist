@@ -42,6 +42,7 @@ public class MainActivity extends Activity {
 	
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
+	private String[] mDrawerItemIds;
 	private String[] mDrawerItems;
 
 	private UserBean user;
@@ -69,6 +70,8 @@ public class MainActivity extends Activity {
 
 		// 3. 数据加载
 		user = app.getUser();
+		mDrawerItemIds =  getResources().getStringArray(
+				R.array.drawer_menu_item_ids);
 		mDrawerItems = getResources().getStringArray(
 				R.array.drawer_menu_items);
 		if (user.getUserId() != 0 && user.getTokenStatus() != 0) {
@@ -192,6 +195,8 @@ public class MainActivity extends Activity {
 	private void selectItem(int position) {
 		// update the main content by replacing fragments
 		Fragment fragment;
+		
+		String ListSort = mDrawerItemIds[position];
 
 		switch (position) {
 		case 0:
@@ -204,9 +209,11 @@ public class MainActivity extends Activity {
 
 			break;
 		case 1: // 全部
+		case 3: // 全部
+		case 4: // 全部
 			fragment = new ListFragment();
 			Bundle args0 = new Bundle();			
-			args0.putInt(ListFragment.LIST_SORT, position);
+			args0.putString(ListFragment.LIST_SORT, ListSort);
 			fragment.setArguments(args0);
 			break;
 		case 2: // 待办
@@ -217,7 +224,7 @@ public class MainActivity extends Activity {
 			break;
 //		case 3: // 提醒
 			
-		case 3:
+		case 5:
 		default:
 			fragment = new SettingFragment();
 			break;

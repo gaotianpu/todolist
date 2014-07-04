@@ -2,12 +2,25 @@
 <resources>
 
     <string name="app_name">闪电云笔记</string>
+    
+    <string-array name="drawer_menu_item_ids">
+        <item>login</item>
+        <item>all</item>       
+        <item>todo</item> 
+        <item>done</item>
+        <item>block</item>
+        <item>remind</item> 
+        <item>setting</item>
+    </string-array>
 
     <string-array name="drawer_menu_items">
         <item>登录或注册</item>
-        <item>全部</item>
-       
-        <item>待办</item> <!--
+        <item>全部</item>       
+        <item>待办</item> 
+        <item>完成</item>
+        <item>暂停</item>
+        
+        <!--
         <item>提醒</item>
         -->
         <item>设置</item>

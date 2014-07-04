@@ -17,7 +17,7 @@ def insert(user_id,subject):
         plan_start_date=web.SQLLiteral('now()'))
 
 def insert2(user_id,body,device_type,device_no,local_id,created_date,last_update):
-    rows = list(dbr.select(table_name,what="pk_id,body", where="user_id=$user_id",vars=locals(),order="pk_id desc", limit=20))
+    rows = list(dbr.select(table_name,what="pk_id,body", where="user_id=$user_id",vars=locals(),order="pk_id desc", limit=80))
     for r in rows:
         if cmp(r.body,body)==0:
             return r.pk_id

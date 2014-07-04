@@ -151,7 +151,9 @@ public class AsyncService extends Service {
 
 						}
 					});
+			break;
 		}
+		
 	}
 
 	private void download() {

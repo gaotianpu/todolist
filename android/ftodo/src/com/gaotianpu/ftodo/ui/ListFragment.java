@@ -59,7 +59,7 @@ public class ListFragment extends Fragment {
 	public static final String TAG = "ListFragment";
 	public static final String LIST_SORT = "ListSort";
 
-	private int list_sort = 0; // 1全部,2待办,3提醒
+	private String list_sort = "all"; // 1全部,2待办,3提醒
 
 	private MyApplication app;
 	private Activity act;
@@ -86,9 +86,11 @@ public class ListFragment extends Fragment {
 		// 0.外部传入参数
 		// list sort
 
-		int drawer_item_position = getArguments() != null ? getArguments()
-				.getInt(LIST_SORT) : 1;
-		list_sort = drawer_item_position - 1; //
+		list_sort = getArguments() != null ? getArguments().getString(LIST_SORT) : "all";
+				
+//		int drawer_item_position = getArguments() != null ? getArguments()
+//				.getInt(LIST_SORT) : 1;
+		//list_sort = drawer_item_position - 1; //
 		// Log.i("list_sort", String.valueOf(drawer_item_position));
 
 		// 1.系统全局
@@ -127,7 +129,7 @@ public class ListFragment extends Fragment {
 
 		String[] mDrawerItems = getResources().getStringArray(
 				R.array.drawer_menu_items);
-		act.setTitle(mDrawerItems[drawer_item_position]);
+		//act.setTitle(mDrawerItems[drawer_item_position]);
 
 		// 定义可选菜单
 		setHasOptionsMenu(true);

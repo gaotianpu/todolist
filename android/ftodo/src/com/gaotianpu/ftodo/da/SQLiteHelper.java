@@ -25,6 +25,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "parent_id INTEGER NOT NULL default 0,"
 				+ "is_todo INTEGER NOT NULL default 0,"
 				+ "plan_start_date date ,"
+				+ "task_status INTEGER NOT NULL default 0," //task_status 尚未开始 NotBegun 0，已开始 Doing 10，结束Done2，Block3
 				+ "is_remind INTEGER NOT NULL default 0 ,"
 				+ "remind_datetime datetime ,"
 				+ "remind_frequency INTEGER NOT NULL default 0,"

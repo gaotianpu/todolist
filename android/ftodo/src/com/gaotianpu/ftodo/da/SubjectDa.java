@@ -334,21 +334,27 @@ public class SubjectDa {
 	}
 
 	public List<SubjectBean> load_not_uploaded_subjects(long user_id,
-			int list_sort) {
+			String list_sort) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		db = dbHelper.getWritableDatabase();
 		try {
-			String sqlwhere;
-			if (list_sort == 1) { // 待办
-				sqlwhere = "(user_id=? or user_id=0) and remote_id=0 and is_todo=1";
-			} else if (list_sort == 2) { // 提醒
-				sqlwhere = "(user_id=? or user_id=0) and remote_id=0 and is_remind=1";
-			} else {
-				sqlwhere = "(user_id=? or user_id=0) and remote_id=0 ";
+			String sqlwhere = "remote_id=0 and is_del=0 ";
+			 
+			if (list_sort == "todo") { // 待办
+				sqlwhere = sqlwhere + " and is_todo=1";
+			}  else if (list_sort == "done") { //完成
+				sqlwhere = sqlwhere + " and is_todo=1";
+			} else if (list_sort == "block") { //暂停
+				sqlwhere = sqlwhere +  " and is_todo=1";
+			} else if (list_sort == "remind") { // 提醒
+				sqlwhere = sqlwhere + " and is_remind=1";
+			}else { //all
+				//sqlwhere = " ";
 			}
-			sqlwhere = sqlwhere + " and is_del=0 ";
+			
+			sqlwhere = sqlwhere + " and (user_id=? or user_id=0) ";
 
-			// Log.i("sqlwhere",sqlwhere);
+			Log.i("sqlwhere",sqlwhere);
 
 			Cursor cursor = db.query("subjects", list_selected_fields,
 					sqlwhere, new String[] { String.valueOf(user_id) }, null,
@@ -365,23 +371,26 @@ public class SubjectDa {
 		return subjectList;
 	}
 
-	public List<SubjectBean> load(long user_id, int list_sort, int offset,
+	public List<SubjectBean> load(long user_id, String list_sort, int offset,
 			int size) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		db = dbHelper.getWritableDatabase();
 		try {
-
-			// int offset = (page - 1) * size;
-			String sqlwhere;
-			if (list_sort == 1) { // 待办
-				sqlwhere = "user_id=? and remote_id<>0 and is_todo=1";
-			} else if (list_sort == 2) { // 提醒
-				sqlwhere = "user_id=? and remote_id<>0 and is_remind=1";
-			} else {
-				sqlwhere = "user_id=? and remote_id<>0";
+			String sqlwhere = "remote_id<>0 and is_del=0";
+			
+			if (list_sort == "todo") { // 待办
+				sqlwhere = sqlwhere + "and is_todo=1";
+			}  else if (list_sort == "done") {
+				sqlwhere = sqlwhere + " and is_todo=1";
+			} else if (list_sort == "block") {
+				sqlwhere = sqlwhere + " and is_todo=1";
+			} else if (list_sort == "remind") { // 提醒
+				sqlwhere = sqlwhere + " and is_remind=1";
+			}else { //all
+				 //
 			}
 
-			sqlwhere = sqlwhere + " and is_del=0 ";
+			sqlwhere = sqlwhere + " and (user_id=? or user_id=0) ";
 
 			Log.i("sqlwhere", sqlwhere);
 
