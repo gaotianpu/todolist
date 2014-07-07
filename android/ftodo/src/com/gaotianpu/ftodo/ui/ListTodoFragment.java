@@ -9,11 +9,15 @@ import com.gaotianpu.ftodo.R;
 import com.gaotianpu.ftodo.bean.SubjectBean;
 import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.SubjectDa;
+import com.gaotianpu.ftodo.da.Util;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 
 import android.os.Bundle;
@@ -39,7 +43,7 @@ public class ListTodoFragment extends Fragment {
 	private Activity act;
 	private MyApplication app;
 	private UserBean user;
-	private SubjectDa da;
+	private SubjectDa subjectDa;
 
 	private ListView lvDefault;
 	private ListAdapter listAdapter;
@@ -66,7 +70,7 @@ public class ListTodoFragment extends Fragment {
 		app = (MyApplication) act.getApplicationContext();
 		user = app.getUser();
 
-		da = new SubjectDa(act);
+		subjectDa = new SubjectDa(act);
 
 		groups = java.util.Arrays.asList(act.getResources().getStringArray(
 				R.array.todo_plan_date_sorts));
@@ -87,7 +91,7 @@ public class ListTodoFragment extends Fragment {
 	}
 
 	private void load_data(int offset, int size) {
-		List<SubjectBean> list = da.load_todo(user.getUserId(), offset, size);
+		List<SubjectBean> list = subjectDa.load_todo(user.getUserId(), offset, size);
 		for (SubjectBean s : list) {
 			switch (s.getPlanStartSort()) {
 			case 0:
@@ -148,12 +152,91 @@ public class ListTodoFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
+				
+				Object o = taskList.get(arg2);
+				if(o.getClass() != SubjectBean.class){
+					return ;
+				}
+						
+				//o.getClass()==SubjectBean.
+				final SubjectBean subject = (SubjectBean)o;
+				// Log.i("setOnItemClickListener", String.valueOf(arg2) + ","
+				// + String.valueOf(subject.getId()));
+
+				switch (action_menu_checked_menu) {
+				case R.id.action_list_todo:
+					List dates = Util.getPickDates();
+					dates.add("已完成");
+					dates.add("先暂停");
+					if(subject.getIsTodo()){
+						dates.add("非待办事项");
+					}
+					String[] pickdates = (String[])dates.toArray(new String[dates.size()]);
+					new AlertDialog.Builder(act)
+							.setTitle(subject.getBody())
+							//.setIcon(android.R.drawable.ic_dialog_info)
+							.setSingleChoiceItems(
+									pickdates, -1,
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											subject.setIsTodo(true);
+											switch(which){
+											case 0:
+											case 1:
+											case 2: 
+												subject.setStatus(0);
+												String start_date = Util.getDateStr(which);
+												subjectDa.set_todo_start_date(subject.getId(), start_date);
+												subject.setIsTodo(true);
+												subject.setPlanStartDate(start_date);
+												break;
+											case 3:		
+												subject.setStatus(0);
+												String start_date2 = Util.getDateStr(10);
+												subjectDa.set_todo_start_date(subject.getId(), start_date2);
+												subject.setIsTodo(true);
+												subject.setPlanStartDate(start_date2);
+												break;											
+											case 4: //done
+												subject.setStatus(2);
+												subjectDa.set_todo_status(subject.getId(), 2);
+												break;
+											case  5: //block
+												subject.setStatus(3);
+												subjectDa.set_todo_status(subject.getId(), 3);
+												break; 
+											case 6: //非待办事项
+												subject.setStatus(0);
+												subject.setIsTodo(false);
+												subjectDa.set_todo(subject.getId(), false);
+												break;
+											} 
+											listAdapter.notifyDataSetInvalidated();
+											dialog.dismiss();
+										}
+									}).setNegativeButton("取消", null).show(); 
+				 
+					
+					break;
+			 
+				case R.id.action_list_normal:
+				default:
+					Intent detailIntent = new Intent(act,
+							ItemDetailActivity.class);
+					detailIntent.putExtra(ItemDetailActivity.SUBJECT_LOCAL_ID,
+							subject.getId());
+					startActivity(detailIntent);
+					break;
+				}
+
+				 
 
 			}
 		});
 
 	}
-
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// onCreateView setHasOptionsMenu(true);
@@ -234,9 +317,28 @@ public class ListTodoFragment extends Fragment {
 				case R.id.action_list_todo:
 					convertView = inflater1.inflate(
 							R.layout.listview_item_todo, null);
+					
 					SubjectBean subject = (SubjectBean) item;
 					ImageView ic = (ImageView) convertView
 							.findViewById(R.id.icon);
+					
+					if(subject.getIsTodo()  )
+					{
+						switch(subject.getStatus()){
+						case 0:
+							ic.setImageResource(R.drawable.ic_flag);
+							break;
+						case 2: //done
+							ic.setImageResource(R.drawable.ic_done);
+							break;
+						case 3: //pause
+							ic.setImageResource(R.drawable.ic_pause);
+							break;
+						}
+					}
+					
+					
+					
 					if (subject.getIsTodo()) {
 						ic.setColorFilter(Color.RED);
 					}

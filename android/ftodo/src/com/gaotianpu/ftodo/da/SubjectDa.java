@@ -147,6 +147,18 @@ public class SubjectDa {
 		db.close();
 	}
 	
+	public void set_todo_status(long local_id, int task_status) {
+		ContentValues values = new ContentValues();
+		values.put("task_status",  String.valueOf(task_status));
+		values.put("is_todo", 1);
+		
+		db = dbHelper.getWritableDatabase();
+		db.update("subjects", values, "pk_id=?",
+				new String[] { String.valueOf(local_id) });
+		update_version(db, local_id);
+		db.close();
+	}
+	
 	public void set_todo_start_date(long local_id, String start_date) {
 		ContentValues values = new ContentValues();
 		values.put("is_todo", 1);
@@ -263,7 +275,7 @@ public class SubjectDa {
 
 	private final String[] list_selected_fields = new String[] { "pk_id",
 			"user_id", "body", "creation_date", "last_update", "remote_id",
-			"is_todo", "is_remind", "parent_id", "local_version", "is_del","date(plan_start_date) as plan_start_date" };
+			"is_todo", "is_remind", "parent_id", "local_version", "is_del","date(plan_start_date) as plan_start_date,task_status" };
 
 	private List<SubjectBean> load_list(Cursor cursor) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
@@ -282,6 +294,7 @@ public class SubjectDa {
 			subject.setLocalVersion(cursor.getInt(9));
 			subject.setIsDel(cursor.getInt(10));			
 			subject.setPlanStartDate(cursor.getString( 11));
+			subject.setStatus(cursor.getInt( 12 ));
 
 			subjectList.add(subject);
 			cursor.moveToNext();
@@ -340,13 +353,13 @@ public class SubjectDa {
 		try {
 			String sqlwhere = "remote_id=0 and is_del=0 ";
 			 
-			if (list_sort == "todo") { // 待办
-				sqlwhere = sqlwhere + " and is_todo=1";
-			}  else if (list_sort == "done") { //完成
-				sqlwhere = sqlwhere + " and is_todo=1";
-			} else if (list_sort == "block") { //暂停
-				sqlwhere = sqlwhere +  " and is_todo=1";
-			} else if (list_sort == "remind") { // 提醒
+			if (list_sort.equals("todo")) { // 待办
+				sqlwhere = sqlwhere + " and is_todo=1 and task_status<>2 and task_status<>3 ";
+			}  else if (list_sort.equals("done")) { //完成
+				sqlwhere = sqlwhere + " and is_todo=1 and task_status=2 ";
+			} else if (list_sort.equals("block")) { //暂停
+				sqlwhere = sqlwhere +  " and is_todo=1 and task_status=3 ";
+			} else if (list_sort.equals("remind")) { // 提醒
 				sqlwhere = sqlwhere + " and is_remind=1";
 			}else { //all
 				//sqlwhere = " ";
@@ -378,13 +391,13 @@ public class SubjectDa {
 		try {
 			String sqlwhere = "remote_id<>0 and is_del=0";
 			
-			if (list_sort == "todo") { // 待办
-				sqlwhere = sqlwhere + "and is_todo=1";
-			}  else if (list_sort == "done") {
-				sqlwhere = sqlwhere + " and is_todo=1";
-			} else if (list_sort == "block") {
-				sqlwhere = sqlwhere + " and is_todo=1";
-			} else if (list_sort == "remind") { // 提醒
+			if (list_sort.equals( "todo")) { // 待办
+				sqlwhere = sqlwhere + "and is_todo=1 and task_status<>2 and task_status<>3 ";
+			}  else if (list_sort.equals( "done")) {
+				sqlwhere = sqlwhere + " and is_todo=1 and task_status=2 ";
+			} else if (list_sort.equals("block")) {
+				sqlwhere = sqlwhere + " and is_todo=1  and task_status=3  ";
+			} else if (list_sort.equals("remind")) { // 提醒
 				sqlwhere = sqlwhere + " and is_remind=1";
 			}else { //all
 				 //
@@ -416,7 +429,7 @@ public class SubjectDa {
 		db = dbHelper.getWritableDatabase();
 		try { 
 
-			String sqlwhere =  "(user_id=? or user_id=0) and is_todo=1 and is_del=0 ";
+			String sqlwhere =  "(user_id=? or user_id=0) and is_todo=1 and is_del=0 and task_status<>2 and task_status<>3";
 
 			Log.i("sqlwhere", sqlwhere);
 

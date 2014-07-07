@@ -114,6 +114,8 @@ public class SubjectBean {
 		this._plan_start_date = plan_start_date;
 	}
 	
+
+	
 	public int getPlanStartSort(){
 		Date d = Util.str2Date(_plan_start_date);
 		if(d==null){
@@ -154,5 +156,12 @@ public class SubjectBean {
 		return 0;
 	}
 	
+	private int _status=0;
+	public void setStatus(int status){
+		_status = status;
+	}
+	public int getStatus(){
+		return _status;
+	}
 	
 }

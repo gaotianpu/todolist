@@ -199,6 +199,7 @@ public class ListFragment extends Fragment {
 
 	private void load_new_data() {
 		// 从sqlite中读取数据，展示在listview中
+		Log.i("list_sort",list_sort);
 		subjectList = subjectDa.load_not_uploaded_subjects(cust_id, list_sort); // 加载未上传的
 		add_data(0, 100);
 	}
@@ -228,6 +229,8 @@ public class ListFragment extends Fragment {
 				switch (action_menu_checked_menu) {
 				case R.id.action_list_todo:
 					List dates = Util.getPickDates();
+					dates.add("已完成");
+					dates.add("先暂停");
 					if(subject.getIsTodo()){
 						dates.add("非待办事项");
 					}
@@ -241,7 +244,7 @@ public class ListFragment extends Fragment {
 										public void onClick(
 												DialogInterface dialog,
 												int which) {
-											
+											subject.setIsTodo(true);
 											switch(which){
 											case 0:
 											case 1:
@@ -251,14 +254,19 @@ public class ListFragment extends Fragment {
 												subject.setIsTodo(true);
 												subject.setPlanStartDate(start_date);
 												break;
-											case 3:
-												
+											case 3:												
 												String start_date2 = Util.getDateStr(10);
 												subjectDa.set_todo_start_date(subject.getId(), start_date2);
 												subject.setIsTodo(true);
 												subject.setPlanStartDate(start_date2);
+												break;											
+											case 4: //done
+												subjectDa.set_todo_status(subject.getId(), 2);
 												break;
-											case 4:
+											case  5: //block
+												subjectDa.set_todo_status(subject.getId(), 3);
+												break; 
+											case 6: //非待办事项
 												subject.setIsTodo(false);
 												subjectDa.set_todo(subject.getId(), false);
 												break;
