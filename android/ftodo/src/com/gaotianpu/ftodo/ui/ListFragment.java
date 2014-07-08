@@ -163,8 +163,8 @@ public class ListFragment extends Fragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// onCreateView setHasOptionsMenu(true);
-		menu.clear();
-		inflater.inflate(R.menu.list, menu);
+		//menu.clear();
+		//inflater.inflate(R.menu.list, menu);
 
 	}
 
@@ -187,15 +187,15 @@ public class ListFragment extends Fragment {
 		// Log.i("menu_onOptionsItemSelected",
 		// String.valueOf(R.id.action_list_todo));
 
-		if (item.isChecked()) {
-			return true;
-		}
-
-		item.setChecked(true);
-
-		action_menu_checked_menu = item.getItemId();
-		listAdapter = new ListAdapter(act, item.getItemId());
-		lvDefault.setAdapter(listAdapter);
+//		if (item.isChecked()) {
+//			return true;
+//		}
+//
+//		item.setChecked(true);
+//
+//		action_menu_checked_menu = item.getItemId();
+//		listAdapter = new ListAdapter(act, item.getItemId());
+//		lvDefault.setAdapter(listAdapter);
 
 		return super.onOptionsItemSelected(item);
 	}
@@ -459,6 +459,8 @@ public class ListFragment extends Fragment {
 									subjectDa.set_todo_status(subject.getId(), 3);
 									break; 
 								case 3:	//remind	
+									subject.setIsRemind(true);
+									subjectDa.set_remind(subject.getId(), true);
 									break;											
 								case 4: //normal-note									
 								default:

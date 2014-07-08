@@ -117,10 +117,12 @@ public class SubjectBean {
 
 	
 	public int getPlanStartSort(){
-		Date d = Util.str2Date(_plan_start_date);
-		if(d==null){
+		if(_plan_start_date==null){
 			return 0;
 		}
+		
+		Date d = Util.str2Date(_plan_start_date);
+		
 		
 		//Log.i("getPlanStartSort",Util.getDateStr(0));
 		Log.i("getPlanStartSort",_plan_start_date);

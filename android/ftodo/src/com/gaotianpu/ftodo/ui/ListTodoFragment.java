@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -355,6 +356,11 @@ public class ListTodoFragment extends Fragment {
 				default:
 					convertView = inflater1.inflate(R.layout.listview_item,
 							null);
+					
+					ImageButton ibtn = (ImageButton) convertView
+							.findViewById(R.id.btnIcon);
+					ibtn.setImageResource(R.drawable.ic_flag);
+					
 					TextView text = (TextView) convertView
 							.findViewById(R.id.tvBody);
 					SubjectBean s = (SubjectBean) item;
