@@ -441,12 +441,12 @@ public class ListFragment extends Fragment {
 							public void onClick(
 									DialogInterface dialog,
 									int which) {
-								subject.setIsTodo(true);
+								 
 								switch(which){
 								case 0: //todo	
 									subject.setIsTodo(true); 
 									subject.setStatus(0);
-									subjectDa.set_todo(subject.getId(), true);
+									subjectDa.set_todo_status(subject.getId(), 0);
 									break;
 								case 1: //todo-done
 									subject.setIsTodo(true); 
