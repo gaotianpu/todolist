@@ -39,7 +39,8 @@ public final class R {
         public static final int ic_drawer=0x7f020005;
         public static final int ic_flag=0x7f020006;
         public static final int ic_launcher=0x7f020007;
-        public static final int ic_pause=0x7f020008;
+        public static final int ic_note=0x7f020008;
+        public static final int ic_pause=0x7f020009;
     }
     public static final class id {
         public static final int action_forgot_password=0x7f0a002a;
@@ -53,7 +54,7 @@ public final class R {
         public static final int action_list_todo=0x7f0a0029;
         public static final int action_websearch=0x7f0a0027;
         public static final int bottom=0x7f0a000d;
-        public static final int cb=0x7f0a001b;
+        public static final int btnIcon=0x7f0a001b;
         public static final int container=0x7f0a0000;
         public static final int content_frame=0x7f0a0002;
         public static final int drawer_layout=0x7f0a0001;

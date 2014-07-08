@@ -164,4 +164,32 @@ public class SubjectBean {
 		return _status;
 	}
 	
+	public int get_sort_status(){
+		//0, 普通备忘
+		//1, 待办
+		//12, 待办完成
+		//13, 待办暂停
+		//2, 提醒
+		
+		if(is_remind){
+			return 2;
+		}
+		
+		if(is_todo){
+			switch(_status){
+			case 2:
+				return 12;
+			case 3:
+				return 13;
+			case 0:
+			default:
+				return 1 ;
+			}
+		}
+		
+		return 0; 
+		
+		
+	}
+	
 }

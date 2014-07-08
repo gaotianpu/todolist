@@ -52,7 +52,7 @@ def generate_access_token():
 def get_access_token(user_id,device_no,device_type,os_type,channel,version): 
     result = list(dbr.select('user_devices',
         what="user_id,device_no,access_token,device_type,os_type",
-        where="user_id=$user_id",vars=locals()))
+        where="user_id=$user_id and device_no=$device_no",vars=locals()))
 
     access_token = generate_access_token()
     if not result:
@@ -66,7 +66,7 @@ def get_access_token(user_id,device_no,device_type,os_type,channel,version):
 
         result = list(dbr.select('user_devices',
         what="user_id,device_no,access_token,device_type,os_type",
-        where="user_id=$user_id",vars=locals()))
+        where="user_id=$user_id and device_no=$device_no",vars=locals()))
     else:
         dbw.update('user_devices',
             device_no=device_no, 
@@ -75,7 +75,7 @@ def get_access_token(user_id,device_no,device_type,os_type,channel,version):
             channel=channel,
             version=version,
             last_update=web.SQLLiteral('now()'),
-            where="user_id=$user_id",vars=locals())
+            where="user_id=$user_id and device_no=$device_no",vars=locals())
         result[0].access_token = access_token 
     
     return load_user(result[0].user_id)

@@ -1,6 +1,7 @@
 package com.gaotianpu.ftodo.ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -43,6 +44,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -69,6 +71,7 @@ public class ListFragment extends Fragment {
 	private SubjectDa subjectDa;
 	private FTDClient ftd;
 	private List<SubjectBean> subjectList;
+	//private List<HashMap<String, Object>> subjectList = new ArrayList<HashMap<String,Object>>();
 	private ListAdapter listAdapter;
 
 	private View rootView;
@@ -214,6 +217,56 @@ public class ListFragment extends Fragment {
 		}
 		listAdapter.notifyDataSetChanged(); // 数据集变化后,通知adapter
 	}
+	
+	private void tmp(final SubjectBean subject){
+		List dates = Util.getPickDates();
+		dates.add("已完成");
+		dates.add("先暂停");
+		if(subject.getIsTodo()){
+			dates.add("非待办事项");
+		}
+		String[] pickdates = (String[])dates.toArray(new String[dates.size()]);
+		new AlertDialog.Builder(act)
+				.setTitle(subject.getBody())
+				//.setIcon(android.R.drawable.ic_dialog_info)
+				.setSingleChoiceItems(
+						pickdates, -1,
+						new DialogInterface.OnClickListener() {
+							public void onClick(
+									DialogInterface dialog,
+									int which) {
+								subject.setIsTodo(true);
+								switch(which){
+								case 0:
+								case 1:
+								case 2: 
+									String start_date = Util.getDateStr(which);
+									subjectDa.set_todo_start_date(subject.getId(), start_date);
+									subject.setIsTodo(true);
+									subject.setPlanStartDate(start_date);
+									break;
+								case 3:												
+									String start_date2 = Util.getDateStr(10);
+									subjectDa.set_todo_start_date(subject.getId(), start_date2);
+									subject.setIsTodo(true);
+									subject.setPlanStartDate(start_date2);
+									break;											
+								case 4: //done
+									subjectDa.set_todo_status(subject.getId(), 2);
+									break;
+								case  5: //block
+									subjectDa.set_todo_status(subject.getId(), 3);
+									break; 
+								case 6: //非待办事项
+									subject.setIsTodo(false);
+									subjectDa.set_todo(subject.getId(), false);
+									break;
+								} 
+								listAdapter.notifyDataSetInvalidated();
+								dialog.dismiss();
+							}
+						}).setNegativeButton("取消", null).show();
+	}
 
 	private void lvDefault_setOnItemClickListener() {
 		// 单击，查看明细
@@ -228,53 +281,7 @@ public class ListFragment extends Fragment {
 
 				switch (action_menu_checked_menu) {
 				case R.id.action_list_todo:
-					List dates = Util.getPickDates();
-					dates.add("已完成");
-					dates.add("先暂停");
-					if(subject.getIsTodo()){
-						dates.add("非待办事项");
-					}
-					String[] pickdates = (String[])dates.toArray(new String[dates.size()]);
-					new AlertDialog.Builder(act)
-							.setTitle(subject.getBody())
-							//.setIcon(android.R.drawable.ic_dialog_info)
-							.setSingleChoiceItems(
-									pickdates, -1,
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											subject.setIsTodo(true);
-											switch(which){
-											case 0:
-											case 1:
-											case 2: 
-												String start_date = Util.getDateStr(which);
-												subjectDa.set_todo_start_date(subject.getId(), start_date);
-												subject.setIsTodo(true);
-												subject.setPlanStartDate(start_date);
-												break;
-											case 3:												
-												String start_date2 = Util.getDateStr(10);
-												subjectDa.set_todo_start_date(subject.getId(), start_date2);
-												subject.setIsTodo(true);
-												subject.setPlanStartDate(start_date2);
-												break;											
-											case 4: //done
-												subjectDa.set_todo_status(subject.getId(), 2);
-												break;
-											case  5: //block
-												subjectDa.set_todo_status(subject.getId(), 3);
-												break; 
-											case 6: //非待办事项
-												subject.setIsTodo(false);
-												subjectDa.set_todo(subject.getId(), false);
-												break;
-											} 
-											listAdapter.notifyDataSetInvalidated();
-											dialog.dismiss();
-										}
-									}).setNegativeButton("取消", null).show();
+					
 
 					// subject.setIsTodo(!subject.getIsTodo());
 					// subjectDa.set_todo(subject.getId(), subject.getIsTodo());
@@ -416,6 +423,57 @@ public class ListFragment extends Fragment {
 		});
 	}
 
+	private void item_img_btn_click(final SubjectBean subject){
+		List dates = new ArrayList();
+		dates.add("待办"); //0
+		dates.add("完成"); //1
+		dates.add("暂停"); //2
+		dates.add("提醒"); //3
+		dates.add("备忘"); //4 
+		
+		String[] pickdates = (String[])dates.toArray(new String[dates.size()]);
+		new AlertDialog.Builder(act)
+				.setTitle(subject.getBody())
+				//.setIcon(android.R.drawable.ic_dialog_info)
+				.setSingleChoiceItems(
+						pickdates, -1,
+						new DialogInterface.OnClickListener() {
+							public void onClick(
+									DialogInterface dialog,
+									int which) {
+								subject.setIsTodo(true);
+								switch(which){
+								case 0: //todo	
+									subject.setIsTodo(true); 
+									subject.setStatus(0);
+									subjectDa.set_todo(subject.getId(), true);
+									break;
+								case 1: //todo-done
+									subject.setIsTodo(true); 
+									subject.setStatus(2);
+									subjectDa.set_todo_status(subject.getId(), 2);
+									break;
+								case 2:  //todo-block
+									subject.setIsTodo(true); 
+									subject.setStatus(3);
+									subjectDa.set_todo_status(subject.getId(), 3);
+									break; 
+								case 3:	//remind	
+									break;											
+								case 4: //normal-note									
+								default:
+									subject.setIsTodo(false);
+									subject.setIsRemind(false);
+									subjectDa.set_todo(subject.getId(), false);
+									subjectDa.set_remind(subject.getId(), false);
+									break; 
+								} 
+								listAdapter.notifyDataSetInvalidated();
+								dialog.dismiss();
+							}
+						}).setNegativeButton("取消", null).show();
+	}
+	
 	private class ListAdapter extends BaseAdapter {
 		private LayoutInflater inflater1;
 		private int action_sort = 0;
@@ -444,49 +502,89 @@ public class ListFragment extends Fragment {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 
-			SubjectBean subject = subjectList.get(position);
-			
-			
-			
-			ImageView ic;
+			final SubjectBean subject = subjectList.get(position);
+			convertView = inflater1.inflate(R.layout.listview_item, null);
 
-			switch (action_sort) {
-			case R.id.action_list_todo:
-				convertView = inflater1.inflate(R.layout.listview_item_todo,
-						null);
-				ic = (ImageView) convertView.findViewById(R.id.icon);
-				if (subject.getIsTodo()) {
-					ic.setColorFilter(Color.RED);
-				}
-				TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
-				//TextView tvStartDate = (TextView) convertView.findViewById(R.id.tvStartDate);
-				
-				tv.setText(subject.getBody().replaceAll("\n", ""));
-				if(subject.getIsTodo() && subject.getPlanStartDate()!=null){
-					//tvStartDate.setText("待办日期:" + subject.getPlanStartDate() ); 
-					tv.setText(subject.getBody().replaceAll("\n", "") + " 待办日期:" + subject.getPlanStartDate());
-				}
+			TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
+			tv.setText(subject.getBody().replaceAll("\n", ""));
+
+			ImageButton ibtn = (ImageButton) convertView
+					.findViewById(R.id.btnIcon);
+			switch (subject.get_sort_status()) {
+			case 0:
+			default: //0, 普通备忘
+				ibtn.setImageResource(R.drawable.ic_note);
 				break;
-			// case R.id.action_list_remind:
-			// convertView = inflater1.inflate(R.layout.listview_item_remind,
-			// null);
-			// ic = (ImageView) convertView.findViewById(R.id.icon);
-			// if (subject.getIsRemind()) {
-			// ic.setColorFilter(Color.RED);
-			// }
-			// break;
-			case R.id.action_list_normal:
-			default:
-				convertView = inflater1.inflate(R.layout.listview_item, null);
-				if (subject.getIsTodo()) {
-					// CheckBox cb = (CheckBox)
-					// convertView.findViewById(R.id.cb);
-					// cb.setVisibility(View.VISIBLE);
-				}
-				TextView tv1 = (TextView) convertView.findViewById(R.id.tvBody);
-				tv1.setText(subject.getBody().replaceAll("\n", ""));
+			case 1: //1, 待办
+				ibtn.setImageResource(R.drawable.ic_flag);
+				break;
+			case 12: //12, 待办完成
+				ibtn.setImageResource(R.drawable.ic_done);
+				break;
+			case 13: //13, 待办暂停
+				ibtn.setImageResource(R.drawable.ic_pause);
+				break;
+			case 2: //2, 提醒
+				ibtn.setImageResource(R.drawable.ic_alarm);
 				break;
 			}
+			
+			
+			
+			
+			
+			
+			
+			ibtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					//Log.i("imagebutton", "?");
+					
+					item_img_btn_click(subject);
+					
+				}
+			});
+			
+ 
+//			ImageView ic;
+//
+//			switch (action_sort) {
+//			case R.id.action_list_todo:
+//				convertView = inflater1.inflate(R.layout.listview_item_todo,
+//						null);
+//				ic = (ImageView) convertView.findViewById(R.id.icon);
+//				if (subject.getIsTodo()) {
+//					ic.setColorFilter(Color.RED);
+//				}
+//				TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
+//				//TextView tvStartDate = (TextView) convertView.findViewById(R.id.tvStartDate);
+//				
+//				tv.setText(subject.getBody().replaceAll("\n", ""));
+//				if(subject.getIsTodo() && subject.getPlanStartDate()!=null){
+//					//tvStartDate.setText("待办日期:" + subject.getPlanStartDate() ); 
+//					tv.setText(subject.getBody().replaceAll("\n", "") + " 待办日期:" + subject.getPlanStartDate());
+//				}
+//				break;
+//			// case R.id.action_list_remind:
+//			// convertView = inflater1.inflate(R.layout.listview_item_remind,
+//			// null);
+//			// ic = (ImageView) convertView.findViewById(R.id.icon);
+//			// if (subject.getIsRemind()) {
+//			// ic.setColorFilter(Color.RED);
+//			// }
+//			// break;
+//			case R.id.action_list_normal:
+//			default:
+//				convertView = inflater1.inflate(R.layout.listview_item, null);
+//				if (subject.getIsTodo()) {
+//					// CheckBox cb = (CheckBox)
+//					// convertView.findViewById(R.id.cb);
+//					// cb.setVisibility(View.VISIBLE);
+//				}
+//				TextView tv1 = (TextView) convertView.findViewById(R.id.tvBody);
+//				tv1.setText(subject.getBody().replaceAll("\n", ""));
+//				break;
+//			}
 
 			
 
