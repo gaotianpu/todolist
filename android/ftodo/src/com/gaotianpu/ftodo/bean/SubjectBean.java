@@ -1,12 +1,8 @@
 package com.gaotianpu.ftodo.bean;
 
 import java.util.Date;
-
-import android.R;
 import android.util.Log;
-
 import com.gaotianpu.ftodo.da.Util;
- 
 
 public class SubjectBean {
 	public static final String PK_ID = "pk_id";
