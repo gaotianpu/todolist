@@ -69,15 +69,16 @@ public class FTDClient {
 		params.put("access_token", access_token);
 		params.put("content", subject.getBody());
 		params.put("creation_date", subject.getCreationDate()); //
-		params.put("last_update", subject.getUpdateDate()); //
-		params.put("is_todo", String.valueOf(subject.getIsTodo() ? 1 : 0));
+		params.put("last_update", subject.getUpdateDate()); //		
 		params.put("is_remind", String.valueOf(subject.getIsRemind() ? 1 : 0));
 		params.put("local_id", String.valueOf(subject.getId()));
 		params.put("remote_id", String.valueOf(subject.getRemoteId()));
 		params.put("local_version", String.valueOf(subject.getLocalVersion()));
 		params.put("is_del", String.valueOf(subject.getIsDel()));
 		
+		params.put("is_todo", String.valueOf(subject.getIsTodo() ? 1 : 0));
 		params.put("plan_start_date", subject.getPlanStartDate());
+		params.put("task_status", String.valueOf(subject.getStatus())); 
 
 		Log.i("AsyncService", params.toString());
 
@@ -174,6 +175,8 @@ public class FTDClient {
 				subject.setIsRemind(item.getInt("is_remind")==1);
 				 	
 				subject.setPlanStartDate( item.getString("plan_start_date") );
+				
+				subject.setStatus( item.getInt("task_status") );
 				subjectList.add(subject);
 
 				// item.getString("created_date");
