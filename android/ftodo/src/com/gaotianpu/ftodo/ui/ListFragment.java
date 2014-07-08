@@ -458,7 +458,8 @@ public class ListFragment extends Fragment {
 									subject.setStatus(3);
 									subjectDa.set_todo_status(subject.getId(), 3);
 									break; 
-								case 3:	//remind	
+								case 3:	//remind
+									subject.setIsTodo(false); 
 									subject.setIsRemind(true);
 									subjectDa.set_remind(subject.getId(), true);
 									break;											
@@ -517,8 +518,9 @@ public class ListFragment extends Fragment {
 			default: //0, 普通备忘
 				ibtn.setImageResource(R.drawable.ic_note);
 				break;
-			case 1: //1, 待办
+			case 1: //1, 待办				
 				ibtn.setImageResource(R.drawable.ic_flag);
+				ibtn.setColorFilter(Color.RED);
 				break;
 			case 12: //12, 待办完成
 				ibtn.setImageResource(R.drawable.ic_done);
@@ -529,21 +531,13 @@ public class ListFragment extends Fragment {
 			case 2: //2, 提醒
 				ibtn.setImageResource(R.drawable.ic_alarm);
 				break;
-			}
-			
-			
-			
-			
-			
+			} 
 			
 			
 			ibtn.setOnClickListener(new View.OnClickListener() {
 				@Override
-				public void onClick(View v) {
-					//Log.i("imagebutton", "?");
-					
-					item_img_btn_click(subject);
-					
+				public void onClick(View v) { 
+					item_img_btn_click(subject); 
 				}
 			});
 			
