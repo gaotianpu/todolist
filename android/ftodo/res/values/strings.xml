@@ -6,9 +6,9 @@
     <string-array name="drawer_menu_item_ids">
         <item>login</item>
         <item>all</item>       
-        <item>todo</item> 
-        <item>done</item>
+        <item>todo</item>         
         <item>block</item>
+        <item>done</item>
         <item>remind</item> 
         <item>setting</item>
     </string-array>
@@ -17,12 +17,9 @@
         <item>登录或注册</item>
         <item>全部</item>       
         <item>待办</item> 
-        <item>完成</item>
-        <item>暂停</item>
-        
-        <!--
-        <item>提醒</item>
-        -->
+        <item>暂停</item> 
+        <item>完成</item> 
+        <item>提醒</item> 
         <item>设置</item>
     </string-array>
     

@@ -52,12 +52,6 @@ public class ListTodoFragment extends Fragment {
 	private int action_menu_checked_menu;
 
 	private List<Object> taskList = new ArrayList<Object>(); // 合并后的数据
-	private List<SubjectBean> taskList0 = new ArrayList<SubjectBean>();
-	private List<SubjectBean> taskList1 = new ArrayList<SubjectBean>();
-	private List<SubjectBean> taskList2 = new ArrayList<SubjectBean>();
-	private List<SubjectBean> taskList3 = new ArrayList<SubjectBean>();
-	private List<SubjectBean> taskList4 = new ArrayList<SubjectBean>();
-	private List<SubjectBean> taskList5 = new ArrayList<SubjectBean>();
 
 	private List<String> groups;
 
@@ -84,7 +78,7 @@ public class ListTodoFragment extends Fragment {
 
 		listAdapter = new ListAdapter(act);
 		lvDefault.setAdapter(listAdapter);
-		load_data(0, 100);
+		load_data(0, 500);
 
 		lvDefault_setOnItemClickListener();
 
@@ -92,7 +86,15 @@ public class ListTodoFragment extends Fragment {
 	}
 
 	private void load_data(int offset, int size) {
-		List<SubjectBean> list = subjectDa.load_todo(user.getUserId(), offset, size);
+		List<SubjectBean> taskList0 = new ArrayList<SubjectBean>();
+		List<SubjectBean> taskList1 = new ArrayList<SubjectBean>();
+		List<SubjectBean> taskList2 = new ArrayList<SubjectBean>();
+		List<SubjectBean> taskList3 = new ArrayList<SubjectBean>();
+		List<SubjectBean> taskList4 = new ArrayList<SubjectBean>();
+		List<SubjectBean> taskList5 = new ArrayList<SubjectBean>();
+
+		List<SubjectBean> list = subjectDa.load_todo(user.getUserId(), offset,
+				size);
 		for (SubjectBean s : list) {
 			switch (s.getPlanStartSort()) {
 			case 0:
@@ -153,96 +155,29 @@ public class ListTodoFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				
-				Object o = taskList.get(arg2);
-				if(o.getClass() != SubjectBean.class){
-					return ;
-				}
-						
-				//o.getClass()==SubjectBean.
-				final SubjectBean subject = (SubjectBean)o;
-				// Log.i("setOnItemClickListener", String.valueOf(arg2) + ","
-				// + String.valueOf(subject.getId()));
 
-				switch (action_menu_checked_menu) {
-				case R.id.action_list_todo:
-					List dates = Util.getPickDates();
-					dates.add("已完成");
-					dates.add("先暂停");
-					if(subject.getIsTodo()){
-						dates.add("非待办事项");
-					}
-					String[] pickdates = (String[])dates.toArray(new String[dates.size()]);
-					new AlertDialog.Builder(act)
-							.setTitle(subject.getBody())
-							//.setIcon(android.R.drawable.ic_dialog_info)
-							.setSingleChoiceItems(
-									pickdates, -1,
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											
-											switch(which){
-											case 0:
-											case 1:
-											case 2: 
-												subject.setIsTodo(true);
-												subject.setStatus(0);
-												String start_date = Util.getDateStr(which);
-												subjectDa.set_todo_start_date(subject.getId(), start_date);
-												subject.setIsTodo(true);
-												subject.setPlanStartDate(start_date);
-												break;
-											case 3:		
-												subject.setIsTodo(true);
-												subject.setStatus(0);
-												String start_date2 = Util.getDateStr(10);
-												subjectDa.set_todo_start_date(subject.getId(), start_date2);
-												subject.setIsTodo(true);
-												subject.setPlanStartDate(start_date2);
-												break;											
-											case 4: //done
-												subject.setIsTodo(true); 
-												subject.setStatus(2);
-												subjectDa.set_todo_status(subject.getId(), 2);
-												break;
-											case  5: //block
-												subject.setIsTodo(true); 
-												subject.setStatus(3);
-												subjectDa.set_todo_status(subject.getId(), 3);
-												break; 
-											case 6: //非待办事项
-												subject.setIsTodo(false);
-												subjectDa.set_todo(subject.getId(), false);												 
-												break;
-											} 
-											listAdapter.notifyDataSetInvalidated();
-											dialog.dismiss();
-										}
-									}).setNegativeButton("取消", null).show(); 
-				 
-					
-					break;
-			 
-				case R.id.action_list_normal:
-				default:
-					Intent detailIntent = new Intent(act,
-							ItemDetailActivity.class);
-					detailIntent.putExtra(ItemDetailActivity.SUBJECT_LOCAL_ID,
-							subject.getId());
-					startActivity(detailIntent);
-					break;
-				} 
+				Object o = taskList.get(arg2);
+				if (o.getClass() != SubjectBean.class) {
+					return;
+				}
+
+				SubjectBean subject = (SubjectBean) o;
+
+				Intent detailIntent = new Intent(act, ItemDetailActivity.class);
+				detailIntent.putExtra(ItemDetailActivity.SUBJECT_LOCAL_ID,
+						subject.getId());
+				startActivity(detailIntent);
+
 			}
 		});
 
 	}
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// onCreateView setHasOptionsMenu(true);
-//		menu.clear();
-//		inflater.inflate(R.menu.list, menu);
+		// menu.clear();
+		// inflater.inflate(R.menu.list, menu);
 
 	}
 
@@ -262,70 +197,76 @@ public class ListTodoFragment extends Fragment {
 		// Log.i("menu_onOptionsItemSelected",
 		// String.valueOf(R.id.action_list_todo));
 
-//		if (item.isChecked()) {
-//			return true;
-//		}
-//
-//		item.setChecked(true);
-//
-//		action_menu_checked_menu = item.getItemId();
-//		// listAdapter = new ListAdapter(act);
-//		// lvDefault.setAdapter(listAdapter);
-//		listAdapter.notifyDataSetChanged();
+		// if (item.isChecked()) {
+		// return true;
+		// }
+		//
+		// item.setChecked(true);
+		//
+		// action_menu_checked_menu = item.getItemId();
+		// // listAdapter = new ListAdapter(act);
+		// // lvDefault.setAdapter(listAdapter);
+		// listAdapter.notifyDataSetChanged();
 
 		return super.onOptionsItemSelected(item);
 	}
-	
-	private void item_img_btn_click(final SubjectBean subject){
+
+	private void item_img_btn_click(final SubjectBean subject) {
 		List dates = Util.getPickDates();
 		dates.add("已完成");
 		dates.add("先暂停");
-		if(subject.getIsTodo()){
+		if (subject.getIsTodo()) {
 			dates.add("非待办事项");
 		}
-		String[] pickdates = (String[])dates.toArray(new String[dates.size()]);
+		String[] pickdates = (String[]) dates.toArray(new String[dates.size()]);
 		new AlertDialog.Builder(act)
 				.setTitle(subject.getBody())
-				//.setIcon(android.R.drawable.ic_dialog_info)
-				.setSingleChoiceItems(
-						pickdates, -1,
+				// .setIcon(android.R.drawable.ic_dialog_info)
+				.setSingleChoiceItems(pickdates, -1,
 						new DialogInterface.OnClickListener() {
-							public void onClick(
-									DialogInterface dialog,
+							public void onClick(DialogInterface dialog,
 									int which) {
 								subject.setIsTodo(true);
-								switch(which){
+								switch (which) {
 								case 0:
 								case 1:
-								case 2: 
+								case 2:
 									String start_date = Util.getDateStr(which);
-									subjectDa.set_todo_start_date(subject.getId(), start_date);
+									subjectDa.set_todo_start_date(
+											subject.getId(), start_date);
 									subject.setIsTodo(true);
 									subject.setPlanStartDate(start_date);
 									break;
-								case 3:												
+								case 3:
 									String start_date2 = Util.getDateStr(10);
-									subjectDa.set_todo_start_date(subject.getId(), start_date2);
+									subjectDa.set_todo_start_date(
+											subject.getId(), start_date2);
 									subject.setIsTodo(true);
 									subject.setPlanStartDate(start_date2);
-									break;											
-								case 4: //done
-									subjectDa.set_todo_status(subject.getId(), 2);
 									break;
-								case  5: //block
-									subjectDa.set_todo_status(subject.getId(), 3);
-									break; 
-								case 6: //非待办事项
+								case 4: // done
+									subjectDa.set_todo_status(subject.getId(),
+											2);
+									break;
+								case 5: // block
+									subjectDa.set_todo_status(subject.getId(),
+											3);
+									break;
+								case 6: // 非待办事项
 									subject.setIsTodo(false);
 									subjectDa.set_todo(subject.getId(), false);
 									break;
-								} 
-								listAdapter.notifyDataSetInvalidated();
+								}
+
 								dialog.dismiss();
+								
+								taskList.clear();
+								load_data(0, 500);
+
+								
 							}
 						}).setNegativeButton("取消", null).show();
 	}
-
 
 	private class ListAdapter extends BaseAdapter {
 		private LayoutInflater inflater1;
@@ -365,9 +306,8 @@ public class ListTodoFragment extends Fragment {
 			Log.i("listviewgetview", String.valueOf(item));
 
 			if (item.getClass() == SubjectBean.class) {
-				convertView = inflater1.inflate(R.layout.listview_item,
-						null);
-				
+				convertView = inflater1.inflate(R.layout.listview_item, null);
+
 				ImageButton ibtn = (ImageButton) convertView
 						.findViewById(R.id.btnIcon);
 				ibtn.setImageResource(R.drawable.ic_flag);
@@ -375,87 +315,86 @@ public class ListTodoFragment extends Fragment {
 						.findViewById(R.id.tvBody);
 				final SubjectBean s = (SubjectBean) item;
 				text.setText(s.getBody());
-				
+
 				switch (s.get_sort_status()) {
 				case 0:
-				default: //0, 普通备忘
+				default: // 0, 普通备忘
 					ibtn.setImageResource(R.drawable.ic_note);
 					break;
-				case 1: //1, 待办				
-					ibtn.setImageResource(R.drawable.ic_flag);					 
+				case 1: // 1, 待办
+					ibtn.setImageResource(R.drawable.ic_flag);
 					break;
-				case 12: //12, 待办完成
+				case 12: // 12, 待办完成
 					ibtn.setImageResource(R.drawable.ic_done);
 					break;
-				case 13: //13, 待办暂停
+				case 13: // 13, 待办暂停
 					ibtn.setImageResource(R.drawable.ic_pause);
 					break;
-				case 2: //2, 提醒
+				case 2: // 2, 提醒
 					ibtn.setImageResource(R.drawable.ic_alarm);
 					break;
-				} 
-				
+				}
+
 				ibtn.setOnClickListener(new View.OnClickListener() {
 					@Override
-					public void onClick(View v) { 
-						item_img_btn_click(s); 
+					public void onClick(View v) {
+						item_img_btn_click(s);
 					}
 				});
-				
-				
-//				switch (action_menu_checked_menu) {
-//				case R.id.action_list_todo:
-//					convertView = inflater1.inflate(
-//							R.layout.listview_item_todo, null);
-//					
-//					SubjectBean subject = (SubjectBean) item;
-//					ImageView ic = (ImageView) convertView
-//							.findViewById(R.id.icon);
-//					
-//					if(subject.getIsTodo()  )
-//					{
-//						switch(subject.getStatus()){
-//						case 0:
-//							ic.setImageResource(R.drawable.ic_flag);
-//							break;
-//						case 2: //done
-//							ic.setImageResource(R.drawable.ic_done);
-//							break;
-//						case 3: //pause
-//							ic.setImageResource(R.drawable.ic_pause);
-//							break;
-//						}
-//					}
-//					
-//					
-//					
-//					if (subject.getIsTodo()) {
-//						ic.setColorFilter(Color.RED);
-//					}
-//					TextView tv = (TextView) convertView
-//							.findViewById(R.id.tvBody);
-//					tv.setText(subject.getBody().replaceAll("\n", ""));
-//					if (subject.getIsTodo()
-//							&& subject.getPlanStartDate() != null) {
-//						tv.setText(subject.getBody().replaceAll("\n", "")
-//								+ " 待办日期:" + subject.getPlanStartDate());
-//					}
-//
-//					break;
-//				default:
-//					convertView = inflater1.inflate(R.layout.listview_item,
-//							null);
-//					
-//					ImageButton ibtn = (ImageButton) convertView
-//							.findViewById(R.id.btnIcon);
-//					ibtn.setImageResource(R.drawable.ic_flag);
-//					
-//					TextView text = (TextView) convertView
-//							.findViewById(R.id.tvBody);
-//					SubjectBean s = (SubjectBean) item;
-//					text.setText(s.getBody());
-//					break;
-//				}
+
+				// switch (action_menu_checked_menu) {
+				// case R.id.action_list_todo:
+				// convertView = inflater1.inflate(
+				// R.layout.listview_item_todo, null);
+				//
+				// SubjectBean subject = (SubjectBean) item;
+				// ImageView ic = (ImageView) convertView
+				// .findViewById(R.id.icon);
+				//
+				// if(subject.getIsTodo() )
+				// {
+				// switch(subject.getStatus()){
+				// case 0:
+				// ic.setImageResource(R.drawable.ic_flag);
+				// break;
+				// case 2: //done
+				// ic.setImageResource(R.drawable.ic_done);
+				// break;
+				// case 3: //pause
+				// ic.setImageResource(R.drawable.ic_pause);
+				// break;
+				// }
+				// }
+				//
+				//
+				//
+				// if (subject.getIsTodo()) {
+				// ic.setColorFilter(Color.RED);
+				// }
+				// TextView tv = (TextView) convertView
+				// .findViewById(R.id.tvBody);
+				// tv.setText(subject.getBody().replaceAll("\n", ""));
+				// if (subject.getIsTodo()
+				// && subject.getPlanStartDate() != null) {
+				// tv.setText(subject.getBody().replaceAll("\n", "")
+				// + " 待办日期:" + subject.getPlanStartDate());
+				// }
+				//
+				// break;
+				// default:
+				// convertView = inflater1.inflate(R.layout.listview_item,
+				// null);
+				//
+				// ImageButton ibtn = (ImageButton) convertView
+				// .findViewById(R.id.btnIcon);
+				// ibtn.setImageResource(R.drawable.ic_flag);
+				//
+				// TextView text = (TextView) convertView
+				// .findViewById(R.id.tvBody);
+				// SubjectBean s = (SubjectBean) item;
+				// text.setText(s.getBody());
+				// break;
+				// }
 
 			} else {
 				convertView = inflater1.inflate(R.layout.listview_group, null);

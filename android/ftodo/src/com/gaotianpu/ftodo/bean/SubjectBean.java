@@ -124,7 +124,7 @@ public class SubjectBean {
 		Log.i("getPlanStartSort",_plan_start_date);
 		
 		if(d.getTime() < Util.str2Date(Util.getDateStr(0)).getTime()){
-			return 1;
+			return 2; //过期的默认变成今天的
 		}
 		if(_plan_start_date.equals(Util.getDateStr(0))  ){
 			return 2;

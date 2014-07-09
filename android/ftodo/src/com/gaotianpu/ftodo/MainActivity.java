@@ -209,8 +209,9 @@ public class MainActivity extends Activity {
 
 			break;
 		case 1: // 全部
-		case 3: // 全部
-		case 4: // 全部
+		case 3: // 待办
+		case 4: // 完成
+		case 5: // 提醒
 			fragment = new ListFragment();
 			Bundle args0 = new Bundle();			
 			args0.putString(ListFragment.LIST_SORT, ListSort);
@@ -224,7 +225,7 @@ public class MainActivity extends Activity {
 			break;
 //		case 3: // 提醒
 			
-		case 5:
+		case 6:
 		default:
 			fragment = new SettingFragment();
 			break;
