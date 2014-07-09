@@ -28,7 +28,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "task_status INTEGER NOT NULL default 0," //task_status 尚未开始 NotBegun 0，已开始 Doing 10，结束Done2，Block3
 				+ "is_remind INTEGER NOT NULL default 0 ,"
 				+ "remind_datetime datetime ,"
-				+ "remind_frequency INTEGER NOT NULL default 0,"
+				+ "remind_frequency INTEGER NOT NULL default 0,"  //1day,2week,3month,4year
 				+ "remind_next datetime ,"
 				+ "local_version INTEGER NOT NULL default 0,"	
 				+ "server_version INTEGER NOT NULL default 0,"	

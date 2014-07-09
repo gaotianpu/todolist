@@ -79,6 +79,10 @@ public class FTDClient {
 		params.put("is_todo", String.valueOf(subject.getIsTodo() ? 1 : 0));
 		params.put("plan_start_date", subject.getPlanStartDate());
 		params.put("task_status", String.valueOf(subject.getStatus())); 
+		
+		params.put("remind_datetime", subject.getRemindDate()); 
+		params.put("remind_next", subject.getNextRemindDate()); 
+		params.put("remind_frequency", String.valueOf(subject.getRemindFrequency())); 
 
 		Log.i("AsyncService", params.toString());
 
@@ -177,6 +181,11 @@ public class FTDClient {
 				subject.setPlanStartDate( item.getString("plan_start_date") );
 				
 				subject.setStatus( item.getInt("task_status") );
+				
+				subject.setRemindDate(item.getString( "remind_datetime"));
+				subject.setNextRemindDate(item.getString( "remind_next"));
+				subject.setRemindFrequency(item.getInt( "remind_frequency" ));
+				
 				subjectList.add(subject);
 
 				// item.getString("created_date");

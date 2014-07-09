@@ -70,7 +70,7 @@ def load_last_one(user_id):
 def load_all(offset,limit=100):
     return list(dbr.select(table_name,order="pk_id desc",offset=offset,limit=limit))
 
-list_fields = "pk_id,user_id,body,created_date,last_update,local_id,is_delete,is_todo,is_remind,plan_start_date,task_status"
+list_fields = "pk_id,user_id,body,created_date,last_update,local_id,is_delete,is_todo,is_remind,plan_start_date,task_status,remind_datetime,remind_frequency,remind_next"
 def load_page(cust_id,offset,limit): 
     rows = list(dbr.select(table_name,
         what= list_fields, 

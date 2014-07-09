@@ -79,6 +79,11 @@ public class SubjectDa {
 		values.put("is_todo", subject.getIsTodo());
 		values.put("is_remind", subject.getIsRemind()); //
 		values.put("plan_start_date", subject.getPlanStartDate()); //
+		
+		//remind
+		values.put("remind_datetime", subject.getRemindDate());
+		values.put("remind_next", subject.getNextRemindDate());  
+		values.put("remind_frequency", subject.getRemindFrequency());   
 
 		// 检查sqlite 是否有remote_id, 无
 		db = dbHelper.getWritableDatabase();
@@ -275,7 +280,8 @@ public class SubjectDa {
 
 	private final String[] list_selected_fields = new String[] { "pk_id",
 			"user_id", "body", "creation_date", "last_update", "remote_id",
-			"is_todo", "is_remind", "parent_id", "local_version", "is_del","date(plan_start_date) as plan_start_date,task_status" };
+			"is_todo", "is_remind", "parent_id", "local_version", "is_del","date(plan_start_date) as plan_start_date","task_status",
+			"date(remind_datetime) as remind_datetime","date(remind_next) as  remind_next","remind_frequency"};
 
 	private List<SubjectBean> load_list(Cursor cursor) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
@@ -295,6 +301,11 @@ public class SubjectDa {
 			subject.setIsDel(cursor.getInt(10));			
 			subject.setPlanStartDate(cursor.getString( 11));
 			subject.setStatus(cursor.getInt( 12 ));
+			
+			//提醒相关
+			subject.setRemindDate(cursor.getString( 13));
+			subject.setNextRemindDate(cursor.getString( 14));
+			subject.setRemindFrequency(cursor.getInt( 15 ));
 
 			subjectList.add(subject);
 			cursor.moveToNext();

@@ -110,7 +110,29 @@ public class SubjectBean {
 		this._plan_start_date = plan_start_date;
 	}
 	
-
+	private String _remind_date;
+	public String getRemindDate() {
+		return _remind_date;
+	}
+	public void setRemindDate(String remind_date) {
+		this._remind_date = remind_date;
+	}
+	
+	private String _next_remind_date;
+	public String getNextRemindDate() {
+		return _next_remind_date;
+	}
+	public void setNextRemindDate(String next_remind_date) {
+		this._next_remind_date = next_remind_date;
+	}
+	
+	private int _remind_frequency=0;
+	public int getRemindFrequency() {
+		return _remind_frequency;
+	}
+	public void setRemindFrequency(int remind_frequency) {
+		_remind_frequency = remind_frequency;
+	}
 	
 	public int getPlanStartSort(){
 		if(_plan_start_date==null){
