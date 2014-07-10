@@ -306,6 +306,8 @@ public class ListTodoFragment extends Fragment {
 			Log.i("listviewgetview", String.valueOf(item));
 
 			if (item.getClass() == SubjectBean.class) {
+				final SubjectBean s = (SubjectBean) item;
+				
 				convertView = inflater1.inflate(R.layout.listview_item, null);
 
 				ImageButton ibtn = (ImageButton) convertView
@@ -313,8 +315,10 @@ public class ListTodoFragment extends Fragment {
 				ibtn.setImageResource(R.drawable.ic_flag);
 				TextView text = (TextView) convertView
 						.findViewById(R.id.tvBody);
-				final SubjectBean s = (SubjectBean) item;
-				text.setText(s.getBody());
+				
+				String content = s.getBody().replaceAll("\n", "") ;
+				//content = content + " l:" + String.valueOf(s.getId()) + ",r:" + String.valueOf(s.getRemoteId()) ;
+				text.setText(content);
 
 				switch (s.get_sort_status()) {
 				case 0:
@@ -340,61 +344,7 @@ public class ListTodoFragment extends Fragment {
 					public void onClick(View v) {
 						item_img_btn_click(s);
 					}
-				});
-
-				// switch (action_menu_checked_menu) {
-				// case R.id.action_list_todo:
-				// convertView = inflater1.inflate(
-				// R.layout.listview_item_todo, null);
-				//
-				// SubjectBean subject = (SubjectBean) item;
-				// ImageView ic = (ImageView) convertView
-				// .findViewById(R.id.icon);
-				//
-				// if(subject.getIsTodo() )
-				// {
-				// switch(subject.getStatus()){
-				// case 0:
-				// ic.setImageResource(R.drawable.ic_flag);
-				// break;
-				// case 2: //done
-				// ic.setImageResource(R.drawable.ic_done);
-				// break;
-				// case 3: //pause
-				// ic.setImageResource(R.drawable.ic_pause);
-				// break;
-				// }
-				// }
-				//
-				//
-				//
-				// if (subject.getIsTodo()) {
-				// ic.setColorFilter(Color.RED);
-				// }
-				// TextView tv = (TextView) convertView
-				// .findViewById(R.id.tvBody);
-				// tv.setText(subject.getBody().replaceAll("\n", ""));
-				// if (subject.getIsTodo()
-				// && subject.getPlanStartDate() != null) {
-				// tv.setText(subject.getBody().replaceAll("\n", "")
-				// + " 待办日期:" + subject.getPlanStartDate());
-				// }
-				//
-				// break;
-				// default:
-				// convertView = inflater1.inflate(R.layout.listview_item,
-				// null);
-				//
-				// ImageButton ibtn = (ImageButton) convertView
-				// .findViewById(R.id.btnIcon);
-				// ibtn.setImageResource(R.drawable.ic_flag);
-				//
-				// TextView text = (TextView) convertView
-				// .findViewById(R.id.tvBody);
-				// SubjectBean s = (SubjectBean) item;
-				// text.setText(s.getBody());
-				// break;
-				// }
+				}); 
 
 			} else {
 				convertView = inflater1.inflate(R.layout.listview_group, null);

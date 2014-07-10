@@ -1,6 +1,7 @@
 package com.gaotianpu.ftodo.ui;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,6 +19,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 
 import android.content.Context;
@@ -43,6 +46,7 @@ import android.view.View.OnKeyListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -345,6 +349,63 @@ public class ListFragment extends Fragment {
 
 		});
 	}
+	
+	private void remind_img_btn_click(final SubjectBean subject) {
+		Calendar c = Calendar.getInstance();
+		Dialog dialog = new DatePickerDialog(act,
+				new DatePickerDialog.OnDateSetListener() {
+					public void onDateSet(DatePicker dp, int year, int month,
+							int dayOfMonth) { 
+						
+						String remind_date =  String.format("%d-%d-%d", year,month+1,dayOfMonth);
+						Log.i("remind_date",remind_date);
+						subject.setRemindDate(remind_date);
+						subjectDa.set_remind_date(subject.getId(),remind_date); 
+						
+						String[] items = {"每天","每周","每月","每年"};
+						new AlertDialog.Builder(act)
+						.setTitle("设置重复周期")
+						.setSingleChoiceItems(
+								items, -1, //get from data
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										
+										//change data
+										subject.setRemindFrequency(which+1);
+										subjectDa.set_remind_frequency(subject.getId(), which+1);
+										
+										switch(which+1){
+										case 1: //day
+											//day+1
+											break;
+										case 2: //week
+											//day+7
+											break;
+										case 3: //month
+											//month+1, 30,31,28,29?
+											break;
+										case 4: //year
+											//subjectDa.set_next_remind(subject.getId(),String.format("%d-%d-%d");
+											break;
+										}
+										
+										dialog.dismiss();
+										
+										listAdapter.notifyDataSetChanged();
+									}
+								}).setNegativeButton("取消", null).show();
+
+					}
+				}, c.get(Calendar.YEAR), // 传入年份
+				c.get(Calendar.MONTH), // 传入月份
+				c.get(Calendar.DAY_OF_MONTH) // 传入天数
+		);
+
+		dialog.setTitle("设置提醒日期");
+		dialog.setCancelable(true);
+		dialog.show();
+	}
 
 	private void item_img_btn_click(final SubjectBean subject) {
 		List dates = new ArrayList();
@@ -436,7 +497,46 @@ public class ListFragment extends Fragment {
 			convertView = inflater1.inflate(R.layout.listview_item, null);
 
 			TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
-			tv.setText(subject.getBody().replaceAll("\n", ""));
+			Log.i("remind",list_sort);
+			String content = "";
+			if(list_sort.equals("remind")){				
+				if(subject.getNextRemindDate()!=null){
+					content = content + subject.getNextRemindDate();
+				}
+				if(subject.getRemindFrequency()>0){
+					switch(subject.getRemindFrequency()){
+					case 1:
+						content = content + " 天 ";
+						break;
+					case 2:
+						content = content + " 周 ";
+						break;
+					case 3:
+						content = content + " 月 ";
+						break;
+					case 4:
+						content = content + " 年 ";
+						break;
+					}					
+				}
+				
+				Log.i("remind",String.valueOf(subject.getRemindFrequency()));
+				
+				content = content + subject.getBody().replaceAll("\n", "") ;
+				
+				//debug, 看listview中item重复的原因
+				//content = content + " l:" + String.valueOf(subject.getId()) + ",r:" + String.valueOf(subject.getRemoteId()) ;
+				
+				tv.setText(content);
+			}else{
+				content = subject.getBody().replaceAll("\n", "") ;
+				
+				//debug, 看listview中item重复的原因
+				//content = content + " l:" + String.valueOf(subject.getId()) + ",r:" + String.valueOf(subject.getRemoteId()) ;
+				
+				tv.setText(content);
+			}
+			
 
 			ImageButton ibtn = (ImageButton) convertView
 					.findViewById(R.id.btnIcon);
@@ -463,9 +563,13 @@ public class ListFragment extends Fragment {
 			ibtn.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					item_img_btn_click(subject);
+					if (list_sort.equals("remind")) {
+						remind_img_btn_click(subject);
+					} else {
+						item_img_btn_click(subject);
+					}
 				}
-			}); 
+			});
 
 			return convertView;
 

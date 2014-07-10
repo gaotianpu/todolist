@@ -2,15 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="#666666"
+    android:background="#ccc"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:paddingLeft="10dp" >
+    android:padding="5dp" >
 
     <TextView
         android:id="@+id/group_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical" />
+        android:gravity="center_vertical" 
+        android:textSize="14sp"
+        android:textStyle="bold"/>
 
 </LinearLayout>

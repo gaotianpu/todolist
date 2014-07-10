@@ -17,7 +17,7 @@ def insert(user_id,subject):
         plan_start_date=web.SQLLiteral('now()'))
 
 def insert2(user_id,body,device_type,device_no,local_id,created_date,last_update):
-    rows = list(dbr.select(table_name,what="pk_id,body", where="user_id=$user_id",vars=locals(),order="pk_id desc", limit=80))
+    rows = list(dbw.select(table_name,what="pk_id,body", where="user_id=$user_id",vars=locals(),order="pk_id desc", limit=80))
     for r in rows:
         if cmp(r.body,body)==0:
             return r.pk_id
@@ -61,7 +61,7 @@ def load_by_date(user_id,date):
         order="pk_id",vars=locals()))
 
 def load_last_one(user_id):
-    rows = list(dbr.select(table_name,what="pk_id,subject,body,task_status",
+    rows = list(dbw.select(table_name,what="pk_id,subject,body,task_status",
         where='user_id=$user_id',vars=locals()))
     if rows:
         return rows[0]

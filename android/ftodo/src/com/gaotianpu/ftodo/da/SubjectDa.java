@@ -192,6 +192,39 @@ public class SubjectDa {
 		update_version(db, local_id);
 		db.close();
 	}
+	
+	public void set_remind_date(long local_id,String remind_date){
+		ContentValues values = new ContentValues();
+		values.put("remind_datetime", remind_date);
+
+		db = dbHelper.getWritableDatabase();
+		db.update("subjects", values, "pk_id=?",
+				new String[] { String.valueOf(local_id) });
+		update_version(db, local_id);
+		db.close();
+	}
+	
+	public void set_remind_frequency(long local_id,int remind_frequency){
+		ContentValues values = new ContentValues();
+		values.put("remind_frequency", remind_frequency);
+
+		db = dbHelper.getWritableDatabase();
+		db.update("subjects", values, "pk_id=?",
+				new String[] { String.valueOf(local_id) });
+		update_version(db, local_id);
+		db.close();
+	}
+	
+	public void set_next_remind(long local_id,String next_remind_date){
+		ContentValues values = new ContentValues();
+		values.put("remind_next", next_remind_date);
+
+		db = dbHelper.getWritableDatabase();
+		db.update("subjects", values, "pk_id=?",
+				new String[] { String.valueOf(local_id) });
+		update_version(db, local_id);
+		db.close();
+	}
 
 	public void edit_content(long local_id, String content) {
 		ContentValues values = new ContentValues();
