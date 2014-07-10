@@ -285,6 +285,9 @@ public class SubjectDa {
 
 		return subject;
 	}
+	
+	 
+	
 
 	// 失败的尝试，
 	public List<SubjectBean> search(long user_id, String query) {
@@ -377,6 +380,29 @@ public class SubjectDa {
 					"(user_id=? or user_id=0) and parent_id=? and is_del=0 ",
 					new String[] { String.valueOf(user_id),
 							String.valueOf(parent_id) }, null, null,
+					"pk_id desc");
+
+			subjectList = load_list(cursor);
+
+		} catch (IllegalArgumentException e) {
+			Log.e("SQLiteOp", e.toString());
+		} finally {
+			db.close();
+		}
+
+		return subjectList;
+	}
+	
+	public List<SubjectBean> load_expired_reminds(long user_id) {
+		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
+		db = dbHelper.getWritableDatabase();
+		try {
+
+			Cursor cursor = db.query(
+					"subjects",
+					list_selected_fields,
+					"(user_id=? or user_id=0) and is_del=0 and is_remind=1 and remind_datetime is not null and remind_next < current_date", 
+					new String[] { String.valueOf(user_id) }, null, null,
 					"pk_id desc");
 
 			subjectList = load_list(cursor);

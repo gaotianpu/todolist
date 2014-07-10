@@ -57,6 +57,12 @@ public class SettingFragment extends Fragment {
 
 		return rootView;
 	}
+	
+	@Override
+	public void onResume() {
+		listAdapter.notifyDataSetChanged();
+		super.onResume();
+	}
 
 	private List<SettingBean> load_data() {
 		//cn

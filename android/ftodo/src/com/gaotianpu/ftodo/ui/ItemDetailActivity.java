@@ -1,22 +1,20 @@
 package com.gaotianpu.ftodo.ui;
 
-import java.text.SimpleDateFormat;
+ 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+ 
 import java.util.List;
 import com.gaotianpu.ftodo.MainActivity;
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
 import com.gaotianpu.ftodo.bean.DateBean;
-import com.gaotianpu.ftodo.bean.SettingBean;
+ 
 import com.gaotianpu.ftodo.bean.SubjectBean;
 import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.SubjectDa;
 import com.gaotianpu.ftodo.da.Util;
 
-import android.annotation.SuppressLint;
+ 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -36,8 +34,7 @@ import android.view.View.OnKeyListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
+ 
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;

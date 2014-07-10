@@ -84,6 +84,12 @@ public class ListTodoFragment extends Fragment {
 
 		return rootView;
 	}
+	
+	@Override
+	public void onResume() {
+		listAdapter.notifyDataSetChanged();
+		super.onResume();
+	}
 
 	private void load_data(int offset, int size) {
 		List<SubjectBean> taskList0 = new ArrayList<SubjectBean>();

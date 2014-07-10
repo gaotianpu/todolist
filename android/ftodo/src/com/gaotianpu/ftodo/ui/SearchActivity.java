@@ -97,6 +97,12 @@ public class SearchActivity extends Activity {
 		// lvDefault_setOnScrollListener();
 
 	}
+	
+	@Override
+	public void onResume() {
+		listAdapter.notifyDataSetChanged();
+		super.onResume();
+	}
 
 	/**
 	 * Shows the progress UI and hides the login form.

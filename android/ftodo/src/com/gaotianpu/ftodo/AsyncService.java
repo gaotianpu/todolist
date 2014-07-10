@@ -9,13 +9,13 @@ import com.gaotianpu.ftodo.bean.SubjectBean;
 import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.FTDClient;
 import com.gaotianpu.ftodo.da.SubjectDa;
+import com.gaotianpu.ftodo.da.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Service;
 
 import android.content.Context;
 import android.content.Intent;
-
 
 import android.os.Binder;
 import android.os.Handler;
@@ -41,7 +41,6 @@ public class AsyncService extends Service {
 
 	public static final String TAG = "AsyncService";
 	private Handler mHandler;
-	 
 
 	private String devie_no;
 	private String device_type;
@@ -58,7 +57,7 @@ public class AsyncService extends Service {
 		app = (MyApplication) getApplicationContext();
 		ftd = new FTDClient(context);
 
-		mHandler = new Handler(); 
+		mHandler = new Handler();
 
 		context = this;
 		subjectDa = new SubjectDa(this);
@@ -71,15 +70,22 @@ public class AsyncService extends Service {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-			 
-				if ( app.network_available() ) {
+
+				if (app.network_available()) {
 					user = app.getUser();
 					// Log.i("onStartCommand",
 					// String.valueOf(user.getUserId()) + ","
 					// + String.valueOf(user.getTokenStatus()));
 					if (user.getUserId() != 0 && user.getTokenStatus() != 0) {
 						upload();
+						
 						download();
+
+						try {
+							next_remind();
+						} catch (Exception ex) {
+							Log.e(TAG, ex.getMessage());
+						}
 					}
 
 				}
@@ -101,12 +107,12 @@ public class AsyncService extends Service {
 		// need changed?
 		List<SubjectBean> subjectList = subjectDa
 				.load_changed_but_not_uploaded(user.getUserId());
-		//Log.i(TAG,  String.valueOf(subjectList.size() ) );
+		// Log.i(TAG, String.valueOf(subjectList.size() ) );
 		if (subjectList.size() == 0) {
 			return;
 		}
 
-	//	Log.i(TAG, "has not async subjects times ");
+		// Log.i(TAG, "has not async subjects times ");
 
 		// todo, 单个上传要改成批量上传
 		for (SubjectBean subject : subjectList) {
@@ -117,9 +123,9 @@ public class AsyncService extends Service {
 			if (user_id == 0) {
 				user_id = user.getUserId();
 			}
-			
+
 			Log.i(TAG, String.valueOf(subject.getRemoteId()));
-			
+
 			ftd.post_task(user_id, user.getAccessToken(), subject,
 					new JsonHttpResponseHandler() {
 						@Override
@@ -132,7 +138,7 @@ public class AsyncService extends Service {
 										data.getLong("pk_id"),
 										data.getLong("user_id"),
 										data.getInt("version"));
-								 Log.d(TAG, "sucess");
+								Log.d(TAG, "sucess");
 
 							} catch (JSONException e) {
 								Log.e(TAG, e.toString());
@@ -146,14 +152,14 @@ public class AsyncService extends Service {
 								// add code here
 								app.set_token_failure();
 							}
-							
+
 							Log.d(TAG, String.valueOf(statusCode));
 
 						}
 					});
 			break;
 		}
-		
+
 	}
 
 	private void download() {
@@ -180,7 +186,7 @@ public class AsyncService extends Service {
 		// download and insert into subjects
 		int page_size = 100;
 		List<Long> offset_list = subjectDa.load_not_download(user.getUserId());
-		// Log.i(TAG,  "download"   );
+		// Log.i(TAG, "download" );
 
 		if (offset_list.size() == 0) {
 			return;
@@ -201,7 +207,7 @@ public class AsyncService extends Service {
 							for (SubjectBean s : subjectList) {
 								uid = s.getUserId();
 
-								subjectDa.insert2(s );
+								subjectDa.insert2(s);
 
 							}
 
@@ -224,5 +230,18 @@ public class AsyncService extends Service {
 				});
 		// }
 
+	}
+
+	private void next_remind() {
+		List<SubjectBean> subjectList = subjectDa.load_expired_reminds(user
+				.getUserId());
+		
+		//Log.i("next_remind", String.valueOf( subjectList.size()));
+		
+		for (SubjectBean subject : subjectList) {
+			String next_remind_date = Util.getNextDate(subject.getRemindDate(),
+					subject.getRemindFrequency());
+			subjectDa.set_next_remind(subject.getId(), next_remind_date);
+		}
 	}
 }

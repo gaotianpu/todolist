@@ -3,7 +3,7 @@ package com.gaotianpu.ftodo.ui;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
+ 
 import java.util.List;
 
 import org.json.JSONObject;
@@ -54,7 +54,7 @@ import android.widget.ImageButton;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import android.widget.ImageView;
+ 
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
