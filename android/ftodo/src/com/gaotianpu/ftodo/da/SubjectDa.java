@@ -396,7 +396,8 @@ public class SubjectDa {
 		db = dbHelper.getWritableDatabase();
 		try {
 			String sqlwhere = "remote_id=0 and is_del=0 ";
-			 
+			String orderBy = "pk_id desc";
+			
 			if (list_sort.equals("todo")) { // 待办
 				sqlwhere = sqlwhere + " and is_todo=1 and task_status<>2 and task_status<>3 ";
 			}  else if (list_sort.equals("done")) { //完成
@@ -405,17 +406,18 @@ public class SubjectDa {
 				sqlwhere = sqlwhere +  " and is_todo=1 and task_status=3 ";
 			} else if (list_sort.equals("remind")) { // 提醒
 				sqlwhere = sqlwhere + " and is_remind=1";
+				orderBy = "remind_next asc";
 			}else { //all
 				//sqlwhere = " ";
 			}
 			
 			sqlwhere = sqlwhere + " and (user_id=? or user_id=0) ";
 
-			Log.i("sqlwhere",sqlwhere);
-
+			Log.i("sqlwhere",sqlwhere); 
+			
 			Cursor cursor = db.query("subjects", list_selected_fields,
 					sqlwhere, new String[] { String.valueOf(user_id) }, null,
-					null, "pk_id desc");
+					null, orderBy);
 
 			subjectList = load_list(cursor);
 
@@ -434,6 +436,7 @@ public class SubjectDa {
 		db = dbHelper.getWritableDatabase();
 		try {
 			String sqlwhere = "remote_id<>0 and is_del=0";
+			String orderBy = "remote_id DESC,pk_id desc";
 			
 			if (list_sort.equals( "todo")) { // 待办
 				sqlwhere = sqlwhere + "and is_todo=1 and task_status<>2 and task_status<>3 ";
@@ -443,6 +446,7 @@ public class SubjectDa {
 				sqlwhere = sqlwhere + " and is_todo=1  and task_status=3  ";
 			} else if (list_sort.equals("remind")) { // 提醒
 				sqlwhere = sqlwhere + " and is_remind=1";
+				orderBy = "remind_next asc";
 			}else { //all
 				 //
 			}
@@ -454,7 +458,7 @@ public class SubjectDa {
 			Cursor cursor = db.query("subjects", list_selected_fields,
 					sqlwhere, new String[] { String.valueOf(user_id) }, null,
 					null,
-					"remote_id DESC,pk_id desc limit " + String.valueOf(size)
+					orderBy + " limit " + String.valueOf(size)
 							+ " offset " + String.valueOf(offset));
 
 			subjectList = load_list(cursor);

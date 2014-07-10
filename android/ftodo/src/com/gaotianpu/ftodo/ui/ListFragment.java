@@ -375,20 +375,10 @@ public class ListFragment extends Fragment {
 										subject.setRemindFrequency(which+1);
 										subjectDa.set_remind_frequency(subject.getId(), which+1);
 										
-										switch(which+1){
-										case 1: //day
-											//day+1
-											break;
-										case 2: //week
-											//day+7
-											break;
-										case 3: //month
-											//month+1, 30,31,28,29?
-											break;
-										case 4: //year
-											//subjectDa.set_next_remind(subject.getId(),String.format("%d-%d-%d");
-											break;
-										}
+										String next_remind_date = Util.getNextDate(subject.getRemindDate(),which+1);
+										
+										subject.setNextRemindDate(next_remind_date);
+										subjectDa.set_next_remind(subject.getId(), next_remind_date);
 										
 										dialog.dismiss();
 										
@@ -522,7 +512,7 @@ public class ListFragment extends Fragment {
 				
 				Log.i("remind",String.valueOf(subject.getRemindFrequency()));
 				
-				content = content + subject.getBody().replaceAll("\n", "") ;
+				content = content + "\n" + subject.getBody().replaceAll("\n", "") ;
 				
 				//debug, 看listview中item重复的原因
 				//content = content + " l:" + String.valueOf(subject.getId()) + ",r:" + String.valueOf(subject.getRemoteId()) ;
