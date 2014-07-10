@@ -2,6 +2,7 @@ package com.gaotianpu.ftodo.ui;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -350,15 +351,21 @@ public class ListFragment extends Fragment {
 		});
 	}
 	
-	private void remind_img_btn_click(final SubjectBean subject) {
-		Calendar c = Calendar.getInstance();
+	private void remind_img_btn_click(final SubjectBean subject) { 
+		Calendar c = Calendar.getInstance(); 
+		Date d = Util.str2Date(subject.getRemindDate());
+	 
+		if(d!=null){
+			c.setTime(d);
+		} 
+	 
 		Dialog dialog = new DatePickerDialog(act,
 				new DatePickerDialog.OnDateSetListener() {
 					public void onDateSet(DatePicker dp, int year, int month,
 							int dayOfMonth) { 
 						
-						String remind_date =  String.format("%d-%d-%d", year,month+1,dayOfMonth);
-						Log.i("remind_date",remind_date);
+						String remind_date = Util.GetDateFromInts(year,month,dayOfMonth); // String.format("%d-%d-%d", year,month+1,dayOfMonth);
+						 
 						subject.setRemindDate(remind_date);
 						subjectDa.set_remind_date(subject.getId(),remind_date); 
 						
@@ -366,7 +373,7 @@ public class ListFragment extends Fragment {
 						new AlertDialog.Builder(act)
 						.setTitle("设置重复周期")
 						.setSingleChoiceItems(
-								items, -1, //get from data
+								items, subject.getRemindFrequency()-1,  //get from data
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int which) {
@@ -552,7 +559,8 @@ public class ListFragment extends Fragment {
 
 			ibtn.setOnClickListener(new View.OnClickListener() {
 				@Override
-				public void onClick(View v) {
+				public void onClick(View v) { 
+					
 					if (list_sort.equals("remind")) {
 						remind_img_btn_click(subject);
 					} else {

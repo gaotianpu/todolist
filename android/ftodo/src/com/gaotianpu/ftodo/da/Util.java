@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.net.ParseException;
+import android.util.Log;
 
 public class Util {
 	public static String getDateStr(int days) {
@@ -61,21 +62,53 @@ public class Util {
 		return tommorrow;
 	}
 	
+	public static String getNextWeekDay(String remindDate){
+		//先算出，星期几
+		//今天是星期几，
+		//距离设定的星期几，差几天，还是多几天 
+		
+		Date current = str2Date(remindDate);  
+		 
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(new Date());
+		int today_week_day = calendar.get(Calendar.DAY_OF_WEEK);
+		
+		Calendar calendar1 = new GregorianCalendar();
+		calendar1.setTime(current);
+		int remind_week_day = calendar1.get(Calendar.DAY_OF_WEEK);
+		
+		if(remind_week_day>today_week_day){		
+			//remind_week_day 大于当月总天数，eg. 8.31, 9.30
+			int max_days = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+			if(max_days>remind_week_day){
+				calendar.add(calendar.DATE, remind_week_day-today_week_day);
+			}else{
+				calendar.add(calendar.DATE, max_days);
+			}
+		}else{
+			calendar.add(calendar.DATE, 7 - today_week_day + remind_week_day);
+		}
+		
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");		 
+		String next = fmt.format(calendar.getTime());
+		return next;
+	}
+	
 	public static String getNextDate(String currentDate,int sort){
-		Date current = str2Date(currentDate);
+		Date current = str2Date(currentDate); 
+		
+		//如果设置的提醒日期 大于今天，则直接设置 current
+		if(current.after(new Date())){			 
+			return currentDate;
+		}
 		
 		switch(sort){
-		case 1: //day
-			//day+1
-			return getDateStr(1);			 
-		case 2: //week
-			//day+7
-			//先算出，星期几
-			//今天是星期几，
-			//距离设定的星期几，差几天，还是多几天
-			return getAddDateStr(current,7);			 
+		case 1: //day			
+			return getDateStr(1);  //today+1	???		 
+		case 2: //week			 
+			return getNextWeekDay(currentDate);	 //ok	 
 		case 3: //month			 
-			return getDateOfNextMonth(currentDate);  
+			return GetNextMonthDay(currentDate); //ok 
 		case 4: //year
 			//有一个例外，闰年2-29，下一年则没有2-29 
 			return getDateOfNextYear(currentDate); 
@@ -109,6 +142,39 @@ public class Util {
 		
 		return "";
 		
+	}
+	
+	public static String GetDateFromInts(int year,int month,int day){
+		Calendar c = Calendar.getInstance();
+		c.set(year, month, day);
+		
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");		 
+		String next = fmt.format(c.getTime());
+		return next;
+	}
+	
+	public static String GetNextMonthDay(String remindDate){
+		Date current = str2Date(remindDate);  
+		 
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(new Date());
+		int today_day_of_month = calendar.get(Calendar.DAY_OF_MONTH);
+		
+		Calendar calendar1 = new GregorianCalendar();
+		calendar1.setTime(current);
+		int remind_day_of_month = calendar1.get(Calendar.DAY_OF_MONTH);
+		
+		if(remind_day_of_month > today_day_of_month){
+			// (remind_week_day-today_week_day) 
+			calendar.add(calendar.DATE, remind_day_of_month - today_day_of_month);
+		}else{ 
+			calendar.add(calendar.MONTH, 1);
+			calendar.set(Calendar.DAY_OF_MONTH, remind_day_of_month);
+		}
+		
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");		 
+		String next = fmt.format(calendar.getTime());
+		return next;
 	}
 
 	

@@ -112,6 +112,10 @@ public class SubjectBean {
 	
 	private String _remind_date;
 	public String getRemindDate() {
+		if(_remind_date==null){
+			return "";
+		}
+		
 		return _remind_date;
 	}
 	public void setRemindDate(String remind_date) {
@@ -120,6 +124,9 @@ public class SubjectBean {
 	
 	private String _next_remind_date;
 	public String getNextRemindDate() {
+		if(_next_remind_date==null){
+			return "";
+		}
 		return _next_remind_date;
 	}
 	public void setNextRemindDate(String next_remind_date) {
@@ -128,6 +135,7 @@ public class SubjectBean {
 	
 	private int _remind_frequency=0;
 	public int getRemindFrequency() {
+		 
 		return _remind_frequency;
 	}
 	public void setRemindFrequency(int remind_frequency) {
