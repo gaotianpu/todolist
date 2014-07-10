@@ -60,12 +60,14 @@ class Edit:
     @validate_token
     def POST(self):
         i = web.input(remote_id=0,local_id=0,content='',is_todo=0,is_remind=0,parent_id=0,
-            local_version=0,is_del=0,plan_start_date=None,task_status=0)  
+            local_version=0,is_del=0,plan_start_date=None,task_status=0,
+            remind_datetime=None,remind_next=None,remind_frequency=0)  
         content = web.websafe(i.content)
         da.subject.update(i.remote_id,self.token.user_id,
             body=i.content,is_todo=i.is_todo,is_remind=i.is_remind,
             parent_id=i.parent_id,version=i.local_version,is_delete=i.is_del,
-            plan_start_date = i.plan_start_date,task_status=i.task_status) 
+            plan_start_date = i.plan_start_date,task_status=i.task_status,
+            remind_datetime=i.remind_datetime,remind_next=i.remind_next,remind_frequency=i.remind_frequency) 
         task = da.subject.load_by_id(i.remote_id) 
         task.local_id = i.local_id        
         r = {"code":1,"data":task}
