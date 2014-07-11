@@ -1,22 +1,24 @@
 package com.gaotianpu.ftodo.ui;
 
- 
 import java.util.ArrayList;
- 
+import java.util.Calendar;
+import java.util.Date;
+
 import java.util.List;
 import com.gaotianpu.ftodo.MainActivity;
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
 import com.gaotianpu.ftodo.bean.DateBean;
- 
+
 import com.gaotianpu.ftodo.bean.SubjectBean;
 import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.SubjectDa;
 import com.gaotianpu.ftodo.da.Util;
 
- 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -34,8 +36,11 @@ import android.view.View.OnKeyListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
- 
+
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -52,7 +57,7 @@ public class ItemDetailActivity extends Activity {
 	private static SubjectDa subjectDa;
 
 	private static UserBean user;
-	private static SubjectBean currentSubject;
+	private static SubjectBean subject;
 
 	private Long subject_local_id;
 
@@ -74,9 +79,9 @@ public class ItemDetailActivity extends Activity {
 		// 2 UI
 
 		// 3 load data
-		currentSubject = subjectDa.load_by_localId(user.getUserId(),
+		subject = subjectDa.load_by_localId(user.getUserId(),
 				subject_local_id);
-		setTitle(currentSubject.getBody());
+		setTitle(subject.getBody());
 
 		// 4. event binding
 		if (savedInstanceState == null) {
@@ -156,7 +161,7 @@ public class ItemDetailActivity extends Activity {
 							@Override
 							public void onClick(DialogInterface dialog, int i) {
 
-								subjectDa.delete(currentSubject.getId());
+								subjectDa.delete(subject.getId());
 
 								Intent intent = new Intent();
 								intent.setClass(getApplicationContext(),
@@ -184,6 +189,24 @@ public class ItemDetailActivity extends Activity {
 	// 浏览模式
 	public static class DetailReadFragment extends Fragment {
 		private TextView txtSubjectBody;
+		private TextView subject_created_date;
+		private TextView subject_last_update;
+		private TextView subject_start_date;
+		private TextView subject_done_date;
+		private TextView subject_remind_date;
+		private TextView subject_remind_frequency;
+		
+		private LinearLayout layoutTodoRemind;
+		private LinearLayout layoutTodo;
+		private LinearLayout layoutRemind;
+		
+		private ImageButton btnRemind;
+		private ImageButton btnRemind1;
+		private ImageButton btnTodo;
+		private ImageButton btnTodo1;
+		
+		
+		
 		private ListView lvDefault;
 		private EditText txtNew;
 
@@ -201,11 +224,43 @@ public class ItemDetailActivity extends Activity {
 			// 1. ui
 			txtSubjectBody = (TextView) rootView
 					.findViewById(R.id.subject_body);
+			subject_created_date = (TextView) rootView
+					.findViewById(R.id.subject_created_date);
+			subject_last_update = (TextView) rootView
+					.findViewById(R.id.subject_last_update);			
+			subject_start_date  = (TextView) rootView
+					.findViewById(R.id.subject_start_date);
+			subject_done_date = (TextView) rootView
+					.findViewById(R.id.subject_done_date);
+			subject_remind_date = (TextView) rootView
+					.findViewById(R.id.subject_remind_date);
+			subject_remind_frequency = (TextView) rootView
+					.findViewById(R.id.subject_remind_frequency);
+
+			layoutTodoRemind = (LinearLayout) rootView
+					.findViewById(R.id.layoutTodoRemind);
+			layoutTodo = (LinearLayout) rootView.findViewById(R.id.layoutTodo);
+			layoutRemind = (LinearLayout) rootView
+					.findViewById(R.id.layoutRemind);
+			
+			btnRemind= (ImageButton) rootView
+					.findViewById(R.id.btnRemind);
+			btnRemind1= (ImageButton) rootView
+					.findViewById(R.id.btnRemind1);
+			btnTodo= (ImageButton) rootView
+					.findViewById(R.id.btnTodo);
+			btnTodo1 = (ImageButton) rootView
+					.findViewById(R.id.btnTodo1);
+
 			// lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
 			// txtNew = (EditText) rootView.findViewById(R.id.txtNew);
 
-			// data bindding
-			txtSubjectBody.setText(currentSubject.getBody());
+			// data bindding 
+					
+			data_bindding();
+			
+			event_binding();
+			
 
 			// subjectList = new ArrayList<SubjectBean>();
 			// listAdapter = new ListAdapter(getActivity());
@@ -230,6 +285,200 @@ public class ItemDetailActivity extends Activity {
 
 			return rootView;
 		}
+		
+		private void event_binding(){
+			btnRemind.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) { 
+					set_or_cancel_remind();					 
+				}
+			});
+			btnRemind1.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) { 
+					set_or_cancel_remind();			 
+				}
+			});
+			
+			btnTodo.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) { 
+					set_todo();				 
+				}
+			});
+			btnTodo1.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) { 
+					set_todo();			 
+				}
+			});
+		}
+		
+		private void set_todo(){
+			List dates = Util.getPickDates();
+			dates.add("已完成");
+			dates.add("先暂停");
+			if (subject.isTodo()) {
+				dates.add("非待办事项");
+			}
+			String[] pickdates = (String[]) dates.toArray(new String[dates.size()]);
+			new AlertDialog.Builder(act)
+					.setTitle(subject.getBody())
+					// .setIcon(android.R.drawable.ic_dialog_info)
+					.setSingleChoiceItems(pickdates, -1,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									subject.setIsTodo(true);
+									switch (which) {
+									case 0:
+									case 1:
+									case 2:
+										String start_date = Util.getDateStr(which);
+										subjectDa.set_todo_start_date(
+												subject.getId(), start_date);
+										subject.setIsTodo(true);
+										subject.setPlanStartDate(start_date);
+										break;
+									case 3:
+										String start_date2 = Util.getDateStr(10);
+										subjectDa.set_todo_start_date(
+												subject.getId(), start_date2);
+										subject.setIsTodo(true);
+										subject.setPlanStartDate(start_date2);
+										break;
+									case 4: // done
+										subjectDa.set_todo_status(subject.getId(),
+												2);
+										break;
+									case 5: // block
+										subjectDa.set_todo_status(subject.getId(),
+												3);
+										break;
+									case 6: // 非待办事项
+										subject.setIsTodo(false);
+										subjectDa.set_todo(subject.getId(), false);
+										break;
+									}
+
+									dialog.dismiss();  
+									data_bindding();
+									
+								}
+							}).setNegativeButton("取消", null).show();
+		}
+		
+		private void set_or_cancel_remind(){
+			if(subject.isRemind()){
+				//提示是否要取消？
+				new AlertDialog.Builder(act) 
+			 	.setTitle("取消提醒功能")
+			 	.setMessage("确定吗？")
+			 	.setPositiveButton("是", new DialogInterface.OnClickListener() {//设置确定的按键
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //do something
+                    	subject.setIsRemind(false);
+                    	subjectDa.set_remind(subject.getId(), false);
+                    	data_bindding();
+                    }
+                })
+			 	.setNegativeButton("否", new DialogInterface.OnClickListener() {//设置确定的按键
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    	set_remind();
+                    }
+                })
+			 	.show();
+				 
+			} else{			
+			set_remind();
+			}
+		}
+		
+		private void set_remind(){
+			
+			
+			
+			Calendar c = Calendar.getInstance(); 
+			Date d = Util.str2Date(subject.getRemindDate());
+		 
+			if(d!=null){
+				c.setTime(d);
+			} 
+		 
+			Dialog dialog = new DatePickerDialog(act,
+					new DatePickerDialog.OnDateSetListener() {
+						public void onDateSet(DatePicker dp, int year, int month,
+								int dayOfMonth) { 
+							
+							String remind_date = Util.GetDateFromInts(year,month,dayOfMonth); // String.format("%d-%d-%d", year,month+1,dayOfMonth);
+							 
+							subject.setRemindDate(remind_date);
+							subjectDa.set_remind_date(subject.getId(),remind_date); 
+							
+							String[] items = {"每天","每周","每月","每年"};
+							new AlertDialog.Builder(act)
+							.setTitle("设置重复周期")
+							.setSingleChoiceItems(
+									items, subject.getRemindFrequency()-1,  //get from data
+									new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialog,
+												int which) {
+											
+											//change data
+											subject.setIsRemind(true);
+											subject.setRemindFrequency(which+1);
+											subjectDa.set_remind_frequency(subject.getId(), which+1);
+											
+											String next_remind_date = Util.getNextDate(subject.getRemindDate(),which+1);
+											
+											subject.setNextRemindDate(next_remind_date);
+											subjectDa.set_next_remind(subject.getId(), next_remind_date);
+											
+											dialog.dismiss();
+											
+											data_bindding();
+										}
+									}).setNegativeButton("取消", null).show();
+
+						}
+					}, c.get(Calendar.YEAR), // 传入年份
+					c.get(Calendar.MONTH), // 传入月份
+					c.get(Calendar.DAY_OF_MONTH) // 传入天数
+			);
+
+			dialog.setTitle("设置提醒日期");
+			dialog.setCancelable(true);
+			dialog.show();
+		}
+		
+		private void data_bindding() {
+			txtSubjectBody.setText(subject.getBody());
+			subject_created_date.setText(subject.getCreationDate());
+			subject_last_update.setText(subject.getUpdateDate());
+
+			subject_start_date.setText(subject.getPlanStartDate());
+			subject_done_date.setText("");
+			
+			subject_remind_date.setText(subject.getNextRemindDate());
+			subject_remind_frequency.setText(String.valueOf(subject
+					.getRemindFrequency()));
+
+			if (!subject.isTodo() && !subject.isRemind()) {
+				layoutTodoRemind.setVisibility(View.VISIBLE);
+				layoutTodo.setVisibility(View.GONE);
+				layoutRemind.setVisibility(View.GONE);
+			} else if (subject.isRemind()) {
+				layoutTodoRemind.setVisibility(View.GONE);
+				layoutTodo.setVisibility(View.GONE);
+				layoutRemind.setVisibility(View.VISIBLE);
+			} else {
+				layoutTodoRemind.setVisibility(View.GONE);
+				layoutTodo.setVisibility(View.VISIBLE);
+				layoutRemind.setVisibility(View.GONE);
+			}
+		}
 
 		private void txtNew_setOnKeyListener() {
 
@@ -249,7 +498,7 @@ public class ItemDetailActivity extends Activity {
 								// user = app.getUser();
 								// Long subjectID =
 								long pk_id = subjectDa.insert(user.getUserId(),
-										content, currentSubject.getId());
+										content, subject.getId());
 
 								SubjectBean sbean = subjectDa.load_by_localId(
 										user.getUserId(), pk_id);
@@ -356,8 +605,8 @@ public class ItemDetailActivity extends Activity {
 					false);
 
 			txtEdit = (EditText) rootView.findViewById(R.id.txtEdit);
-			txtEdit.setText(currentSubject.getBody());
-			txtEdit.setSelection(currentSubject.getBody().length());
+			txtEdit.setText(subject.getBody());
+			txtEdit.setSelection(subject.getBody().length());
 			txtEdit.requestFocus();
 
 			// 自动开启软键盘
@@ -385,8 +634,8 @@ public class ItemDetailActivity extends Activity {
 			case R.id.action_item_save:
 				String newTxt = txtEdit.getText().toString().trim();
 				act.setTitle(newTxt);
-				currentSubject.setBody(newTxt);
-				subjectDa.edit_content(currentSubject.getId(), newTxt);
+				subject.setBody(newTxt);
+				subjectDa.edit_content(subject.getId(), newTxt);
 
 				getFragmentManager().beginTransaction()
 						.replace(R.id.container, new DetailReadFragment())
@@ -423,10 +672,14 @@ public class ItemDetailActivity extends Activity {
 
 			dates = new ArrayList<DateBean>();
 
-			dates.add(new DateBean(Util.getDateStr(0), Util.getDateStr(0) + "今天", true));
-			dates.add(new DateBean(Util.getDateStr(1), Util.getDateStr(1) + " 明天", false));
-			dates.add(new DateBean(Util.getDateStr(2), Util.getDateStr(2) + " 后天", false));
-			dates.add(new DateBean(Util.getDateStr(10), Util.getDateStr(10) + " 10天后", false));
+			dates.add(new DateBean(Util.getDateStr(0), Util.getDateStr(0)
+					+ "今天", true));
+			dates.add(new DateBean(Util.getDateStr(1), Util.getDateStr(1)
+					+ " 明天", false));
+			dates.add(new DateBean(Util.getDateStr(2), Util.getDateStr(2)
+					+ " 后天", false));
+			dates.add(new DateBean(Util.getDateStr(10), Util.getDateStr(10)
+					+ " 10天后", false));
 
 			dtAdapter = new PickDatesAdapter(act);
 			lvDefault.setAdapter(dtAdapter);
@@ -435,8 +688,6 @@ public class ItemDetailActivity extends Activity {
 
 			return rootView;
 		}
-
-		
 
 		private void lvDefault_setOnItemClickListener() {
 			// 单击，查看明细

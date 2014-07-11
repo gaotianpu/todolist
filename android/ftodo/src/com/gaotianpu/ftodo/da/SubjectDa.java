@@ -178,7 +178,7 @@ public class SubjectDa {
 
 	private void update_version(SQLiteDatabase db, long local_id) {
 		// 累加版本号
-		db.execSQL("update subjects set local_version=local_version+1 where pk_id="
+		db.execSQL("update subjects set local_version=local_version+1,last_update=current_date where pk_id="  
 				+ String.valueOf(local_id));
 	}
 

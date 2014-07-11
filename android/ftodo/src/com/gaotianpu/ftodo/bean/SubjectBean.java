@@ -65,6 +65,10 @@ public class SubjectBean {
 	}
 	
 	public String getUpdateDate() {
+		if(update_date==null){
+			return "";
+		}
+		
 		return update_date;
 	}
 	public void setUpdateDate(String update_date) {
