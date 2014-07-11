@@ -2,6 +2,8 @@ package com.gaotianpu.ftodo.bean;
 
 import java.util.Date;
 import android.util.Log;
+
+import com.gaotianpu.ftodo.R;
 import com.gaotianpu.ftodo.da.Util;
 
 public class SubjectBean {
@@ -145,6 +147,10 @@ public class SubjectBean {
 	public void setRemindFrequency(int remind_frequency) {
 		_remind_frequency = remind_frequency;
 	}
+	
+	 
+	
+	
 	
 	public int getPlanStartSort(){
 		if(_plan_start_date==null){

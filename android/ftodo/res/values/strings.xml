@@ -31,6 +31,14 @@
         <item>后天</item>
         <item>更晚</item>
       </string-array>   
+      
+    <string-array name="remind_frequency_items">
+       
+        <item>每天</item>
+        <item>每周</item>
+        <item>每月</item>
+        <item>每年</item> 
+      </string-array> 
     
 
     <string name="dialog_delete_title">删除</string>

@@ -417,7 +417,8 @@ public class ItemDetailActivity extends Activity {
 							subject.setRemindDate(remind_date);
 							subjectDa.set_remind_date(subject.getId(),remind_date); 
 							
-							String[] items = {"每天","每周","每月","每年"};
+							String[] items = act.getResources().getStringArray(
+									R.array.remind_frequency_items);
 							new AlertDialog.Builder(act)
 							.setTitle("设置重复周期")
 							.setSingleChoiceItems(
@@ -461,9 +462,14 @@ public class ItemDetailActivity extends Activity {
 			subject_start_date.setText(subject.getPlanStartDate());
 			subject_done_date.setText("");
 			
-			subject_remind_date.setText(subject.getNextRemindDate());
-			subject_remind_frequency.setText(String.valueOf(subject
-					.getRemindFrequency()));
+			subject_remind_date.setText(subject.getNextRemindDate()); 
+			
+			if(subject
+					.getRemindFrequency()>0){
+			subject_remind_frequency.setText(act.getResources().getStringArray(
+					R.array.remind_frequency_items)[subject
+					.getRemindFrequency()-1]);
+			}
 
 			if (!subject.isTodo() && !subject.isRemind()) {
 				layoutTodoRemind.setVisibility(View.VISIBLE);
