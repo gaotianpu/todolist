@@ -496,7 +496,7 @@ public class ListFragment extends Fragment {
 			TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
 			Log.i("remind",list_sort);
 			String content = "";
-			if(list_sort.equals("remind")){				
+			if(list_sort.equals("remind") && subject.isRemind() ){				
 				if(subject.getNextRemindDate()!=null){
 					content = content + subject.getNextRemindDate();
 				}

@@ -79,14 +79,14 @@ public class SubjectBean {
 	}
 	
 	//
-	public boolean getIsTodo() {
+	public boolean isTodo() {
 		return is_todo;
 	}
 	public void setIsTodo(boolean t) {
 		this.is_todo = t;
 	}
 	//
-	public boolean getIsRemind() {
+	public boolean isRemind() {
 		return is_remind;
 	}
 	public void setIsRemind(boolean r) {

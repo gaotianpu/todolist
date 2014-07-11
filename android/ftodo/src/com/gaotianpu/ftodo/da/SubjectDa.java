@@ -76,8 +76,8 @@ public class SubjectDa {
 		values.put("local_version", subject.getLocalVersion());
 		values.put("server_version", subject.getLocalVersion()); //?
 		
-		values.put("is_todo", subject.getIsTodo());
-		values.put("is_remind", subject.getIsRemind()); //
+		values.put("is_todo", subject.isTodo());
+		values.put("is_remind", subject.isRemind()); //
 		values.put("plan_start_date", subject.getPlanStartDate()); //
 		
 		//remind

@@ -221,7 +221,7 @@ public class ListTodoFragment extends Fragment {
 		List dates = Util.getPickDates();
 		dates.add("已完成");
 		dates.add("先暂停");
-		if (subject.getIsTodo()) {
+		if (subject.isTodo()) {
 			dates.add("非待办事项");
 		}
 		String[] pickdates = (String[]) dates.toArray(new String[dates.size()]);
