@@ -293,6 +293,98 @@ public class ItemDetailActivity extends Activity {
 			listAdapter.notifyDataSetChanged();
 
 		}
+		
+		private void sort_status_picker() { 
+			String[] pickdates = act.getResources().getStringArray(
+					R.array.subject_sorts) ; //(String[]) dates.toArray(new String[dates.size()]);
+			new AlertDialog.Builder(act)
+					.setTitle(subject.getBody())
+					// .setIcon(android.R.drawable.ic_dialog_info)
+					.setSingleChoiceItems(pickdates, -1,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) { 
+									
+									dialog.dismiss();
+									listAdapter.notifyDataSetChanged();
+									
+									
+								}
+							}).setNegativeButton("取消", null).show();
+			
+		}
+		
+		private void todo_status_picker() { 
+			String[] pickdates = act.getResources().getStringArray(
+					R.array.subject_todo_status) ; //(String[]) dates.toArray(new String[dates.size()]);
+			new AlertDialog.Builder(act)
+					.setTitle(subject.getBody())
+					// .setIcon(android.R.drawable.ic_dialog_info)
+					.setSingleChoiceItems(pickdates, -1,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) { 
+									
+									dialog.dismiss();
+									listAdapter.notifyDataSetChanged();
+									
+									
+								}
+							}).setNegativeButton("取消", null).show();
+			
+		}
+		
+		private void remind_frequency_picker() { 
+			String[] pickdates = act.getResources().getStringArray(
+					R.array.remind_frequency_items) ; //(String[]) dates.toArray(new String[dates.size()]);
+			new AlertDialog.Builder(act)
+					.setTitle(subject.getBody())
+					// .setIcon(android.R.drawable.ic_dialog_info)
+					.setSingleChoiceItems(pickdates, -1,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+
+//									switch (which) {
+//									case 0: // todo
+//										subject.setIsTodo(true);
+//										subject.setStatus(0);
+//										subjectDa.set_todo_status(subject.getId(),
+//												0);
+//										break;
+//									case 1: // todo-done
+//										subject.setIsTodo(true);
+//										subject.setStatus(2);
+//										subjectDa.set_todo_status(subject.getId(),
+//												2);
+//										break;
+//									case 2: // todo-block
+//										subject.setIsTodo(true);
+//										subject.setStatus(3);
+//										subjectDa.set_todo_status(subject.getId(),
+//												3);
+//										break;
+//									case 3: // remind
+//										subject.setIsTodo(false);
+//										subject.setIsRemind(true);
+//										subjectDa.set_remind(subject.getId(), true);
+//										break;
+//									case 4: // normal-note
+//									default:
+//										subject.setIsTodo(false);
+//										subject.setIsRemind(false);
+//										subjectDa.set_todo(subject.getId(), false);
+//										subjectDa.set_remind(subject.getId(), false);
+//										break;
+//									} 
+									dialog.dismiss();
+									listAdapter.notifyDataSetChanged();
+									
+									
+								}
+							}).setNegativeButton("取消", null).show();
+			
+		}
 
 		private void lvSubjectInfos_setOnItemClickListener() {
 			// 单击，查看明细
@@ -302,37 +394,24 @@ public class ItemDetailActivity extends Activity {
 						int arg2, long arg3) {
 
 					SettingBean item = infoList.get(arg2);
-					if(item.getId().equals("a_sort") ){
-						//note
-						//todo
-						//block
-						//pause
-						//remind
-						Log.i("click","a_sort");
-						
+					if(item.getId().equals("a_sort") ){						 
+						sort_status_picker();
 					}else if(item.getId().equals("a_remind_date")){
 						//today
 						//tommorrow
 						//sss
 						//
 						Log.i("click","a_remind_date");
-					}else if(item.getId().equals("a_remind_frequency")){
-						//day
-						//week
-						//month
-						//year
-						
-						Log.i("click","a_remind_frequency");
+					}else if(item.getId().equals("a_remind_frequency")){						 
+						remind_frequency_picker();
 					}else if(item.getId().equals("a_task_status")){
-						//doing
-						//done
-						//block
-						Log.i("click","a_task_status");
+						todo_status_picker();
 					}else if(item.getId().equals("a_plan_start_date")){
+						//
 						Log.i("click","a_plan_start_date");
 					}else{
 						//
-						Log.i("click","----------------");
+						//Log.i("click","----------------");
 					}
 
 					load_infos();

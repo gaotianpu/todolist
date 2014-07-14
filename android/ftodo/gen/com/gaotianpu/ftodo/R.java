@@ -16,6 +16,8 @@ public final class R {
         public static final int pref_sync_frequency_titles=0x7f070006;
         public static final int pref_sync_frequency_values=0x7f070007;
         public static final int remind_frequency_items=0x7f070003;
+        public static final int subject_sorts=0x7f070008;
+        public static final int subject_todo_status=0x7f070009;
         public static final int todo_plan_date_sorts=0x7f070002;
     }
     public static final class attr {
