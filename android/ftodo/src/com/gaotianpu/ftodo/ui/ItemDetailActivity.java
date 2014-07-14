@@ -226,8 +226,8 @@ public class ItemDetailActivity extends Activity {
 			infoList.add( new SettingBean("update_date",getString(R.string.label_last_update), subject.getUpdateDate() ) );
 			
 			if(subject.isRemind()){
-				infoList.add( new SettingBean("a_sort", getString(R.string.label_subject_sort)  ,getString(R.string.label_remind)) );
-				infoList.add( new SettingBean("a_remind_date",getString(R.string.label_remind_date), subject.getRemindDate() ) );
+				infoList.add( new SettingBean("a_sort","* " +getString(R.string.label_subject_sort)  ,getString(R.string.label_remind)) );
+				infoList.add( new SettingBean("a_remind_date","* " +getString(R.string.label_remind_date), subject.getRemindDate() ) );
 				
 				String remind_f = "";
 				if(subject
@@ -238,13 +238,13 @@ public class ItemDetailActivity extends Activity {
 				 
 				}
 				
-				infoList.add( new SettingBean("a_remind_frequency",getString(R.string.label_remind_frequency),  remind_f) );
+				infoList.add( new SettingBean("a_remind_frequency","* " +getString(R.string.label_remind_frequency),  remind_f) );
 				
 				return ;
 			}
 			
 			if(subject.isTodo()){
-				infoList.add( new SettingBean("a_sort",getString(R.string.label_subject_sort),getString(R.string.label_todo)) );
+				infoList.add( new SettingBean("a_sort","* " +getString(R.string.label_subject_sort),getString(R.string.label_todo)) );
 				
 				String todoStatus= "";
 				if (subject.getStatus() ==2 ){
@@ -255,9 +255,9 @@ public class ItemDetailActivity extends Activity {
 					todoStatus = getString(R.string.label_todo_doing);
 				}
 				
-				infoList.add( new SettingBean("a_task_status",getString(R.string.label_todo_status),  todoStatus  ) );
+				infoList.add( new SettingBean("a_task_status", "* " +getString(R.string.label_todo_status),  todoStatus  ) );
 				
-				infoList.add( new SettingBean("a_plan_start_date",getString(R.string.label_todo_plan_start_date), subject.getPlanStartDate() ) );
+				infoList.add( new SettingBean("a_plan_start_date","* " +getString(R.string.label_todo_plan_start_date), subject.getPlanStartDate() ) );
 				
 				if (subject.getStatus() == 2   ){
 				infoList.add( new SettingBean("closed_date",getString(R.string.label_todo_done_date), subject.getClosedDate() ) );
@@ -270,7 +270,7 @@ public class ItemDetailActivity extends Activity {
 				return ;
 			}
 			
-			infoList.add( new SettingBean("a_sort",getString(R.string.label_subject_sort),getString(R.string.label_note)) );
+			infoList.add( new SettingBean("a_sort","* " +getString(R.string.label_subject_sort),getString(R.string.label_note)) );
 			//note
 			
 		}
