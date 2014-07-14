@@ -197,14 +197,15 @@ public class ItemDetailActivity extends Activity {
 		private TextView subject_remind_frequency;
 		
 		private LinearLayout layoutTodoRemind;
+		
 		private LinearLayout layoutTodo;
-		private LinearLayout layoutRemind;
-		
-		private ImageButton btnRemind;
-		private ImageButton btnRemind1;
+		private LinearLayout layoutTodoDoneDate;
 		private ImageButton btnTodo;
-		private ImageButton btnTodo1;
+		private ImageButton btnTodo1; 
 		
+		private LinearLayout layoutRemind;  
+		private ImageButton btnRemind;
+		private ImageButton btnRemind1; 
 		
 		
 		private ListView lvDefault;
@@ -242,6 +243,8 @@ public class ItemDetailActivity extends Activity {
 			layoutTodo = (LinearLayout) rootView.findViewById(R.id.layoutTodo);
 			layoutRemind = (LinearLayout) rootView
 					.findViewById(R.id.layoutRemind);
+			layoutTodoDoneDate = (LinearLayout) rootView
+					.findViewById(R.id.layoutTodoDoneDate);
 			
 			btnRemind= (ImageButton) rootView
 					.findViewById(R.id.btnRemind);
@@ -480,9 +483,16 @@ public class ItemDetailActivity extends Activity {
 				layoutTodo.setVisibility(View.GONE);
 				layoutRemind.setVisibility(View.VISIBLE);
 			} else {
+				//is todo
 				layoutTodoRemind.setVisibility(View.GONE);
 				layoutTodo.setVisibility(View.VISIBLE);
 				layoutRemind.setVisibility(View.GONE);
+				
+				if(subject.getStatus()==2 || subject.getStatus()==3 ){
+					layoutTodoDoneDate.setVisibility(View.VISIBLE);
+				}else{
+					layoutTodoDoneDate.setVisibility(View.GONE);
+				}
 			}
 		}
 

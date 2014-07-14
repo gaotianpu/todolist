@@ -116,6 +116,14 @@ public class SubjectBean {
 		this._plan_start_date = plan_start_date;
 	}
 	
+	private String _closed_date;
+	public String getClosedDate() {
+		return _closed_date;
+	}
+	public void setClosedDate(String closed_date) {
+		this._closed_date = closed_date;
+	}
+	
 	private String _remind_date;
 	public String getRemindDate() {
 		if(_remind_date==null){

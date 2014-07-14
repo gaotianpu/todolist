@@ -83,6 +83,8 @@ public class FTDClient {
 		params.put("remind_datetime", subject.getRemindDate()); 
 		params.put("remind_next", subject.getNextRemindDate()); 
 		params.put("remind_frequency", String.valueOf(subject.getRemindFrequency())); 
+		
+		params.put("closed_date", subject.getClosedDate()); 
 
 		Log.i("AsyncService", params.toString());
 
@@ -185,6 +187,9 @@ public class FTDClient {
 				subject.setRemindDate(item.getString( "remind_datetime"));
 				subject.setNextRemindDate(item.getString( "remind_next"));
 				subject.setRemindFrequency(item.getInt( "remind_frequency" ));
+				
+				
+				subject.setClosedDate(item.getString( "closed_date"));
 				
 				subjectList.add(subject);
 
