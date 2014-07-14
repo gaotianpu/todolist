@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="label_creation_date">创建时间</string>
-<string name="label_last_update">最近更新时间</string>
+<string name="label_last_update">最近更新</string>
 
 <string name="label_subject_sort">类型</string>
     
