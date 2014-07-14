@@ -10,10 +10,12 @@ import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
 import com.gaotianpu.ftodo.bean.DateBean;
 
+import com.gaotianpu.ftodo.bean.SettingBean;
 import com.gaotianpu.ftodo.bean.SubjectBean;
 import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.SubjectDa;
 import com.gaotianpu.ftodo.da.Util;
+ 
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -185,9 +187,149 @@ public class ItemDetailActivity extends Activity {
 							}
 						}).show();
 	}
+	
+	public static class DetailReadFragment extends Fragment {
+		private TextView txtSubjectBody;   
+		private ListView lvSubjectInfos; 
+		
+		private List<SettingBean> infoList;
+		private ListAdapter listAdapter;
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View rootView = inflater.inflate(R.layout.detail_main, container,
+					false); 
+			
+			//UI widget
+			txtSubjectBody = (TextView) rootView
+					.findViewById(R.id.subject_body);
+			lvSubjectInfos = (ListView) rootView
+					.findViewById(R.id.lvSubjectInfos);
+			
+			
+			//data 
+			infoList = new ArrayList<SettingBean>();
+			listAdapter = new ListAdapter(act);
+			lvSubjectInfos.setAdapter(listAdapter); 
+			
+			load_infos();
+			
+
+			return rootView;
+		} 
+		
+		private void load_infos(){
+			txtSubjectBody.setText(subject.getBody()); 
+			
+			infoList.add( new SettingBean("creation_date",getString(R.string.label_creation_date), subject.getCreationDate() ) );
+			infoList.add( new SettingBean("update_date",getString(R.string.label_last_update), subject.getUpdateDate() ) );
+			
+			if(subject.isRemind()){
+				infoList.add( new SettingBean("a_sort", getString(R.string.label_subject_sort)  ,getString(R.string.label_remind)) );
+				infoList.add( new SettingBean("a_remind_date",getString(R.string.label_remind_date), subject.getRemindDate() ) );
+				
+				String remind_f = "";
+				if(subject
+						.getRemindFrequency()>0){
+					remind_f = act.getResources().getStringArray(
+							R.array.remind_frequency_items)[subject
+							        						.getRemindFrequency()-1];
+				 
+				}
+				
+				infoList.add( new SettingBean("a_remind_frequency",getString(R.string.label_remind_frequency),  remind_f) );
+				
+				return ;
+			}
+			
+			if(subject.isTodo()){
+				infoList.add( new SettingBean("a_sort",getString(R.string.label_subject_sort),getString(R.string.label_todo)) );
+				
+				String todoStatus= "";
+				if (subject.getStatus() ==2 ){
+					todoStatus = getString(R.string.label_todo_done);
+				}else if (subject.getStatus() ==3 ){
+					todoStatus = getString(R.string.label_todo_block);
+				}else{
+					todoStatus = getString(R.string.label_todo_doing);
+				}
+				
+				infoList.add( new SettingBean("a_task_status",getString(R.string.label_todo_status),  todoStatus  ) );
+				
+				infoList.add( new SettingBean("a_plan_start_date",getString(R.string.label_todo_plan_start_date), subject.getPlanStartDate() ) );
+				
+				if (subject.getStatus() == 2   ){
+				infoList.add( new SettingBean("closed_date",getString(R.string.label_todo_done_date), subject.getClosedDate() ) );
+				}else if (subject.getStatus() ==3   ) {
+					infoList.add( new SettingBean("closed_date",getString(R.string.label_todo_block_date), subject.getClosedDate() ) );
+					
+				}else{
+					
+				}
+				return ;
+			}
+			
+			infoList.add( new SettingBean("a_sort",getString(R.string.label_subject_sort),getString(R.string.label_note)) );
+			//note
+			
+		}
+
+		private class ListAdapter extends BaseAdapter {
+			private LayoutInflater inflater1;
+			private int action_sort = 0;
+
+			public ListAdapter(Context ctx1) {
+				this.inflater1 = LayoutInflater.from(ctx1);
+
+			}
+
+			@Override
+			public int getCount() {
+				// TODO Auto-generated method stub
+				return infoList.size();
+			}
+
+			@Override
+			public Object getItem(int position) {
+				return position;
+			}
+
+			@Override
+			public long getItemId(int position) {
+				return position;
+			}
+
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				SettingBean item = infoList.get(position); 
+				
+				convertView = inflater1.inflate(R.layout.setting_listview_item,
+						null); 
+
+				TextView tv = (TextView) convertView.findViewById(R.id.tvK);
+				tv.setText(item.getK());
+
+				TextView tvV = (TextView) convertView.findViewById(R.id.tvV);
+				tvV.setText(item.getV());
+				
+				boolean is_action = item.getId().substring(0,2).equals("a_");
+				if (!is_action){
+					 //不可进行点击设置的项目，颜色只为灰色？
+					//tv.setTextColor( 0xcccccc )  ;
+				}
+				 
+				return convertView;
+
+			}
+
+		}
+
+	}
+
 
 	// 浏览模式
-	public static class DetailReadFragment extends Fragment {
+	public static class DetailReadFragment1 extends Fragment {
 		private TextView txtSubjectBody;
 		private TextView subject_created_date;
 		private TextView subject_last_update;
