@@ -86,6 +86,8 @@ public class SubjectDa {
 		values.put("remind_frequency", subject.getRemindFrequency());   
 		
 		values.put("closed_date", subject.getClosedDate());  
+		
+		values.put("task_status", subject.getStatus());  
 
 		// 检查sqlite 是否有remote_id, 无
 		db = dbHelper.getWritableDatabase();
@@ -321,8 +323,8 @@ public class SubjectDa {
 
 	private final String[] list_selected_fields = new String[] { "pk_id",
 			"user_id", "body", "creation_date", "last_update", "remote_id",
-			"is_todo", "is_remind", "parent_id", "local_version", "is_del","plan_start_date","task_status",
-			"date(remind_datetime) as remind_datetime","date(remind_next) as  remind_next","remind_frequency","closed_date"};
+			"is_todo", "is_remind", "parent_id", "local_version", "is_del","date(plan_start_date) as plan_start_date","task_status",
+			"date(remind_datetime) as remind_datetime","date(remind_next) as  remind_next","remind_frequency","date(closed_date) as closed_date"};
 
 	private List<SubjectBean> load_list(Cursor cursor) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
