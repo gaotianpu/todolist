@@ -322,16 +322,38 @@ public class ItemDetailActivity extends Activity {
 										int which) { 
 									switch(which){
 									case 0:
+										subject.setIsTodo(false);
+										subject.setIsRemind(false);
+										subjectDa.set_todo(subject.getId(), false);
+										subjectDa.set_remind(subject.getId(), false);
 										break;
-									case 1:
+									case 1: //todo
+										subject.setIsTodo(true);
+										subject.setStatus(0);
+										subjectDa.set_todo_status(subject.getId(),
+												0);
 										break;
-									case 2:
-										break;									
+									case 2: //block
+										subject.setIsTodo(true);
+										subject.setStatus(3);
+										subjectDa.set_todo_status(subject.getId(),
+												3);
+										break;		
+									case 3: // done
+										subject.setIsTodo(true);
+										subject.setStatus(2);
+										subjectDa.set_todo_status(subject.getId(),
+												2);
+										break;
+									case 4: // remind
+									default:
+										subject.setIsTodo(false);
+										subject.setIsRemind(true);
+										subjectDa.set_remind(subject.getId(), true);
+										break;
 									}
 									dialog.dismiss();
-									listAdapter.notifyDataSetChanged();
-									
-									
+									load_infos();  
 								}
 							}).setNegativeButton("取消", null).show();
 			
@@ -357,16 +379,25 @@ public class ItemDetailActivity extends Activity {
 								public void onClick(DialogInterface dialog,
 										int which) { 
 									switch(which){
-									case 0:
+									case 0: // todo										 
+										subject.setStatus(0);
+										subjectDa.set_todo_status(subject.getId(),
+												0);
 										break;
-									case 1:
+									case 1: // todo-block												 
+										subject.setStatus(3);
+										subjectDa.set_todo_status(subject.getId(),
+												3);
 										break;
-									case 2:
-										break;									
-									}
-									dialog.dismiss();
-									listAdapter.notifyDataSetChanged();
+									case 2: 	// todo-done							 
+										subject.setStatus(2);
+										subjectDa.set_todo_status(subject.getId(),
+												3);
+										break;
+									} 
 									
+									dialog.dismiss(); 
+									load_infos(); 
 									
 								}
 							}).setNegativeButton("取消", null).show();
@@ -386,16 +417,16 @@ public class ItemDetailActivity extends Activity {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int which) { 
-									switch(which){
-									case 0:
-										break;
-									case 1:
-										break;
-									case 2:
-										break;									
-									}
+									subject.setRemindFrequency(which+1);
+									subjectDa.set_remind_frequency(subject.getId(), which+1);
+									
+									String next_remind_date = Util.getNextDate(subject.getRemindDate(),which+1);
+									
+									subject.setNextRemindDate(next_remind_date);
+									subjectDa.set_next_remind(subject.getId(), next_remind_date);
+									 
 									dialog.dismiss();
-									listAdapter.notifyDataSetChanged();
+									load_infos(); 
 									
 									
 								}
@@ -415,6 +446,12 @@ public class ItemDetailActivity extends Activity {
 					new DatePickerDialog.OnDateSetListener() {
 						public void onDateSet(DatePicker dp, int year,
 								int month, int dayOfMonth) {
+							
+							String remind_date = Util.GetDateFromInts(year,month,dayOfMonth); 							 
+							subject.setRemindDate(remind_date);
+							subjectDa.set_remind_date(subject.getId(),remind_date); 
+							
+							load_infos(); 
 						}
 					}, c.get(Calendar.YEAR), // 传入年份
 					c.get(Calendar.MONTH), // 传入月份
@@ -426,7 +463,7 @@ public class ItemDetailActivity extends Activity {
 		}
 		
 		private void set_todo_plan_date(){			 
-			String[] pickdates = act.getResources().getStringArray(
+			final String[] pickdates = act.getResources().getStringArray(
 					R.array.subject_todo_plan_dates) ;
 			
 			//?需要设置具体的日期
@@ -444,16 +481,13 @@ public class ItemDetailActivity extends Activity {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int which) { 
-									switch(which){
-									case 0:
-										break;
-									case 1:
-										break;
-									case 2:
-										break;									
-									}
+									String start_date = pickdates[which].split(" ")[1];
+									subjectDa.set_todo_start_date(
+											subject.getId(), start_date);									 
+									subject.setPlanStartDate(start_date); 
+									 
 									dialog.dismiss();
-									listAdapter.notifyDataSetChanged();
+									load_infos(); 
 									
 									
 								}
@@ -481,9 +515,7 @@ public class ItemDetailActivity extends Activity {
 					}else{
 						//
 						//Log.i("click","----------------");
-					}
-
-					load_infos();
+					} 
 				}
 			});
 
