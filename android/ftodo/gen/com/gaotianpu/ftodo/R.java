@@ -47,16 +47,15 @@ public final class R {
         public static final int ic_pause=0x7f020009;
     }
     public static final class id {
-        public static final int action_forgot_password=0x7f0a0039;
-        public static final int action_item_cancel=0x7f0a0035;
-        public static final int action_item_delete=0x7f0a0033;
+        public static final int action_forgot_password=0x7f0a0038;
+        public static final int action_item_cancel=0x7f0a0034;
+        public static final int action_item_delete=0x7f0a0032;
         public static final int action_item_edit=0x7f0a0031;
         public static final int action_item_read=0x7f0a0030;
-        public static final int action_item_save=0x7f0a0034;
-        public static final int action_item_todo=0x7f0a0032;
-        public static final int action_list_normal=0x7f0a0037;
-        public static final int action_list_todo=0x7f0a0038;
-        public static final int action_websearch=0x7f0a0036;
+        public static final int action_item_save=0x7f0a0033;
+        public static final int action_list_normal=0x7f0a0036;
+        public static final int action_list_todo=0x7f0a0037;
+        public static final int action_websearch=0x7f0a0035;
         public static final int bottom=0x7f0a001c;
         public static final int btnIcon=0x7f0a002a;
         public static final int btnRemind=0x7f0a0012;
@@ -161,10 +160,10 @@ public final class R {
         public static final int append_post_hint=0x7f060016;
         public static final int current_user=0x7f060017;
         public static final int dashboard_title=0x7f06000c;
-        public static final int dialog_delete_cancel=0x7f060004;
+        public static final int dialog_cancel=0x7f060004;
         public static final int dialog_delete_message=0x7f060002;
-        public static final int dialog_delete_sure=0x7f060003;
         public static final int dialog_delete_title=0x7f060001;
+        public static final int dialog_sure=0x7f060003;
         public static final int drawer_close=0x7f060020;
         public static final int drawer_open=0x7f06001f;
         public static final int error_field_required=0x7f060033;

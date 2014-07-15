@@ -271,7 +271,7 @@ public class ListTodoFragment extends Fragment {
 
 								
 							}
-						}).setNegativeButton("取消", null).show();
+						}).setNegativeButton(R.string.dialog_cancel, null).show();
 	}
 
 	private class ListAdapter extends BaseAdapter {

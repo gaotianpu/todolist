@@ -391,7 +391,7 @@ public class ListFragment extends Fragment {
 //										
 //										listAdapter.notifyDataSetChanged();
 //									}
-//								}).setNegativeButton("取消", null).show();
+//								}).setNegativeButton(R.string.dialog_delete_cancel, null).show();
 //
 //					}
 //				}, c.get(Calendar.YEAR), // 传入年份

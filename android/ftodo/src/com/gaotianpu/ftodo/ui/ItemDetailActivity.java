@@ -127,17 +127,7 @@ public class ItemDetailActivity extends Activity {
 			item.setChecked(true);
 			getFragmentManager().beginTransaction()
 					.replace(R.id.container, new DetailEditFragment()).commit();
-			break;
-		case R.id.action_item_todo:
-			item.setChecked(true);
-			getFragmentManager().beginTransaction()
-					.replace(R.id.container, new DetailTodoFragment()).commit();
-			break;
-		// case R.id.action_item_remind:
-		// getFragmentManager().beginTransaction()
-		// .replace(R.id.container, new DetailRemindFragment())
-		// .commit();
-		// break;
+			break; 
 		case R.id.action_item_delete:
 			delete();
 			break;
@@ -156,7 +146,7 @@ public class ItemDetailActivity extends Activity {
 		new AlertDialog.Builder(act)
 				.setTitle(R.string.dialog_delete_title)
 				.setMessage(R.string.dialog_delete_message)
-				.setPositiveButton(R.string.dialog_delete_sure,
+				.setPositiveButton(R.string.dialog_cancel,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int i) {
@@ -177,7 +167,7 @@ public class ItemDetailActivity extends Activity {
 								Log.i("dialog", "ok");
 							}
 						})
-				.setNegativeButton(R.string.dialog_delete_cancel,
+				.setNegativeButton(R.string.dialog_cancel,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int i) {
@@ -357,7 +347,7 @@ public class ItemDetailActivity extends Activity {
 									dialog.dismiss();
 									load_infos();  
 								}
-							}).setNegativeButton("取消", null).show();
+							}).setNegativeButton(R.string.dialog_cancel, null).show();
 			
 		}
 		
@@ -402,7 +392,7 @@ public class ItemDetailActivity extends Activity {
 									load_infos(); 
 									
 								}
-							}).setNegativeButton("取消", null).show();
+							}).setNegativeButton(R.string.dialog_cancel, null).show();
 			
 		}
 		
@@ -432,7 +422,7 @@ public class ItemDetailActivity extends Activity {
 									
 									
 								}
-							}).setNegativeButton("取消", null).show();
+							}).setNegativeButton(R.string.dialog_cancel, null).show();
 			
 		}
 		
@@ -493,7 +483,17 @@ public class ItemDetailActivity extends Activity {
 									
 									
 								}
-							}).setNegativeButton("取消", null).show();
+							}).setNegativeButton(R.string.dialog_cancel, null).show();
+		}
+		
+		private void edit_content(){
+		new AlertDialog.Builder(act)
+		.setTitle("请输入")
+		.setIcon(android.R.drawable.ic_dialog_info)
+		.setView(new EditText(act))
+		.setPositiveButton(R.string.dialog_sure, null)
+		.setNegativeButton(R.string.dialog_cancel, null)
+		.show();
 		}
 
 		private void lvSubjectInfos_setOnItemClickListener() {
@@ -575,443 +575,7 @@ public class ItemDetailActivity extends Activity {
 
 	}
 
-	// 浏览模式
-	public static class DetailReadFragment1 extends Fragment {
-		private TextView txtSubjectBody;
-		private TextView subject_created_date;
-		private TextView subject_last_update;
-		private TextView subject_start_date;
-		private TextView subject_done_date;
-		private TextView subject_remind_date;
-		private TextView subject_remind_frequency;
-
-		private LinearLayout layoutTodoRemind;
-
-		private LinearLayout layoutTodo;
-		private LinearLayout layoutTodoDoneDate;
-		private ImageButton btnTodo;
-		private ImageButton btnTodo1;
-
-		private LinearLayout layoutRemind;
-		private ImageButton btnRemind;
-		private ImageButton btnRemind1;
-
-		private ListView lvDefault;
-		private EditText txtNew;
-
-		private ListAdapter listAdapter;
-		private List<SubjectBean> subjectList;
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.detail_read, container,
-					false);
-
-			// 追加评论这部分，还没有想好该怎么处理，贸然的添加该共功能，容易给用户造成理解上的困扰？
-
-			// 1. ui
-			txtSubjectBody = (TextView) rootView
-					.findViewById(R.id.subject_body);
-			subject_created_date = (TextView) rootView
-					.findViewById(R.id.subject_created_date);
-			subject_last_update = (TextView) rootView
-					.findViewById(R.id.subject_last_update);
-			subject_start_date = (TextView) rootView
-					.findViewById(R.id.subject_start_date);
-			subject_done_date = (TextView) rootView
-					.findViewById(R.id.subject_done_date);
-			subject_remind_date = (TextView) rootView
-					.findViewById(R.id.subject_remind_date);
-			subject_remind_frequency = (TextView) rootView
-					.findViewById(R.id.subject_remind_frequency);
-
-			layoutTodoRemind = (LinearLayout) rootView
-					.findViewById(R.id.layoutTodoRemind);
-			layoutTodo = (LinearLayout) rootView.findViewById(R.id.layoutTodo);
-			layoutRemind = (LinearLayout) rootView
-					.findViewById(R.id.layoutRemind);
-			layoutTodoDoneDate = (LinearLayout) rootView
-					.findViewById(R.id.layoutTodoDoneDate);
-
-			btnRemind = (ImageButton) rootView.findViewById(R.id.btnRemind);
-			btnRemind1 = (ImageButton) rootView.findViewById(R.id.btnRemind1);
-			btnTodo = (ImageButton) rootView.findViewById(R.id.btnTodo);
-			btnTodo1 = (ImageButton) rootView.findViewById(R.id.btnTodo1);
-
-			// lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
-			// txtNew = (EditText) rootView.findViewById(R.id.txtNew);
-
-			// data bindding
-
-			data_bindding();
-
-			event_binding();
-
-			// subjectList = new ArrayList<SubjectBean>();
-			// listAdapter = new ListAdapter(getActivity());
-			// lvDefault.setAdapter(listAdapter);
-
-			//
-			// subjectList = subjectDa.load_son_subjects(user.getUserId(),
-			// currentSubject.getId());
-			//
-			// if (currentSubject.getParentId() != 0) {
-			// SubjectBean subject = subjectDa.load_by_localId(
-			// user.getUserId(), currentSubject.getParentId());
-			// if (subject != null) {
-			// subjectList.add(0, subject);
-			// }
-			// }
-			// subjectList.add(0,currentSubject);
-			// listAdapter.notifyDataSetChanged();
-
-			// txtNew_setOnKeyListener();
-			// lvDefault_setOnItemClickListener(); 需要太多次后退才能到达？ Fragment 堆栈？
-
-			return rootView;
-		}
-
-		private void event_binding() {
-			btnRemind.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					set_or_cancel_remind();
-				}
-			});
-			btnRemind1.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					set_or_cancel_remind();
-				}
-			});
-
-			btnTodo.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					set_todo();
-				}
-			});
-			btnTodo1.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					set_todo();
-				}
-			});
-		}
-
-		private void set_todo() {
-			List dates = Util.getPickDates();
-			dates.add("已完成");
-			dates.add("先暂停");
-			if (subject.isTodo()) {
-				dates.add("非待办事项");
-			}
-			String[] pickdates = (String[]) dates.toArray(new String[dates
-					.size()]);
-			new AlertDialog.Builder(act)
-					.setTitle(subject.getBody())
-					// .setIcon(android.R.drawable.ic_dialog_info)
-					.setSingleChoiceItems(pickdates, -1,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									subject.setIsTodo(true);
-									switch (which) {
-									case 0:
-									case 1:
-									case 2:
-										String start_date = Util
-												.getDateStr(which);
-										subjectDa.set_todo_start_date(
-												subject.getId(), start_date);
-										subject.setIsTodo(true);
-										subject.setPlanStartDate(start_date);
-										break;
-									case 3:
-										String start_date2 = Util
-												.getDateStr(10);
-										subjectDa.set_todo_start_date(
-												subject.getId(), start_date2);
-										subject.setIsTodo(true);
-										subject.setPlanStartDate(start_date2);
-										break;
-									case 4: // done
-										subjectDa.set_todo_status(
-												subject.getId(), 2);
-										break;
-									case 5: // block
-										subjectDa.set_todo_status(
-												subject.getId(), 3);
-										break;
-									case 6: // 非待办事项
-										subject.setIsTodo(false);
-										subjectDa.set_todo(subject.getId(),
-												false);
-										break;
-									}
-
-									dialog.dismiss();
-									data_bindding();
-
-								}
-							}).setNegativeButton("取消", null).show();
-		}
-
-		private void set_or_cancel_remind() {
-			if (subject.isRemind()) {
-				// 提示是否要取消？
-				new AlertDialog.Builder(act)
-						.setTitle("取消提醒功能")
-						.setMessage("确定吗？")
-						.setPositiveButton("是",
-								new DialogInterface.OnClickListener() {// 设置确定的按键
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										// do something
-										subject.setIsRemind(false);
-										subjectDa.set_remind(subject.getId(),
-												false);
-										data_bindding();
-									}
-								})
-						.setNegativeButton("否",
-								new DialogInterface.OnClickListener() {// 设置确定的按键
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										set_remind();
-									}
-								}).show();
-
-			} else {
-				set_remind();
-			}
-		}
-
-		private void set_remind() {
-
-			Calendar c = Calendar.getInstance();
-			Date d = Util.str2Date(subject.getRemindDate());
-
-			if (d != null) {
-				c.setTime(d);
-			}
-
-			Dialog dialog = new DatePickerDialog(act,
-					new DatePickerDialog.OnDateSetListener() {
-						public void onDateSet(DatePicker dp, int year,
-								int month, int dayOfMonth) {
-
-							String remind_date = Util.GetDateFromInts(year,
-									month, dayOfMonth); // String.format("%d-%d-%d",
-														// year,month+1,dayOfMonth);
-
-							subject.setRemindDate(remind_date);
-							subjectDa.set_remind_date(subject.getId(),
-									remind_date);
-
-							String[] items = act.getResources().getStringArray(
-									R.array.remind_frequency_items);
-							new AlertDialog.Builder(act)
-									.setTitle("设置重复周期")
-									.setSingleChoiceItems(
-											items,
-											subject.getRemindFrequency() - 1, // get
-																				// from
-																				// data
-											new DialogInterface.OnClickListener() {
-												public void onClick(
-														DialogInterface dialog,
-														int which) {
-
-													// change data
-													subject.setIsRemind(true);
-													subject.setRemindFrequency(which + 1);
-													subjectDa
-															.set_remind_frequency(
-																	subject.getId(),
-																	which + 1);
-
-													String next_remind_date = Util.getNextDate(
-															subject.getRemindDate(),
-															which + 1);
-
-													subject.setNextRemindDate(next_remind_date);
-													subjectDa.set_next_remind(
-															subject.getId(),
-															next_remind_date);
-
-													dialog.dismiss();
-
-													data_bindding();
-												}
-											}).setNegativeButton("取消", null)
-									.show();
-
-						}
-					}, c.get(Calendar.YEAR), // 传入年份
-					c.get(Calendar.MONTH), // 传入月份
-					c.get(Calendar.DAY_OF_MONTH) // 传入天数
-			);
-
-			dialog.setTitle("设置提醒日期");
-			dialog.setCancelable(true);
-			dialog.show();
-		}
-
-		private void data_bindding() {
-			txtSubjectBody.setText(subject.getBody());
-			subject_created_date.setText(subject.getCreationDate());
-			subject_last_update.setText(subject.getUpdateDate());
-
-			subject_start_date.setText(subject.getPlanStartDate());
-			subject_done_date.setText("");
-
-			subject_remind_date.setText(subject.getNextRemindDate());
-
-			if (subject.getRemindFrequency() > 0) {
-				subject_remind_frequency.setText(act.getResources()
-						.getStringArray(R.array.remind_frequency_items)[subject
-						.getRemindFrequency() - 1]);
-			}
-
-			if (!subject.isTodo() && !subject.isRemind()) {
-				layoutTodoRemind.setVisibility(View.VISIBLE);
-				layoutTodo.setVisibility(View.GONE);
-				layoutRemind.setVisibility(View.GONE);
-			} else if (subject.isRemind()) {
-				layoutTodoRemind.setVisibility(View.GONE);
-				layoutTodo.setVisibility(View.GONE);
-				layoutRemind.setVisibility(View.VISIBLE);
-			} else {
-				// is todo
-				layoutTodoRemind.setVisibility(View.GONE);
-				layoutTodo.setVisibility(View.VISIBLE);
-				layoutRemind.setVisibility(View.GONE);
-
-				if (subject.getStatus() == 2 || subject.getStatus() == 3) {
-					layoutTodoDoneDate.setVisibility(View.VISIBLE);
-				} else {
-					layoutTodoDoneDate.setVisibility(View.GONE);
-				}
-			}
-		}
-
-		private void txtNew_setOnKeyListener() {
-
-			txtNew.setOnKeyListener(new OnKeyListener() {
-				@Override
-				public boolean onKey(View v, int keyCode, KeyEvent event) {
-					// TODO Auto-generated method stub
-					if (keyCode == KeyEvent.KEYCODE_ENTER) {
-						InputMethodManager imm = (InputMethodManager) v
-								.getContext().getSystemService(
-										Context.INPUT_METHOD_SERVICE);
-						if (imm.isActive()) {
-							// insert into sqlite
-							String content = txtNew.getText().toString().trim();
-							if (content.length() > 1) {
-
-								// user = app.getUser();
-								// Long subjectID =
-								long pk_id = subjectDa.insert(user.getUserId(),
-										content, subject.getId());
-
-								SubjectBean sbean = subjectDa.load_by_localId(
-										user.getUserId(), pk_id);
-								subjectList.add(sbean);
-								listAdapter.notifyDataSetChanged();
-
-								// SubjectBean subject = new SubjectBean();
-								// subject.setId(subjectID);
-								// subject.setUserId(user.getUserId());
-								// subject.setBody(txtNew.getText().toString().trim());
-								//
-
-								// insert_new_item(subject, 0);
-
-								// show new item in ListView
-								// lvDefault.setAdapter(new ListAdapter(act,
-								// 0));
-								txtNew.setText("");
-							}
-
-						}
-						return true;
-					}
-					return false;
-
-				}
-
-			});
-		}
-
-		private void lvDefault_setOnItemClickListener() {
-			// 单击，查看明细
-			lvDefault.setOnItemClickListener(new OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> arg0, View arg1,
-						int arg2, long arg3) {
-
-					SubjectBean subject = subjectList.get(arg2);
-
-					Intent detailIntent = new Intent(act,
-							ItemDetailActivity.class);
-					detailIntent.putExtra(ItemDetailActivity.SUBJECT_LOCAL_ID,
-							subject.getId());
-					startActivity(detailIntent);
-
-				}
-			});
-
-		}
-
-		private class ListAdapter extends BaseAdapter {
-			private LayoutInflater inflater1;
-			private int action_sort = 0;
-
-			public ListAdapter(Context ctx1) {
-				this.inflater1 = LayoutInflater.from(ctx1);
-
-			}
-
-			@Override
-			public int getCount() {
-				// TODO Auto-generated method stub
-				return subjectList.size();
-			}
-
-			@Override
-			public Object getItem(int position) {
-				return position;
-			}
-
-			@Override
-			public long getItemId(int position) {
-				return position;
-			}
-
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent) {
-				SubjectBean subject = subjectList.get(position);
-				convertView = inflater1.inflate(R.layout.listview_item, null);
-				TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
-				tv.setText("" + subject.getBody());
-
-				// if(currentSubject.getId() == subject.getId() ){
-				// convertView.setBackgroundColor();
-				// }
-
-				return convertView;
-
-			}
-
-		}
-
-	}
-
+	 
 	// 文本编辑模式
 	public static class DetailEditFragment extends Fragment {
 		private EditText txtEdit;
@@ -1072,143 +636,8 @@ public class ItemDetailActivity extends Activity {
 		}
 	}
 
-	// todo模式
-	public static class DetailTodoFragment extends Fragment {
-		private List<DateBean> dates;
-		private ListView lvDefault;
-		private TextView plan_stat_date;
-		private PickDatesAdapter dtAdapter;
+	 
 
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.detail_todo, container,
-					false);
-
-			plan_stat_date = (TextView) rootView
-					.findViewById(R.id.plan_stat_date);
-			lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
-
-			dates = new ArrayList<DateBean>();
-
-			dates.add(new DateBean(Util.getDateStr(0), Util.getDateStr(0)
-					+ "今天", true));
-			dates.add(new DateBean(Util.getDateStr(1), Util.getDateStr(1)
-					+ " 明天", false));
-			dates.add(new DateBean(Util.getDateStr(2), Util.getDateStr(2)
-					+ " 后天", false));
-			dates.add(new DateBean(Util.getDateStr(10), Util.getDateStr(10)
-					+ " 10天后", false));
-
-			dtAdapter = new PickDatesAdapter(act);
-			lvDefault.setAdapter(dtAdapter);
-
-			lvDefault_setOnItemClickListener();
-
-			return rootView;
-		}
-
-		private void lvDefault_setOnItemClickListener() {
-			// 单击，查看明细
-			lvDefault.setOnItemClickListener(new OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> arg0, View arg1,
-						int arg2, long arg3) {
-
-					DateBean item = dates.get(arg2);
-					if (item.getV()) {
-						return;
-					}
-
-					item.setV(true);
-					for (DateBean d : dates) {
-						if (d.getId() != item.getId()) {
-							d.setV(false);
-						}
-					}
-					plan_stat_date.setText(item.getK());
-					dtAdapter.notifyDataSetChanged();
-
-					// 设置option菜单项？
-					// getFragmentManager().beginTransaction()
-					// .replace(R.id.container, new
-					// DetailReadFragment()).commit();
-
-				}
-			});
-
-		}
-
-		private class PickDatesAdapter extends BaseAdapter {
-			private LayoutInflater inflater1;
-			private int temp = -1;
-
-			public PickDatesAdapter(Context ctx1) {
-				this.inflater1 = LayoutInflater.from(ctx1);
-
-			}
-
-			@Override
-			public int getCount() {
-				// TODO Auto-generated method stub
-				return dates.size();
-			}
-
-			@Override
-			public Object getItem(int position) {
-				return position;
-			}
-
-			@Override
-			public long getItemId(int position) {
-				return position;
-			}
-
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent) {
-				convertView = inflater1.inflate(
-						R.layout.detail_item_todo_dates_item, null);
-				DateBean item = dates.get(position);
-
-				// ui
-				TextView tv = (TextView) convertView.findViewById(R.id.tvK);
-				RadioButton picked = (RadioButton) convertView
-						.findViewById(R.id.radioDate);
-
-				tv.setText(item.getK());
-				picked.setChecked(item.getV());
-
-				// if(currentSubject.getId() == subject.getId() ){
-				// convertView.setBackgroundColor();
-				// }
-
-				return convertView;
-
-			}
-
-		}
-	}
-
-	// 提醒模式
-	public static class DetailRemindFragment extends Fragment {
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.detail_todo, container,
-					false);
-			return rootView;
-		}
-	}
-
-	// 删除模式
-	public static class DetailDeleteFragment extends Fragment {
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.detail_todo, container,
-					false);
-			return rootView;
-		}
-	}
+	 
 
 }
