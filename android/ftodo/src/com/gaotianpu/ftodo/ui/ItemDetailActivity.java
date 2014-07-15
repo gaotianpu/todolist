@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -123,18 +124,11 @@ public class ItemDetailActivity extends Activity {
 		}
 
 		switch (id) {
-		case R.id.action_item_edit:
-			item.setChecked(true);
-			getFragmentManager().beginTransaction()
-					.replace(R.id.container, new DetailEditFragment()).commit();
-			break; 
+		 
 		case R.id.action_item_delete:
 			delete();
 			break;
-		case R.id.action_item_read:
-			item.setChecked(true);
-			getFragmentManager().beginTransaction()
-					.replace(R.id.container, new DetailReadFragment()).commit();
+		 
 		default:
 			return super.onOptionsItemSelected(item); // 如果没有这条语句，Fragment下的菜单将不会被执行
 		}
@@ -217,8 +211,8 @@ public class ItemDetailActivity extends Activity {
 			infoList.add(new SettingBean("creation_date",
 					getString(R.string.label_creation_date), subject
 							.getCreationDate()));
-			infoList.add(new SettingBean("update_date",
-					getString(R.string.label_last_update), subject
+			infoList.add(new SettingBean("a_update_date",
+					 "* "+getString(R.string.label_last_update), subject
 							.getUpdateDate()));
 
 			if (subject.isRemind()) {
@@ -486,14 +480,28 @@ public class ItemDetailActivity extends Activity {
 							}).setNegativeButton(R.string.dialog_cancel, null).show();
 		}
 		
-		private void edit_content(){
-		new AlertDialog.Builder(act)
-		.setTitle("请输入")
-		.setIcon(android.R.drawable.ic_dialog_info)
-		.setView(new EditText(act))
-		.setPositiveButton(R.string.dialog_sure, null)
-		.setNegativeButton(R.string.dialog_cancel, null)
-		.show();
+		private void edit_content() {
+			final EditText et = new EditText(act);  
+			et.setText(subject.getBody()); 
+			
+			new AlertDialog.Builder(act)
+				 //	.setTitle("请输入")
+					.setView(et)
+					.setPositiveButton(R.string.dialog_sure,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int i) {									
+									String newTxt = et.getText().toString().trim();
+									act.setTitle(newTxt);
+									subject.setBody(newTxt);
+									subjectDa.edit_content(subject.getId(), newTxt);
+									
+									load_infos(); 
+
+								}
+							}).setNegativeButton(R.string.dialog_cancel, null)
+					.show();
 		}
 
 		private void lvSubjectInfos_setOnItemClickListener() {
@@ -514,6 +522,8 @@ public class ItemDetailActivity extends Activity {
 						todo_status_picker();
 					}else if(item.getId().equals("a_plan_start_date")){
 						set_todo_plan_date();
+					}else if(item.getId().equals("a_update_date")){
+						edit_content();
 					}else{
 						//
 						//Log.i("click","----------------");

@@ -2,24 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.gaotianpu.ftodo.ItemDetailActivity" >
 
-    <group android:checkableBehavior="single" > 
-        <item
-            android:id="@+id/action_item_read"
-            android:checked="true"
-            android:orderInCategory="100"
-            android:showAsAction="never"
-            android:title="@string/action_item_read"/>
-        <item
-            android:id="@+id/action_item_edit"
-            android:orderInCategory="100"
-            android:showAsAction="never"
-            android:title="@string/action_item_edit"/>
-          
-        <item
-            android:id="@+id/action_item_delete"
-            android:orderInCategory="100"
-            android:showAsAction="never"
-            android:title="@string/action_item_delete"/>
-    </group>
+    <item
+        android:id="@+id/action_item_delete"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_item_delete"/>
 
 </menu>

@@ -47,15 +47,13 @@ public final class R {
         public static final int ic_pause=0x7f020009;
     }
     public static final class id {
-        public static final int action_forgot_password=0x7f0a0038;
-        public static final int action_item_cancel=0x7f0a0034;
-        public static final int action_item_delete=0x7f0a0032;
-        public static final int action_item_edit=0x7f0a0031;
-        public static final int action_item_read=0x7f0a0030;
-        public static final int action_item_save=0x7f0a0033;
-        public static final int action_list_normal=0x7f0a0036;
-        public static final int action_list_todo=0x7f0a0037;
-        public static final int action_websearch=0x7f0a0035;
+        public static final int action_forgot_password=0x7f0a0036;
+        public static final int action_item_cancel=0x7f0a0032;
+        public static final int action_item_delete=0x7f0a0030;
+        public static final int action_item_save=0x7f0a0031;
+        public static final int action_list_normal=0x7f0a0034;
+        public static final int action_list_todo=0x7f0a0035;
+        public static final int action_websearch=0x7f0a0033;
         public static final int bottom=0x7f0a001c;
         public static final int btnIcon=0x7f0a002a;
         public static final int btnRemind=0x7f0a0012;
