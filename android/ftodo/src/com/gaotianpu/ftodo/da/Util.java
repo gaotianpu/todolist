@@ -62,6 +62,14 @@ public class Util {
 		return tommorrow;
 	}
 	
+	public static String GetCurrentWeekDay(int count){
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(new Date());
+		int today_week_day = calendar.get(Calendar.DAY_OF_WEEK);
+		int left_day = count - today_week_day;
+		return getDateStr(left_day);
+	}
+	
 	public static String getNextWeekDay(String remindDate){
 		//先算出，星期几
 		//今天是星期几，

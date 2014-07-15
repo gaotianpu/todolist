@@ -30,5 +30,14 @@
         <item>暂停</item>
         <item>完成</item>         
     </string-array>
+    
+      <string-array name="subject_todo_plan_dates">
+        <item>今天</item>
+        <item>明天</item>
+        <item>后天</item>
+        <item>周六</item>
+        <item>周日</item>
+        <item>10天后</item>
+    </string-array>
 
 </resources>

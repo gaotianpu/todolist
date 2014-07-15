@@ -296,15 +296,38 @@ public class ItemDetailActivity extends Activity {
 		
 		private void sort_status_picker() { 
 			String[] pickdates = act.getResources().getStringArray(
-					R.array.subject_sorts) ; //(String[]) dates.toArray(new String[dates.size()]);
+					R.array.subject_sorts) ;  
+			
+			int choic_index = -1;
+			if(subject.isRemind()){
+				choic_index = 4;
+			}else if(subject.isTodo()){
+				if(subject.getStatus()==3){
+					choic_index = 2;
+				}else if(subject.getStatus()==2){
+					choic_index = 3;
+				}else{
+					choic_index = 1;
+				}
+				
+			}else{
+				choic_index = 0;
+			}
+			
 			new AlertDialog.Builder(act)
-					.setTitle(subject.getBody())
-					// .setIcon(android.R.drawable.ic_dialog_info)
-					.setSingleChoiceItems(pickdates, -1,
+					.setTitle(subject.getBody())					 
+					.setSingleChoiceItems(pickdates, choic_index,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int which) { 
-									
+									switch(which){
+									case 0:
+										break;
+									case 1:
+										break;
+									case 2:
+										break;									
+									}
 									dialog.dismiss();
 									listAdapter.notifyDataSetChanged();
 									
@@ -316,15 +339,31 @@ public class ItemDetailActivity extends Activity {
 		
 		private void todo_status_picker() { 
 			String[] pickdates = act.getResources().getStringArray(
-					R.array.subject_todo_status) ; //(String[]) dates.toArray(new String[dates.size()]);
+					R.array.subject_todo_status) ;  
+			
+			int choic_index = -1;
+			if(subject.getStatus()==3){
+				choic_index = 1;
+			}else if(subject.getStatus()==2){
+				choic_index = 2;
+			}else{
+				choic_index = 0;
+			}
+			
 			new AlertDialog.Builder(act)
-					.setTitle(subject.getBody())
-					// .setIcon(android.R.drawable.ic_dialog_info)
-					.setSingleChoiceItems(pickdates, -1,
+					.setTitle(subject.getBody())					 
+					.setSingleChoiceItems(pickdates, choic_index,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int which) { 
-									
+									switch(which){
+									case 0:
+										break;
+									case 1:
+										break;
+									case 2:
+										break;									
+									}
 									dialog.dismiss();
 									listAdapter.notifyDataSetChanged();
 									
@@ -336,47 +375,25 @@ public class ItemDetailActivity extends Activity {
 		
 		private void remind_frequency_picker() { 
 			String[] pickdates = act.getResources().getStringArray(
-					R.array.remind_frequency_items) ; //(String[]) dates.toArray(new String[dates.size()]);
+					R.array.remind_frequency_items) ; 
+			int choic_index = -1;
+			if(subject.getRemindFrequency()>0){
+				choic_index = subject.getRemindFrequency()-1;
+			}
 			new AlertDialog.Builder(act)
-					.setTitle(subject.getBody())
-					// .setIcon(android.R.drawable.ic_dialog_info)
-					.setSingleChoiceItems(pickdates, -1,
+					.setTitle(subject.getBody())					 
+					.setSingleChoiceItems(pickdates, choic_index,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
-										int which) {
-
-//									switch (which) {
-//									case 0: // todo
-//										subject.setIsTodo(true);
-//										subject.setStatus(0);
-//										subjectDa.set_todo_status(subject.getId(),
-//												0);
-//										break;
-//									case 1: // todo-done
-//										subject.setIsTodo(true);
-//										subject.setStatus(2);
-//										subjectDa.set_todo_status(subject.getId(),
-//												2);
-//										break;
-//									case 2: // todo-block
-//										subject.setIsTodo(true);
-//										subject.setStatus(3);
-//										subjectDa.set_todo_status(subject.getId(),
-//												3);
-//										break;
-//									case 3: // remind
-//										subject.setIsTodo(false);
-//										subject.setIsRemind(true);
-//										subjectDa.set_remind(subject.getId(), true);
-//										break;
-//									case 4: // normal-note
-//									default:
-//										subject.setIsTodo(false);
-//										subject.setIsRemind(false);
-//										subjectDa.set_todo(subject.getId(), false);
-//										subjectDa.set_remind(subject.getId(), false);
-//										break;
-//									} 
+										int which) { 
+									switch(which){
+									case 0:
+										break;
+									case 1:
+										break;
+									case 2:
+										break;									
+									}
 									dialog.dismiss();
 									listAdapter.notifyDataSetChanged();
 									
@@ -384,6 +401,63 @@ public class ItemDetailActivity extends Activity {
 								}
 							}).setNegativeButton("取消", null).show();
 			
+		}
+		
+		private void set_remind_date() {
+			Calendar c = Calendar.getInstance();
+			
+			Date d = Util.str2Date(subject.getRemindDate());
+			if (d != null) {
+				c.setTime(d);
+			}
+
+			Dialog dialog = new DatePickerDialog(act,
+					new DatePickerDialog.OnDateSetListener() {
+						public void onDateSet(DatePicker dp, int year,
+								int month, int dayOfMonth) {
+						}
+					}, c.get(Calendar.YEAR), // 传入年份
+					c.get(Calendar.MONTH), // 传入月份
+					c.get(Calendar.DAY_OF_MONTH) // 传入天数
+			);
+			dialog.setTitle("设置提醒日期");
+			dialog.setCancelable(true);
+			dialog.show();
+		}
+		
+		private void set_todo_plan_date(){			 
+			String[] pickdates = act.getResources().getStringArray(
+					R.array.subject_todo_plan_dates) ;
+			
+			//?需要设置具体的日期
+			pickdates[0] =  pickdates[0] + " " + Util.getDateStr(0); //今天
+			pickdates[1] =  pickdates[1] + " " + Util.getDateStr(1); //明天
+			pickdates[2] =  pickdates[2] + " " + Util.getDateStr(2); //后天
+			pickdates[3] =  pickdates[3] + " " + Util.GetCurrentWeekDay(7); //周六  ？
+			pickdates[4] =  pickdates[4] + " " + Util.GetCurrentWeekDay(8); //周日  ？
+			pickdates[5] =  pickdates[5] + " " + Util.getDateStr(10); //10天后 
+			
+			int choic_index = -1;			 
+			new AlertDialog.Builder(act)
+					.setTitle(subject.getBody())					 
+					.setSingleChoiceItems(pickdates, choic_index,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) { 
+									switch(which){
+									case 0:
+										break;
+									case 1:
+										break;
+									case 2:
+										break;									
+									}
+									dialog.dismiss();
+									listAdapter.notifyDataSetChanged();
+									
+									
+								}
+							}).setNegativeButton("取消", null).show();
 		}
 
 		private void lvSubjectInfos_setOnItemClickListener() {
@@ -397,18 +471,13 @@ public class ItemDetailActivity extends Activity {
 					if(item.getId().equals("a_sort") ){						 
 						sort_status_picker();
 					}else if(item.getId().equals("a_remind_date")){
-						//today
-						//tommorrow
-						//sss
-						//
-						Log.i("click","a_remind_date");
+						set_remind_date();
 					}else if(item.getId().equals("a_remind_frequency")){						 
 						remind_frequency_picker();
 					}else if(item.getId().equals("a_task_status")){
 						todo_status_picker();
 					}else if(item.getId().equals("a_plan_start_date")){
-						//
-						Log.i("click","a_plan_start_date");
+						set_todo_plan_date();
 					}else{
 						//
 						//Log.i("click","----------------");
