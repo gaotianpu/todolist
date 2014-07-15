@@ -34,6 +34,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -115,7 +116,12 @@ public class LoginFragment extends Fragment {
 
 	public void attemptLogin() {
 		// 检测网络条件
-
+		if(!app.network_available()){
+			Toast.makeText(act, R.string.network_failed ,
+				     Toast.LENGTH_SHORT).show();
+			return ;
+		} 
+		
 		// Reset errors.
 		mMobileView.setError(null);
 		mPasswordView.setError(null);

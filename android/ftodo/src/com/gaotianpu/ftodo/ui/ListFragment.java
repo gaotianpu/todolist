@@ -351,115 +351,121 @@ public class ListFragment extends Fragment {
 		});
 	}
 	
-	private void remind_img_btn_click(final SubjectBean subject) { 
-		Calendar c = Calendar.getInstance(); 
-		Date d = Util.str2Date(subject.getRemindDate());
-	 
-		if(d!=null){
-			c.setTime(d);
-		} 
-	 
-		Dialog dialog = new DatePickerDialog(act,
-				new DatePickerDialog.OnDateSetListener() {
-					public void onDateSet(DatePicker dp, int year, int month,
-							int dayOfMonth) { 
-						
-						String remind_date = Util.GetDateFromInts(year,month,dayOfMonth); // String.format("%d-%d-%d", year,month+1,dayOfMonth);
-						 
-						subject.setRemindDate(remind_date);
-						subjectDa.set_remind_date(subject.getId(),remind_date); 
-						
-						String[] items = {"每天","每周","每月","每年"};
-						new AlertDialog.Builder(act)
-						.setTitle("设置重复周期")
-						.setSingleChoiceItems(
-								items, subject.getRemindFrequency()-1,  //get from data
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int which) {
-										
-										//change data
-										subject.setRemindFrequency(which+1);
-										subjectDa.set_remind_frequency(subject.getId(), which+1);
-										
-										String next_remind_date = Util.getNextDate(subject.getRemindDate(),which+1);
-										
-										subject.setNextRemindDate(next_remind_date);
-										subjectDa.set_next_remind(subject.getId(), next_remind_date);
-										
-										dialog.dismiss();
-										
-										listAdapter.notifyDataSetChanged();
-									}
-								}).setNegativeButton("取消", null).show();
-
-					}
-				}, c.get(Calendar.YEAR), // 传入年份
-				c.get(Calendar.MONTH), // 传入月份
-				c.get(Calendar.DAY_OF_MONTH) // 传入天数
-		);
-
-		dialog.setTitle("设置提醒日期");
-		dialog.setCancelable(true);
-		dialog.show();
-	}
+//	private void remind_img_btn_click(final SubjectBean subject) { 
+//		Calendar c = Calendar.getInstance(); 
+//		Date d = Util.str2Date(subject.getRemindDate());
+//	 
+//		if(d!=null){
+//			c.setTime(d);
+//		} 
+//	 
+//		Dialog dialog = new DatePickerDialog(act,
+//				new DatePickerDialog.OnDateSetListener() {
+//					public void onDateSet(DatePicker dp, int year, int month,
+//							int dayOfMonth) { 
+//						
+//						String remind_date = Util.GetDateFromInts(year,month,dayOfMonth); // String.format("%d-%d-%d", year,month+1,dayOfMonth);
+//						 
+//						subject.setRemindDate(remind_date);
+//						subjectDa.set_remind_date(subject.getId(),remind_date); 
+//						
+//						String[] items = {"每天","每周","每月","每年"};
+//						new AlertDialog.Builder(act)
+//						.setTitle("设置重复周期")
+//						.setSingleChoiceItems(
+//								items, subject.getRemindFrequency()-1,  //get from data
+//								new DialogInterface.OnClickListener() {
+//									public void onClick(DialogInterface dialog,
+//											int which) {
+//										
+//										//change data
+//										subject.setRemindFrequency(which+1);
+//										subjectDa.set_remind_frequency(subject.getId(), which+1);
+//										
+//										String next_remind_date = Util.getNextDate(subject.getRemindDate(),which+1);
+//										
+//										subject.setNextRemindDate(next_remind_date);
+//										subjectDa.set_next_remind(subject.getId(), next_remind_date);
+//										
+//										dialog.dismiss();
+//										
+//										listAdapter.notifyDataSetChanged();
+//									}
+//								}).setNegativeButton("取消", null).show();
+//
+//					}
+//				}, c.get(Calendar.YEAR), // 传入年份
+//				c.get(Calendar.MONTH), // 传入月份
+//				c.get(Calendar.DAY_OF_MONTH) // 传入天数
+//		);
+//
+//		dialog.setTitle("设置提醒日期");
+//		dialog.setCancelable(true);
+//		dialog.show();
+//	}
 
 	private void item_img_btn_click(final SubjectBean subject) {
-		List dates = new ArrayList();
-		dates.add("待办"); // 0
-		dates.add("完成"); // 1
-		dates.add("暂停"); // 2
-		dates.add("提醒"); // 3
-		dates.add("备忘"); // 4
-
-		String[] pickdates = (String[]) dates.toArray(new String[dates.size()]);
+		String[] pickdates = act.getResources().getStringArray(
+				R.array.subject_sorts) ;  
+		
+		int choic_index = -1;
+		if(subject.isRemind()){
+			choic_index = 4;
+		}else if(subject.isTodo()){
+			if(subject.getStatus()==3){
+				choic_index = 2;
+			}else if(subject.getStatus()==2){
+				choic_index = 3;
+			}else{
+				choic_index = 1;
+			}
+			
+		}else{
+			choic_index = 0;
+		}
+		
 		new AlertDialog.Builder(act)
-				.setTitle(subject.getBody())
-				// .setIcon(android.R.drawable.ic_dialog_info)
-				.setSingleChoiceItems(pickdates, -1,
+				.setTitle(subject.getBody())					 
+				.setSingleChoiceItems(pickdates, choic_index,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
-									int which) {
-
-								switch (which) {
-								case 0: // todo
-									subject.setIsTodo(true);
-									subject.setStatus(0);
-									subjectDa.set_todo_status(subject.getId(),
-											0);
-									break;
-								case 1: // todo-done
-									subject.setIsTodo(true);
-									subject.setStatus(2);
-									subjectDa.set_todo_status(subject.getId(),
-											2);
-									break;
-								case 2: // todo-block
-									subject.setIsTodo(true);
-									subject.setStatus(3);
-									subjectDa.set_todo_status(subject.getId(),
-											3);
-									break;
-								case 3: // remind
-									subject.setIsTodo(false);
-									subject.setIsRemind(true);
-									subjectDa.set_remind(subject.getId(), true);
-									break;
-								case 4: // normal-note
-								default:
+									int which) { 
+								switch(which){
+								case 0:
 									subject.setIsTodo(false);
 									subject.setIsRemind(false);
 									subjectDa.set_todo(subject.getId(), false);
 									subjectDa.set_remind(subject.getId(), false);
 									break;
-								} 
+								case 1: //todo
+									subject.setIsTodo(true);
+									subject.setStatus(0);
+									subjectDa.set_todo_status(subject.getId(),
+											0);
+									break;
+								case 2: //block
+									subject.setIsTodo(true);
+									subject.setStatus(3);
+									subjectDa.set_todo_status(subject.getId(),
+											3);
+									break;		
+								case 3: // done
+									subject.setIsTodo(true);
+									subject.setStatus(2);
+									subjectDa.set_todo_status(subject.getId(),
+											2);
+									break;
+								case 4: // remind
+								default:
+									subject.setIsTodo(false);
+									subject.setIsRemind(true);
+									subjectDa.set_remind(subject.getId(), true);
+									break;
+								}
 								dialog.dismiss();
 								listAdapter.notifyDataSetChanged();
-								
-								
 							}
-						}).setNegativeButton("取消", null).show();
-		
+						}).setNegativeButton(R.string.action_item_cancel, null).show(); 
 	}
 
 	private class ListAdapter extends BaseAdapter {
@@ -560,12 +566,7 @@ public class ListFragment extends Fragment {
 			ibtn.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) { 
-					
-					if (list_sort.equals("remind")) {
-						remind_img_btn_click(subject);
-					} else {
-						item_img_btn_click(subject);
-					}
+					item_img_btn_click(subject); 
 				}
 			});
 

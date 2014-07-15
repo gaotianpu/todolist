@@ -60,7 +60,7 @@ public class ItemDetailActivity extends Activity {
 	private static UserBean user;
 	private static SubjectBean subject;
 
-	private Long subject_local_id;
+	private static Long subject_local_id;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -218,7 +218,9 @@ public class ItemDetailActivity extends Activity {
 		}
 
 		private void load_infos() {
-			infoList.clear();
+			infoList.clear(); 
+			 
+			subject = subjectDa.load_by_localId(user.getUserId(), subject_local_id);
 			
 			txtSubjectBody.setText(subject.getBody());
 
