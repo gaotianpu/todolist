@@ -66,15 +66,20 @@ public class SettingDetailActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// goback?
-		Runtime runtime = Runtime.getRuntime();
-		try {
-			Log.i("back", String.valueOf(item.getItemId()));
-			runtime.exec("input keyevent " + KeyEvent.KEYCODE_BACK);
-			return true;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// //goback?
+			Runtime runtime = Runtime.getRuntime();
+			try {
+				//Log.i("back", String.valueOf(item.getItemId()));
+				runtime.exec("input keyevent " + KeyEvent.KEYCODE_BACK);
+				return true;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				Log.e("goback", e.toString());
+				e.printStackTrace();
+			}
+			break;
 		}
 
 		return super.onOptionsItemSelected(item);

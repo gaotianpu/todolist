@@ -430,6 +430,7 @@ public class ListFragment extends Fragment {
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) { 
+								Log.i("which",String.valueOf(which ) );
 								switch(which){
 								case 0:
 									subject.setIsTodo(false);
@@ -439,17 +440,20 @@ public class ListFragment extends Fragment {
 									break;
 								case 1: //todo
 									subject.setIsTodo(true);
+									subject.setIsRemind(false);
 									subject.setStatus(0);
 									subjectDa.set_todo_status(subject.getId(),
 											0);
 									break;
 								case 2: //block
+									subject.setIsRemind(false);
 									subject.setIsTodo(true);
 									subject.setStatus(3);
 									subjectDa.set_todo_status(subject.getId(),
 											3);
 									break;		
 								case 3: // done
+									subject.setIsRemind(false);
 									subject.setIsTodo(true);
 									subject.setStatus(2);
 									subjectDa.set_todo_status(subject.getId(),

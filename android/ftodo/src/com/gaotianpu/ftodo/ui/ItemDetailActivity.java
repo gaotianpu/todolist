@@ -1,5 +1,6 @@
 package com.gaotianpu.ftodo.ui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -78,7 +79,11 @@ public class ItemDetailActivity extends Activity {
 		user = app.getUser();
 		subjectDa = new SubjectDa(this);
 
-		// 2 UI
+		// 2 UI		
+		act.getActionBar().setHomeButtonEnabled(true);
+		act.getActionBar().setDisplayHomeAsUpEnabled(true);
+		act.getActionBar().setDisplayShowHomeEnabled(true);
+		
 
 		// 3 load data
 		subject = subjectDa.load_by_localId(user.getUserId(), subject_local_id);
@@ -108,27 +113,30 @@ public class ItemDetailActivity extends Activity {
 
 		// Log.i("back", String.valueOf( KeyEvent.KEYCODE_HOME ));
 		//
-		// //goback?
-		// Runtime runtime = Runtime.getRuntime();
-		// try {
-		// Log.i("back", String.valueOf( item.getItemId() ) );
-		// runtime.exec("input keyevent " + KeyEvent.KEYCODE_BACK);
-		// return true;
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
+		
 
 		if (item.isChecked()) {
 			return true;
 		}
 
-		switch (id) {
-		 
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// //goback?
+			Runtime runtime = Runtime.getRuntime();
+			try {
+				
+				runtime.exec("input keyevent " + KeyEvent.KEYCODE_BACK);
+				return true;
+			} catch (IOException e) {
+				Log.e("goback", e.toString());
+				e.printStackTrace();
+			}
+			break;
+
 		case R.id.action_item_delete:
 			delete();
 			break;
-		 
+
 		default:
 			return super.onOptionsItemSelected(item); // 如果没有这条语句，Fragment下的菜单将不会被执行
 		}
@@ -483,6 +491,10 @@ public class ItemDetailActivity extends Activity {
 		private void edit_content() {
 			final EditText et = new EditText(act);  
 			et.setText(subject.getBody()); 
+			
+//			ViewGroup.LayoutParams lp = et.getLayoutParams();
+//	        lp.height = 50;
+//			et.setLayoutParams(lp);
 			
 			new AlertDialog.Builder(act)
 				 //	.setTitle("请输入")

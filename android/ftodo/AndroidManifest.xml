@@ -35,11 +35,10 @@
         <activity
             android:screenOrientation="portrait"
             android:name="com.gaotianpu.ftodo.ui.ItemDetailActivity"
-            android:label="@string/title_activity_item_detail"
-            android:parentActivityName="com.gaotianpu.ftodo.MainActivity" >
-            <meta-data
+            android:label="@string/title_activity_item_detail" >
+        <!--   <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".MainActivity" />  -->  
         </activity>
         <activity
             android:screenOrientation="portrait"

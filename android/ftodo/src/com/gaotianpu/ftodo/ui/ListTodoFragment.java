@@ -221,13 +221,13 @@ public class ListTodoFragment extends Fragment {
 		List dates = Util.getPickDates();
 		dates.add("已完成");
 		dates.add("先暂停");
-		if (subject.isTodo()) {
-			dates.add("非待办事项");
-		}
+//		if (subject.isTodo()) {
+//			dates.add("非待办事项");
+//		}
 		String[] pickdates = (String[]) dates.toArray(new String[dates.size()]);
 		new AlertDialog.Builder(act)
 				.setTitle(subject.getBody())
-				// .setIcon(android.R.drawable.ic_dialog_info)
+				 
 				.setSingleChoiceItems(pickdates, -1,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
@@ -258,10 +258,10 @@ public class ListTodoFragment extends Fragment {
 									subjectDa.set_todo_status(subject.getId(),
 											3);
 									break;
-								case 6: // 非待办事项
-									subject.setIsTodo(false);
-									subjectDa.set_todo(subject.getId(), false);
-									break;
+//								case 6: // 非待办事项
+//									subject.setIsTodo(false);
+//									subjectDa.set_todo(subject.getId(), false);
+//									break;
 								}
 
 								dialog.dismiss();
