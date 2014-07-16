@@ -148,7 +148,7 @@ public class ItemDetailActivity extends Activity {
 		new AlertDialog.Builder(act)
 				.setTitle(R.string.dialog_delete_title)
 				.setMessage(R.string.dialog_delete_message)
-				.setPositiveButton(R.string.dialog_cancel,
+				.setPositiveButton(R.string.dialog_sure,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int i) {
@@ -223,6 +223,7 @@ public class ItemDetailActivity extends Activity {
 					 "* "+getString(R.string.label_last_update), subject
 							.getUpdateDate()));
 
+			//remind
 			if (subject.isRemind()) {
 				infoList.add(new SettingBean("a_sort", "* "
 						+ getString(R.string.label_subject_sort),
@@ -239,8 +240,10 @@ public class ItemDetailActivity extends Activity {
 
 				}
 
-				infoList.add(new SettingBean("a_remind_frequency", "* "
-						+ getString(R.string.label_remind_frequency), remind_f));
+				infoList.add(new SettingBean("a_remind_next", "* "
+						+ getString(R.string.label_remind_next), ""));
+				
+				
 
 			} else if (subject.isTodo()) {
 				infoList.add(new SettingBean("a_sort", "* "
@@ -412,9 +415,11 @@ public class ItemDetailActivity extends Activity {
 								public void onClick(DialogInterface dialog,
 										int which) { 
 									subject.setRemindFrequency(which+1);
-									subjectDa.set_remind_frequency(subject.getId(), which+1);
+									subjectDa.set_remind_frequency(subject.getId(), subject.getRemindFrequency());
 									
-									String next_remind_date = Util.getNextDate(subject.getRemindDate(),which+1);
+									
+									
+									String next_remind_date = Util.getNextDate(subject.getRemindDate(),subject.getRemindFrequency());
 									
 									subject.setNextRemindDate(next_remind_date);
 									subjectDa.set_next_remind(subject.getId(), next_remind_date);
@@ -515,6 +520,33 @@ public class ItemDetailActivity extends Activity {
 							}).setNegativeButton(R.string.dialog_cancel, null)
 					.show();
 		}
+		
+		private void remin_next(){
+			new AlertDialog.Builder(act)
+			.setTitle("进入下一次提醒?")
+			//.setMessage("已执行")
+			.setPositiveButton(R.string.dialog_sure,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int i) { 
+							Log.i("remin_next",subject.getRemindDate()+" " + String.valueOf(subject.getRemindFrequency()) );
+							String next_remind_date = Util.getNextDate(subject.getRemindDate(),subject.getRemindFrequency());
+							Log.i("remin_next", next_remind_date );
+							
+							subject.setNextRemindDate(next_remind_date);
+							subjectDa.set_next_remind(subject.getId(), next_remind_date);
+							
+							load_infos(); 
+						}
+					})
+			.setNegativeButton(R.string.dialog_cancel,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int i) {
+							// Log.i("dialog", "cancel");
+						}
+					}).show();
+		}
 
 		private void lvSubjectInfos_setOnItemClickListener() {
 			// 单击，查看明细
@@ -536,10 +568,13 @@ public class ItemDetailActivity extends Activity {
 						set_todo_plan_date();
 					}else if(item.getId().equals("a_update_date")){
 						edit_content();
+					}else if(item.getId().equals("a_remind_next")){
+						remin_next();
 					}else{
 						//
 						//Log.i("click","----------------");
 					} 
+					 
 				}
 			});
 

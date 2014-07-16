@@ -171,10 +171,11 @@ public final class R {
         public static final int hello_world=0x7f060024;
         public static final int label_creation_date=0x7f060043;
         public static final int label_last_update=0x7f060044;
-        public static final int label_note=0x7f060051;
+        public static final int label_note=0x7f060052;
         public static final int label_remind=0x7f06004e;
         public static final int label_remind_date=0x7f06004f;
         public static final int label_remind_frequency=0x7f060050;
+        public static final int label_remind_next=0x7f060051;
         public static final int label_subject_sort=0x7f060045;
         public static final int label_todo=0x7f060046;
         public static final int label_todo_block=0x7f060049;

@@ -120,9 +120,7 @@ public class Util {
 		case 4: //year
 			//有一个例外，闰年2-29，下一年则没有2-29 
 			return getDateOfNextYear(currentDate); 
-		}
-		
-		
+		} 
 		return "";
 	}
 	
