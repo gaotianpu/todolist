@@ -514,6 +514,8 @@ public class ItemDetailActivity extends Activity {
 //	        lp.height = 50;
 //			et.setLayoutParams(lp);
 			
+			
+			
 			builderDialog()
 					.setView(et)
 					.setPositiveButton(R.string.dialog_sure,
@@ -531,6 +533,14 @@ public class ItemDetailActivity extends Activity {
 								}
 							}).setNegativeButton(R.string.dialog_cancel, null)
 					.show();
+			
+//			InputMethodManager imm = (InputMethodManager)act.getSystemService(Context.INPUT_METHOD_SERVICE);  
+//			//得到InputMethodManager的实例
+//			if (imm.isActive()) {
+//			//如果开启
+//			imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS); 
+//			//关闭软键盘，开启方法相同，这个方法是切换开启与关闭状态的
+//			}
 		}
 		
 		private void remin_next(){
