@@ -478,13 +478,13 @@ public class SubjectDa {
 			String orderBy = "remote_id DESC,pk_id desc";
 			
 			if (list_sort.equals( "todo")) { // 待办
-				sqlwhere = sqlwhere + "and is_todo=1 and task_status<>2 and task_status<>3 ";
+				sqlwhere = sqlwhere + "and is_todo=1 and is_remind=0 and task_status<>2 and task_status<>3 ";
 			}  else if (list_sort.equals( "done")) {
-				sqlwhere = sqlwhere + " and is_todo=1 and task_status=2 ";
+				sqlwhere = sqlwhere + " and is_todo=1  and task_status=2 and is_remind=0 ";
 			} else if (list_sort.equals("block")) {
-				sqlwhere = sqlwhere + " and is_todo=1  and task_status=3  ";
+				sqlwhere = sqlwhere + " and is_todo=1  and task_status=3 and is_remind=0  ";
 			} else if (list_sort.equals("remind")) { // 提醒
-				sqlwhere = sqlwhere + " and is_remind=1";
+				sqlwhere = sqlwhere + " and is_remind=1 and is_todo=0";
 				orderBy = "remind_next asc";
 			}else { //all
 				 //
@@ -516,7 +516,7 @@ public class SubjectDa {
 		db = dbHelper.getWritableDatabase();
 		try { 
 
-			String sqlwhere =  "(user_id=? or user_id=0) and is_todo=1 and is_del=0 and task_status<>2 and task_status<>3";
+			String sqlwhere =  "(user_id=? or user_id=0) and is_todo=1 and is_remind=0 and is_del=0 and task_status<>2 and task_status<>3";
 
 			Log.i("sqlwhere", sqlwhere);
 

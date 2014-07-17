@@ -9,7 +9,9 @@ import com.gaotianpu.ftodo.da.UserDa;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import android.app.AlertDialog;
 import android.app.Application;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -131,5 +133,14 @@ public class MyApplication extends Application {
 		}
 		return dbHelper.getWritableDatabase();
 	}
+	
+	
+//	private Builder b;
+//	public Builder builderDialog(){
+//		if(b==null){
+//			b = new AlertDialog.Builder(this); //防止重复弹出对话框
+//		}
+//		return b;
+//	}
 
 }

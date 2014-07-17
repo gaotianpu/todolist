@@ -10,6 +10,7 @@ import com.gaotianpu.ftodo.bean.SubjectBean;
 import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.SubjectDa;
 import com.gaotianpu.ftodo.da.Util;
+ 
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,15 +24,19 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnKeyListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -46,6 +51,7 @@ public class ListTodoFragment extends Fragment {
 	private UserBean user;
 	private SubjectDa subjectDa;
 
+	private EditText txtNew;
 	private ListView lvDefault;
 	private ListAdapter listAdapter;
 
@@ -54,6 +60,8 @@ public class ListTodoFragment extends Fragment {
 	private List<Object> taskList = new ArrayList<Object>(); // 合并后的数据
 
 	private List<String> groups;
+	
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,20 +81,24 @@ public class ListTodoFragment extends Fragment {
 		setHasOptionsMenu(true);
 		action_menu_checked_menu = R.id.action_list_normal;
 
+		txtNew = (EditText) rootView.findViewById(R.id.txtNew);
 		lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
-		Log.i("lvDefault", lvDefault.toString());
+		 
 
 		listAdapter = new ListAdapter(act);
 		lvDefault.setAdapter(listAdapter);
 		load_data(0, 500);
 
 		lvDefault_setOnItemClickListener();
+		
+		txtNew_setOnKeyListener();
 
 		return rootView;
 	}
 	
 	@Override
 	public void onResume() {
+		//load_data(0,500);
 		listAdapter.notifyDataSetChanged();
 		super.onResume();
 	}
@@ -154,6 +166,58 @@ public class ListTodoFragment extends Fragment {
 		listAdapter.notifyDataSetChanged();
 
 	}
+	
+	 
+	
+	private void txtNew_setOnKeyListener() {
+
+		txtNew.setOnKeyListener(new OnKeyListener() {
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// TODO Auto-generated method stub
+				if (keyCode == KeyEvent.KEYCODE_ENTER) {
+					InputMethodManager imm = (InputMethodManager) v
+							.getContext().getSystemService(
+									Context.INPUT_METHOD_SERVICE);
+					if (imm.isActive()) {
+						// 输入一条厚，键盘不收起，允许用户多次提交
+						// imm.hideSoftInputFromWindow(
+						// v.getApplicationWindowToken(), 0);
+
+						// insert into sqlite
+						String content = txtNew.getText().toString().trim();
+						if (content.length() > 1) {
+
+							user = app.getUser(); 
+							
+							Long subjectID = subjectDa.insert(user.getUserId(), content,
+									0);
+							subjectDa.set_todo_status(subjectID,
+									0);
+
+//							SubjectBean subject = new SubjectBean();
+//							subject.setId(subjectID);
+//							subject.setUserId(user.getUserId());
+//							subject.setBody(txtNew.getText().toString().trim());
+//							// subject.setCreationDate(1);
+
+							 
+							load_data(0,500);
+							// show new item in ListView
+							 
+							txtNew.setText("");
+						}
+
+					}
+					return true;
+				}
+				return false;
+
+			}
+
+		});
+	}
+	
 
 	private void lvDefault_setOnItemClickListener() {
 		// 单击，查看明细

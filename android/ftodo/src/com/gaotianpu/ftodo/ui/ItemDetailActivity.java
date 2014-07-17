@@ -19,6 +19,7 @@ import com.gaotianpu.ftodo.da.Util;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -184,6 +185,8 @@ public class ItemDetailActivity extends Activity {
 
 		private List<SettingBean> infoList;
 		private ListAdapter listAdapter;
+		
+		
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -207,6 +210,14 @@ public class ItemDetailActivity extends Activity {
 			lvSubjectInfos_setOnItemClickListener();
 
 			return rootView;
+		}
+		
+		private Builder b;
+		private Builder builderDialog(){
+			if(b==null){
+				b = new AlertDialog.Builder(act);
+			}
+			return b;
 		}
 
 		private void load_infos() {
@@ -311,7 +322,8 @@ public class ItemDetailActivity extends Activity {
 				choic_index = 0;
 			}
 			
-			new AlertDialog.Builder(act)
+			//new AlertDialog.Builder(act)
+			builderDialog()
 					.setTitle(subject.getBody())					 
 					.setSingleChoiceItems(pickdates, choic_index,
 							new DialogInterface.OnClickListener() {
@@ -369,7 +381,7 @@ public class ItemDetailActivity extends Activity {
 				choic_index = 0;
 			}
 			
-			new AlertDialog.Builder(act)
+			builderDialog()
 					.setTitle(subject.getBody())					 
 					.setSingleChoiceItems(pickdates, choic_index,
 							new DialogInterface.OnClickListener() {
@@ -408,7 +420,7 @@ public class ItemDetailActivity extends Activity {
 			if(subject.getRemindFrequency()>0){
 				choic_index = subject.getRemindFrequency()-1;
 			}
-			new AlertDialog.Builder(act)
+			builderDialog()
 					.setTitle(subject.getBody())					 
 					.setSingleChoiceItems(pickdates, choic_index,
 							new DialogInterface.OnClickListener() {
@@ -474,7 +486,7 @@ public class ItemDetailActivity extends Activity {
 			pickdates[5] =  pickdates[5] + " " + Util.getDateStr(10); //10天后 
 			
 			int choic_index = -1;			 
-			new AlertDialog.Builder(act)
+			builderDialog()
 					.setTitle(subject.getBody())					 
 					.setSingleChoiceItems(pickdates, choic_index,
 							new DialogInterface.OnClickListener() {
@@ -502,8 +514,7 @@ public class ItemDetailActivity extends Activity {
 //	        lp.height = 50;
 //			et.setLayoutParams(lp);
 			
-			new AlertDialog.Builder(act)
-				 //	.setTitle("请输入")
+			builderDialog()
 					.setView(et)
 					.setPositiveButton(R.string.dialog_sure,
 							new DialogInterface.OnClickListener() {
@@ -523,7 +534,7 @@ public class ItemDetailActivity extends Activity {
 		}
 		
 		private void remin_next(){
-			new AlertDialog.Builder(act)
+			builderDialog()
 			.setTitle("进入下一次提醒?")
 			//.setMessage("已执行")
 			.setPositiveButton(R.string.dialog_sure,

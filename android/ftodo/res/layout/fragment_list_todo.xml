@@ -12,4 +12,21 @@
         android:layout_height="fill_parent" >
     </ListView>
 
+    <LinearLayout
+        android:id="@+id/bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/editbox_boder" >
+
+        <EditText
+            android:id="@+id/txtNew"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/newpost_hint"
+            android:imeOptions="actionSend"
+            android:inputType="text" />
+    </LinearLayout>
+
 </RelativeLayout>

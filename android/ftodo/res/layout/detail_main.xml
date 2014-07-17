@@ -1,24 +1,50 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    tools:context="com.gaotianpu.ftodo.MainActivity"
+    tools:ignore="MergeRootFrame" >
 
-    <TextView
-        android:id="@+id/subject_body"
+    <LinearLayout      
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/subject_body"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="4dp"
+            android:lineSpacingMultiplier="1.2"
+            android:padding="8dip"
+            android:textSize="16sp" />
+
+        <ListView
+            android:id="@+id/lvSubjectInfos"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="30dp" >
+        </ListView>
+    </LinearLayout>
+
+    <!-- 
+    <LinearLayout
+        android:id="@+id/bottom"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:includeFontPadding="false"
-        android:lineSpacingExtra="4dp"
-        android:lineSpacingMultiplier="1.2"
-        android:padding="8dip"
-        android:textSize="16sp" />
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/editbox_boder" >
 
-    <ListView
-        android:id="@+id/lvSubjectInfos"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginLeft="30dp" >
-    </ListView>
-
-</LinearLayout>
+        <EditText
+            android:id="@+id/txtNew"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/newpost_hint"
+            android:imeOptions="actionSend"
+            android:inputType="text" />
+    </LinearLayout>
+ -->
+</RelativeLayout>

@@ -23,6 +23,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.AlertDialog.Builder;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -159,6 +160,14 @@ public class ListFragment extends Fragment {
 		swipeLayout_setOnRefreshListener(); // 下拉刷新
 
 		return rootView;
+	}
+	
+	private Builder b;
+	private Builder builderDialog(){
+		if(b==null){
+			b = new AlertDialog.Builder(act); //防止重复弹出对话框
+		}
+		return b;
 	}
 
 	@Override
@@ -424,7 +433,7 @@ public class ListFragment extends Fragment {
 			choic_index = 0;
 		}
 		
-		new AlertDialog.Builder(act)
+		builderDialog()
 				.setTitle(subject.getBody())					 
 				.setSingleChoiceItems(pickdates, choic_index,
 						new DialogInterface.OnClickListener() {
