@@ -496,6 +496,7 @@ public class ItemDetailActivity extends Activity {
 		private void edit_content() {
 			final EditText et = new EditText(act);  
 			et.setText(subject.getBody()); 
+			et.setSelection(subject.getBody().length() );
 			
 //			ViewGroup.LayoutParams lp = et.getLayoutParams();
 //	        lp.height = 50;

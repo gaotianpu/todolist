@@ -107,14 +107,14 @@ public class MainActivity extends Activity {
 		R.string.drawer_close /* "close drawer" description for accessibility */
 		) {
 			public void onDrawerClosed(View view) {
-				Log.i("title",mTitle.toString());
+				//Log.i("title",mTitle.toString());
 				getActionBar().setTitle(mTitle);
 				invalidateOptionsMenu(); // creates call to
 											// onPrepareOptionsMenu()
 			}
 
 			public void onDrawerOpened(View drawerView) {
-				Log.i("title",mTitle.toString());
+				//Log.i("title",mTitle.toString());
 				getActionBar().setTitle(R.string.app_name);
 				invalidateOptionsMenu(); // creates call to
 											// onPrepareOptionsMenu()

@@ -163,6 +163,7 @@ public class SubjectDa {
 		ContentValues values = new ContentValues();
 		values.put("task_status",  String.valueOf(task_status));
 		values.put("closed_date", Util.getDateStr(0) );
+		values.put("plan_start_date", Util.getDateStr(0)); 
 		
 		values.put("is_todo", 1);
 		values.put("is_remind", 0);
