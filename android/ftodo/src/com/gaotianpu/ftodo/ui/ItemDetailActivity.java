@@ -229,19 +229,19 @@ public class ItemDetailActivity extends Activity {
 						+ getString(R.string.label_subject_sort),
 						getString(R.string.label_remind)));
 				infoList.add(new SettingBean("a_remind_date", "* "
-						+ getString(R.string.label_remind_date), subject
-						.getRemindDate()));
+						+ getString(R.string.label_remind_date), subject.getRemindDate()));
 
 				String remind_f = "";
 				if (subject.getRemindFrequency() > 0) {
 					remind_f = act.getResources().getStringArray(
 							R.array.remind_frequency_items)[subject
-							.getRemindFrequency() - 1];
-
+							.getRemindFrequency() - 1]; 
 				}
+				infoList.add(new SettingBean("a_remind_frequency", "* "
+						+ getString(R.string.label_remind_frequency), remind_f));
 
 				infoList.add(new SettingBean("a_remind_next", "* "
-						+ getString(R.string.label_remind_next), ""));
+						+ getString(R.string.label_remind_next), subject.getNextRemindDate()));
 				
 				
 
@@ -530,7 +530,7 @@ public class ItemDetailActivity extends Activity {
 						@Override
 						public void onClick(DialogInterface dialog, int i) { 
 							Log.i("remin_next",subject.getRemindDate()+" " + String.valueOf(subject.getRemindFrequency()) );
-							String next_remind_date = Util.getNextDate(subject.getRemindDate(),subject.getRemindFrequency());
+							String next_remind_date = Util.getNextDate2(subject.getNextRemindDate(),subject.getRemindFrequency());
 							Log.i("remin_next", next_remind_date );
 							
 							subject.setNextRemindDate(next_remind_date);

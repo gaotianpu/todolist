@@ -70,6 +70,27 @@ public class Util {
 		return getDateStr(left_day);
 	}
 	
+	public static String getNextWeekDay2(String remindDate){
+		//先算出，星期几
+		//今天是星期几，
+		//距离设定的星期几，差几天，还是多几天 		
+		Date current = str2Date(remindDate);  
+		
+		Calendar calendar1 = new GregorianCalendar();
+		calendar1.setTime(current);
+		int remind_week_day = calendar1.get(Calendar.DAY_OF_WEEK);	
+		
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(new Date());	
+		
+		 
+		calendar1.add(calendar1.DATE, 7); 
+		
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");		 
+		String next = fmt.format(calendar1.getTime());
+		return next;
+	}
+	
 	public static String getNextWeekDay(String remindDate){
 		//先算出，星期几
 		//今天是星期几，
@@ -100,6 +121,23 @@ public class Util {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");		 
 		String next = fmt.format(calendar.getTime());
 		return next;
+	}
+	
+	public static String getNextDate2(String remindDate,int sort){
+		Date current = str2Date(remindDate);  
+		
+		switch(sort){
+		case 1: //day			
+			return getDateStr(1);  //today+1	???		 
+		case 2: //week			 
+			return getNextWeekDay2(remindDate);	 //ok	 
+		case 3: //month			 
+			return GetNextMonthDay2(remindDate); //ok 
+		case 4: //year
+			//有一个例外，闰年2-29，下一年则没有2-29 
+			return getDateOfNextYear(remindDate); 
+		} 
+		return "";
 	}
 	
 	public static String getNextDate(String currentDate,int sort){
@@ -180,6 +218,21 @@ public class Util {
 		
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");		 
 		String next = fmt.format(calendar.getTime());
+		return next;
+	}
+	
+	public static String GetNextMonthDay2(String remindDate){
+		Date current = str2Date(remindDate);  
+		Calendar calendar1 = new GregorianCalendar();
+		calendar1.setTime(current);
+		int remind_day_of_month = calendar1.get(Calendar.DAY_OF_MONTH);  
+		
+		calendar1.add(calendar1.MONTH, 1);
+		calendar1.set(calendar1.DAY_OF_MONTH, remind_day_of_month);  
+		
+		
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");		 
+		String next = fmt.format(calendar1.getTime());
 		return next;
 	}
 
