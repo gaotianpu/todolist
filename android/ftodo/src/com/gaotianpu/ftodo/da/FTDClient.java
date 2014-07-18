@@ -174,7 +174,10 @@ public class FTDClient {
 				subject.setUserId(item.getLong("user_id")); // user_id
 				subject.setRemoteId(item.getLong("pk_id"));
 				subject.setBody(item.getString("body"));
-				subject.setCreationDate(item.getString("created_date"));
+				subject.setCreationDate(item.getString("app_created_date"));
+				subject.setUpdateDate(item.getString("last_update"));
+				
+				
 				subject.setIsDel(item.getInt("is_delete"));
 				
 				subject.setIsTodo(item.getInt("is_todo")==1 );

@@ -39,7 +39,7 @@
         <item>每年</item> 
       </string-array> 
     
-
+<string name="day">天</string>
     <string name="dialog_delete_title">删除</string>
     <string name="dialog_delete_message">确认要删除吗？</string>
     <string name="dialog_sure">确定</string>

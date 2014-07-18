@@ -1,6 +1,7 @@
 package com.gaotianpu.ftodo.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.gaotianpu.ftodo.MyApplication;
@@ -282,51 +283,36 @@ public class ListTodoFragment extends Fragment {
 	}
 
 	private void item_img_btn_click(final SubjectBean subject) {
-		List dates = Util.getPickDates();
+		List<String> dates = Util.load_pick_dates(act);
 		dates.add("已完成");
-		dates.add("先暂停");
-//		if (subject.isTodo()) {
-//			dates.add("非待办事项");
-//		}
-		String[] pickdates = (String[]) dates.toArray(new String[dates.size()]);
+		dates.add("先暂停"); 
+		 
+		final String[] pickdates1 = (String[]) dates.toArray(new String[dates.size()]);
 		new AlertDialog.Builder(act)
 				.setTitle(subject.getBody())
 				 
-				.setSingleChoiceItems(pickdates, -1,
+				.setSingleChoiceItems(pickdates1, -1,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
-									int which) {
-								subject.setIsTodo(true);
-								switch (which) {
-								case 0:
-								case 1:
-								case 2:
-									String start_date = Util.getDateStr(which);
-									subjectDa.set_todo_start_date(
-											subject.getId(), start_date);
-									subject.setIsTodo(true);
-									subject.setPlanStartDate(start_date);
-									break;
-								case 3:
-									String start_date2 = Util.getDateStr(10);
-									subjectDa.set_todo_start_date(
-											subject.getId(), start_date2);
-									subject.setIsTodo(true);
-									subject.setPlanStartDate(start_date2);
-									break;
-								case 4: // done
-									subjectDa.set_todo_status(subject.getId(),
-											2);
-									break;
-								case 5: // block
+									int which) { 
+								
+								if((pickdates1.length-which)==1){
 									subjectDa.set_todo_status(subject.getId(),
 											3);
-									break;
-//								case 6: // 非待办事项
-//									subject.setIsTodo(false);
-//									subjectDa.set_todo(subject.getId(), false);
-//									break;
-								}
+									
+								}else if((pickdates1.length-which)==2){
+									subjectDa.set_todo_status(subject.getId(),
+											2);
+								}else{
+									String[] choice_item_arr = pickdates1[which].split(" ");
+									if(choice_item_arr.length==2){
+										String start_date = choice_item_arr[1];
+										subject.setIsTodo(true);
+										subjectDa.set_todo_start_date(
+												subject.getId(), start_date);									 
+										subject.setPlanStartDate(start_date); 
+									}
+								} 
 
 								dialog.dismiss();
 								
@@ -337,6 +323,8 @@ public class ListTodoFragment extends Fragment {
 							}
 						}).setNegativeButton(R.string.dialog_cancel, null).show();
 	}
+
+	
 
 	private class ListAdapter extends BaseAdapter {
 		private LayoutInflater inflater1;

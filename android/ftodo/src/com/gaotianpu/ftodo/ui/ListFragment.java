@@ -433,7 +433,7 @@ public class ListFragment extends Fragment {
 			choic_index = 0;
 		}
 		
-		builderDialog()
+		new AlertDialog.Builder(act)
 				.setTitle(subject.getBody())					 
 				.setSingleChoiceItems(pickdates, choic_index,
 						new DialogInterface.OnClickListener() {
@@ -537,6 +537,17 @@ public class ListFragment extends Fragment {
 				}
 				
 				Log.i("remind",String.valueOf(subject.getRemindFrequency()));
+				
+				String days = "";
+				try{
+				   int d = Util.daysBetween(Util.getDateStr(0),subject.getNextRemindDate() );
+				   if(d<31){
+					   content = String.valueOf(d)+ act.getString(R.string.day) + " " + content;
+				   }
+				}catch(Exception e){
+					Log.i("err",e.toString()); 
+					
+				} 
 				
 				content = content + "\n" + subject.getBody().replaceAll("\n", "") ;
 				

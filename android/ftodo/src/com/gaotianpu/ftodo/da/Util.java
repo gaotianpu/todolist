@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import com.gaotianpu.ftodo.R;
+
+import android.app.Activity;
 import android.net.ParseException;
 import android.util.Log;
 
@@ -21,6 +24,33 @@ public class Util {
 		// Date date = fmt.parse(szDate);
 		String tommorrow = fmt.format(calendar.getTime());
 		return tommorrow;
+	}
+	
+	public static List<String> load_pick_dates(Activity act) {
+		final String[] pickdates = act.getResources().getStringArray(
+				R.array.subject_todo_plan_dates) ;
+		
+		 
+		List<String> dates = new ArrayList<String>(); 
+		
+		dates.add( pickdates[0] + " " + Util.getDateStr(0) ); //今天
+		dates.add( pickdates[1] + " " + Util.getDateStr(1) ); //明天
+		dates.add( pickdates[2] + " " + Util.getDateStr(2) );//后天 
+		
+		if (!Util.GetCurrentWeekDay(7).equals(Util.getDateStr(0))
+				&& !Util.GetCurrentWeekDay(7).equals(Util.getDateStr(1))
+				&& !Util.GetCurrentWeekDay(7).equals(Util.getDateStr(2))) {
+			dates.add(pickdates[3] + " " + Util.GetCurrentWeekDay(7));
+		}
+		
+		if (!Util.GetCurrentWeekDay(8).equals(Util.getDateStr(0))
+				&& !Util.GetCurrentWeekDay(8).equals(Util.getDateStr(1))
+				&& !Util.GetCurrentWeekDay(8).equals(Util.getDateStr(2))) {
+			dates.add(pickdates[4] + " " + Util.GetCurrentWeekDay(8));
+		}
+		
+		dates.add(pickdates[5] + " " + Util.getDateStr(10)); //10天后 
+		return dates;
 	}
 	
 	public static List  getPickDates(){
@@ -235,6 +265,18 @@ public class Util {
 		String next = fmt.format(calendar1.getTime());
 		return next;
 	}
+	
+	public static int daysBetween(String smdate,String bdate) throws java.text.ParseException{  
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");  
+        Calendar cal = Calendar.getInstance();    
+        cal.setTime(sdf.parse(smdate));    
+        long time1 = cal.getTimeInMillis();                 
+        cal.setTime(sdf.parse(bdate));    
+        long time2 = cal.getTimeInMillis();         
+        long between_days=(time2-time1)/(1000*3600*24);  
+            
+       return Integer.parseInt(String.valueOf(between_days));     
+    }  
 
 	
 	public static Calendar getDateOfNextMonth(Calendar date) {

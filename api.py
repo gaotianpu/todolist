@@ -43,7 +43,7 @@ class CJsonEncoder(json.JSONEncoder):
 class New:
     @validate_token
     def POST(self):
-        i = web.input(content='',local_id=0,creation_date=0,last_update=0)  
+        i = web.input(content='',local_id=0,creation_date=None,last_update=None)  
 
         content = web.websafe(i.content)
         pk_id = da.subject.insert2(self.token.user_id,i.content,

@@ -219,6 +219,12 @@ public class ItemDetailActivity extends Activity {
 			}
 			return b;
 		}
+		
+		@Override
+		public void onResume() {
+			listAdapter.notifyDataSetChanged();
+			super.onResume();
+		}
 
 		private void load_infos() {
 			infoList.clear(); 
@@ -323,7 +329,7 @@ public class ItemDetailActivity extends Activity {
 			}
 			
 			//new AlertDialog.Builder(act)
-			builderDialog()
+			new AlertDialog.Builder(act)
 					.setTitle(subject.getBody())					 
 					.setSingleChoiceItems(pickdates, choic_index,
 							new DialogInterface.OnClickListener() {
@@ -381,7 +387,7 @@ public class ItemDetailActivity extends Activity {
 				choic_index = 0;
 			}
 			
-			builderDialog()
+			new AlertDialog.Builder(act)
 					.setTitle(subject.getBody())					 
 					.setSingleChoiceItems(pickdates, choic_index,
 							new DialogInterface.OnClickListener() {
@@ -420,7 +426,7 @@ public class ItemDetailActivity extends Activity {
 			if(subject.getRemindFrequency()>0){
 				choic_index = subject.getRemindFrequency()-1;
 			}
-			builderDialog()
+			new AlertDialog.Builder(act)
 					.setTitle(subject.getBody())					 
 					.setSingleChoiceItems(pickdates, choic_index,
 							new DialogInterface.OnClickListener() {
@@ -474,19 +480,12 @@ public class ItemDetailActivity extends Activity {
 		}
 		
 		private void set_todo_plan_date(){			 
-			final String[] pickdates = act.getResources().getStringArray(
-					R.array.subject_todo_plan_dates) ;
-			
-			//?需要设置具体的日期
-			pickdates[0] =  pickdates[0] + " " + Util.getDateStr(0); //今天
-			pickdates[1] =  pickdates[1] + " " + Util.getDateStr(1); //明天
-			pickdates[2] =  pickdates[2] + " " + Util.getDateStr(2); //后天
-			pickdates[3] =  pickdates[3] + " " + Util.GetCurrentWeekDay(7); //周六  ？
-			pickdates[4] =  pickdates[4] + " " + Util.GetCurrentWeekDay(8); //周日  ？
-			pickdates[5] =  pickdates[5] + " " + Util.getDateStr(10); //10天后 
+ 	
+			List<String> dates = Util.load_pick_dates(act);
+			final String[] pickdates = (String[]) dates.toArray(new String[0]);
 			
 			int choic_index = -1;			 
-			builderDialog()
+			new AlertDialog.Builder(act)
 					.setTitle(subject.getBody())					 
 					.setSingleChoiceItems(pickdates, choic_index,
 							new DialogInterface.OnClickListener() {
@@ -512,11 +511,9 @@ public class ItemDetailActivity extends Activity {
 			
 //			ViewGroup.LayoutParams lp = et.getLayoutParams();
 //	        lp.height = 50;
-//			et.setLayoutParams(lp);
+//			et.setLayoutParams(lp); 
 			
-			
-			
-			builderDialog()
+			new AlertDialog.Builder(act)
 					.setView(et)
 					.setPositiveButton(R.string.dialog_sure,
 							new DialogInterface.OnClickListener() {
@@ -544,7 +541,7 @@ public class ItemDetailActivity extends Activity {
 		}
 		
 		private void remin_next(){
-			builderDialog()
+			new AlertDialog.Builder(act)
 			.setTitle("进入下一次提醒?")
 			//.setMessage("已执行")
 			.setPositiveButton(R.string.dialog_sure,
