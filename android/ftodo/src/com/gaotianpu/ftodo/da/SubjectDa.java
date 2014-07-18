@@ -326,9 +326,9 @@ public class SubjectDa {
 	}
 	
 	private final String[] list_selected_fields = new String[] { "pk_id",
-			"user_id", "body", "datetime(creation_date,'localtime') as creation_date", "datetime(last_update,'localtime') as last_update", "remote_id",
+			"user_id", "body", "creation_date", "last_update", "remote_id",
 			"is_todo", "is_remind", "parent_id", "local_version", "is_del","date(plan_start_date) as plan_start_date","task_status",
-			"date(remind_datetime,'localtime') as remind_datetime","date(remind_next) as  remind_next","remind_frequency","date(closed_date,'localtime') as closed_date"};
+			"date(remind_datetime) as remind_datetime","date(remind_next) as  remind_next","remind_frequency","date(closed_date) as closed_date"};
 
 	private List<SubjectBean> load_list(Cursor cursor) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();

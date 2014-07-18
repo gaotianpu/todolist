@@ -180,6 +180,13 @@ public class MainActivity extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	
+	@Override
+	public void onBackPressed() {
+		//?左侧菜单？
+		
+		return ;
+	}
 
 	private void mDrawerList_setOnItemClickListener() {
 		mDrawerList.setOnItemClickListener(new OnItemClickListener() {
