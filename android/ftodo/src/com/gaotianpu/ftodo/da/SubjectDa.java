@@ -484,7 +484,7 @@ public class SubjectDa {
 			} else if (list_sort.equals("block")) {
 				sqlwhere = sqlwhere + " and is_todo=1  and task_status=3 and is_remind=0  ";
 			} else if (list_sort.equals("remind")) { // 提醒
-				sqlwhere = sqlwhere + " and is_remind=1 and is_todo=0";
+				sqlwhere = sqlwhere + " and is_remind=1 ";
 				orderBy = "remind_next asc";
 			}else { //all
 				 //
@@ -492,7 +492,7 @@ public class SubjectDa {
 
 			sqlwhere = sqlwhere + " and (user_id=? or user_id=0) ";
 
-			Log.i("sqlwhere", sqlwhere);
+			 
 
 			Cursor cursor = db.query("subjects", list_selected_fields,
 					sqlwhere, new String[] { String.valueOf(user_id) }, null,

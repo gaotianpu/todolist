@@ -158,7 +158,9 @@ public class ListFragment extends Fragment {
 		lvDefault_setOnItemClickListener();
 		lvDefault_setOnScrollListener(); // 滚动翻页
 		swipeLayout_setOnRefreshListener(); // 下拉刷新
-
+		
+		
+		
 		return rootView;
 	}
 	
@@ -475,8 +477,10 @@ public class ListFragment extends Fragment {
 									subjectDa.set_remind(subject.getId(), true);
 									break;
 								}
-								dialog.dismiss();
+								dialog.dismiss();								
+								
 								listAdapter.notifyDataSetChanged();
+								//lvDefault.setSelection(0);
 							}
 						}).setNegativeButton(R.string.action_item_cancel, null).show(); 
 	}
