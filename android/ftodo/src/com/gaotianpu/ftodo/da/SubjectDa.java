@@ -165,7 +165,7 @@ public class SubjectDa {
 		values.put("is_remind", 0);
 		
 		values.put("task_status",  String.valueOf(task_status));
-		values.put("closed_date", Util.getDateStr(0) );
+		values.put("closed_date", Util.getNowStr() );
 		values.put("plan_start_date", Util.getDateStr(0)); 
 		
 		
@@ -330,7 +330,7 @@ public class SubjectDa {
 	private final String[] list_selected_fields = new String[] { "pk_id",
 			"user_id", "body", "creation_date", "last_update", "remote_id",
 			"is_todo", "is_remind", "parent_id", "local_version", "is_del","date(plan_start_date) as plan_start_date","task_status",
-			"date(remind_datetime) as remind_datetime","date(remind_next) as  remind_next","remind_frequency","date(closed_date) as closed_date"};
+			"date(remind_datetime) as remind_datetime","date(remind_next) as  remind_next","remind_frequency","closed_date"};
 
 	private List<SubjectBean> load_list(Cursor cursor) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();

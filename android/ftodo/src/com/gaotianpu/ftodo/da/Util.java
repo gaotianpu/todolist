@@ -20,7 +20,19 @@ public class Util {
 		calendar.setTime(date);
 		calendar.add(calendar.DATE, days);
 		date = calendar.getTime();
-		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd"); //HH:mm:ss
+		// Date date = fmt.parse(szDate);
+		String tommorrow = fmt.format(calendar.getTime());
+		return tommorrow;
+	}
+	
+	public static String getNowStr(){
+		Date date = new Date();// 取时间
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(date);
+		 
+		date = calendar.getTime();
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //HH:mm:ss
 		// Date date = fmt.parse(szDate);
 		String tommorrow = fmt.format(calendar.getTime());
 		return tommorrow;
