@@ -2,27 +2,25 @@
 <resources>
 
     <string name="app_name">闪电云笔记</string>
-    
+
     <string-array name="drawer_menu_item_ids">
         <item>login</item>
-        <item>all</item>       
-        <item>todo</item>         
+        <item>all</item>
+        <item>todo</item>
         <item>block</item>
         <item>done</item>
-        <item>remind</item> 
+        <item>remind</item>
         <item>setting</item>
     </string-array>
-
     <string-array name="drawer_menu_items">
         <item>登录或注册</item>
-        <item>全部</item>       
-        <item>待办</item> 
-        <item>暂停</item> 
-        <item>完成</item> 
-        <item>提醒</item> 
+        <item>全部</item>
+        <item>待办</item>
+        <item>暂停</item>
+        <item>完成</item>
+        <item>提醒</item>
         <item>设置</item>
     </string-array>
-    
     <string-array name="todo_plan_date_sorts">
         <item>未设置</item>
         <item>过期</item>
@@ -30,29 +28,25 @@
         <item>明天</item>
         <item>后天</item>
         <item>更晚</item>
-      </string-array>   
-      
-    <string-array name="remind_frequency_items">       
+    </string-array>
+    <string-array name="remind_frequency_items">
         <item>每天</item>
         <item>每周</item>
         <item>每月</item>
-        <item>每年</item> 
-      </string-array> 
-      
-     <string-array name="setting_list_items">       
+        <item>每年</item>
+    </string-array>
+    <string-array name="setting_list_items">
         <item>账号(手机号)</item>
         <item>密码</item>
         <item>电子邮箱</item>
-        <item>关于</item> 
+        <item>关于</item>
         <item>退出</item>
-      </string-array> 
-      
+    </string-array>
+
     <string name="todo_set_done">已完成</string>
     <string name="todo_set_pause">先暂停</string>
-    
     <string name="login_or_register">登录或注册</string>
-    
-<string name="day">天</string>
+    <string name="day">天</string>
     <string name="dialog_delete_title">删除</string>
     <string name="dialog_delete_message">确认要删除吗？</string>
     <string name="dialog_sure">确定</string>
@@ -93,5 +87,6 @@
     <string name="user_unlogin">用户未登录</string>
     <string name="loading">加载中...</string>
     <string name="title_activity_setting_detail">SettingDetailActivity</string>
+    <string name="title_activity_date_list">DateListActivity</string>
 
 </resources>

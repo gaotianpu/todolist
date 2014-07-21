@@ -53,6 +53,7 @@ public class ListTodoFragment extends Fragment {
 	private SubjectDa subjectDa;
 
 	private EditText txtNew;
+	private ImageButton btnPost;
 	private ListView lvDefault;
 	private ListAdapter listAdapter;
 
@@ -83,6 +84,7 @@ public class ListTodoFragment extends Fragment {
 		action_menu_checked_menu = R.id.action_list_normal;
 
 		txtNew = (EditText) rootView.findViewById(R.id.txtNew);
+		btnPost = (ImageButton) rootView.findViewById(R.id.btnPost);
 		lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
 		 
 
@@ -169,8 +171,40 @@ public class ListTodoFragment extends Fragment {
 	}
 	
 	 
+	private void post_new(){
+		// insert into sqlite
+		String content = txtNew.getText().toString().trim();
+		if (content.length() > 1) {
+
+			user = app.getUser(); 
+			
+			Long subjectID = subjectDa.insert(user.getUserId(), content,
+					0);
+			subjectDa.set_todo(subjectID, true);
+
+//			SubjectBean subject = new SubjectBean();
+//			subject.setId(subjectID);
+//			subject.setUserId(user.getUserId());
+//			subject.setBody(txtNew.getText().toString().trim());
+//			// subject.setCreationDate(1);
+
+			 
+			load_data(0,500);
+			// show new item in ListView
+			 
+			txtNew.setText("");
+		}
+	}
 	
 	private void txtNew_setOnKeyListener() {
+		
+		btnPost.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				post_new();
+			}
+		});  
+		
 
 		txtNew.setOnKeyListener(new OnKeyListener() {
 			@Override
@@ -185,29 +219,9 @@ public class ListTodoFragment extends Fragment {
 						// imm.hideSoftInputFromWindow(
 						// v.getApplicationWindowToken(), 0);
 
-						// insert into sqlite
-						String content = txtNew.getText().toString().trim();
-						if (content.length() > 1) {
-
-							user = app.getUser(); 
-							
-							Long subjectID = subjectDa.insert(user.getUserId(), content,
-									0);
-							subjectDa.set_todo_status(subjectID,
-									0);
-
-//							SubjectBean subject = new SubjectBean();
-//							subject.setId(subjectID);
-//							subject.setUserId(user.getUserId());
-//							subject.setBody(txtNew.getText().toString().trim());
-//							// subject.setCreationDate(1);
-
-							 
-							load_data(0,500);
-							// show new item in ListView
-							 
-							txtNew.setText("");
-						}
+						post_new();
+						
+						 
 
 					}
 					return true;

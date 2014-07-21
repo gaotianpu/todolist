@@ -401,7 +401,7 @@ public class ItemDetailActivity extends Activity {
 									case 2: // todo-done
 										subject.setStatus(2);
 										subjectDa.set_todo_status(
-												subject.getId(), 3);
+												subject.getId(), 2);
 										break;
 									}
 

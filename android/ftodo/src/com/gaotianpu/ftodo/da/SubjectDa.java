@@ -148,9 +148,9 @@ public class SubjectDa {
 	public void set_todo(long local_id, boolean todo) {
 		ContentValues values = new ContentValues();
 		values.put("is_todo", todo); 
-		if(todo){
-			values.put("plan_start_date", Util.getDateStr(0)); //默认为今天
-		}
+//		if(todo){
+//			values.put("plan_start_date", Util.getDateStr(0)); //默认为今天
+//		}
 		
 		db = dbHelper.getWritableDatabase();
 		db.update("subjects", values, "pk_id=?",
@@ -161,12 +161,14 @@ public class SubjectDa {
 	
 	public void set_todo_status(long local_id, int task_status) {
 		ContentValues values = new ContentValues();
+		values.put("is_todo", 1);
+		values.put("is_remind", 0);
+		
 		values.put("task_status",  String.valueOf(task_status));
 		values.put("closed_date", Util.getDateStr(0) );
 		values.put("plan_start_date", Util.getDateStr(0)); 
 		
-		values.put("is_todo", 1);
-		values.put("is_remind", 0);
+		
 		
 		db = dbHelper.getWritableDatabase();
 		db.update("subjects", values, "pk_id=?",

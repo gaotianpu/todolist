@@ -84,11 +84,13 @@ public class ListFragment extends Fragment {
 	private View rootView;
 	private ListView lvDefault;
 	private EditText txtNew;
+	private ImageButton btnPost;
 	private SwipeRefreshLayout swipeLayout;
 	private View moreView;
 	private TextView tv_load_more;
 	private ProgressBar pb_load_progress;
 	private int action_menu_checked_menu;
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -119,6 +121,7 @@ public class ListFragment extends Fragment {
 		rootView = inflater.inflate(R.layout.fragment_list, container, false);
 		lvDefault = (ListView) rootView.findViewById(R.id.lvDefault);
 		txtNew = (EditText) rootView.findViewById(R.id.txtNew);
+		btnPost = (ImageButton) rootView.findViewById(R.id.btnPost);
 
 		// 下拉刷新初始化设置
 		swipeLayout = (SwipeRefreshLayout) rootView
@@ -249,7 +252,8 @@ public class ListFragment extends Fragment {
 				Intent detailIntent = new Intent(act, ItemDetailActivity.class);
 				detailIntent.putExtra(ItemDetailActivity.SUBJECT_LOCAL_ID,
 						subject.getId());
-				startActivity(detailIntent);
+				startActivity(detailIntent); 
+				 
 			}
 		});
 
@@ -313,8 +317,39 @@ public class ListFragment extends Fragment {
 					}
 				});
 	}
+	
+	private void post_new(){
+		String content = txtNew.getText().toString().trim();
+		if (content.length() > 1) {
+
+			user = app.getUser();
+			cust_id = user.getUserId();
+
+			Long subjectID = subjectDa.insert(cust_id, content,
+					0);
+
+			SubjectBean subject = new SubjectBean();
+			subject.setId(subjectID);
+			subject.setUserId(cust_id);
+			subject.setBody(txtNew.getText().toString().trim());
+			// subject.setCreationDate(1);
+
+			insert_new_item(subject, 0);
+
+			// show new item in ListView
+			lvDefault.setAdapter(new ListAdapter(act, 0));
+			txtNew.setText("");
+		}
+	}
 
 	private void txtNew_setOnKeyListener() {
+		
+		btnPost.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				post_new();
+			}
+		});  
 
 		txtNew.setOnKeyListener(new OnKeyListener() {
 			@Override
@@ -330,27 +365,7 @@ public class ListFragment extends Fragment {
 						// v.getApplicationWindowToken(), 0);
 
 						// insert into sqlite
-						String content = txtNew.getText().toString().trim();
-						if (content.length() > 1) {
-
-							user = app.getUser();
-							cust_id = user.getUserId();
-
-							Long subjectID = subjectDa.insert(cust_id, content,
-									0);
-
-							SubjectBean subject = new SubjectBean();
-							subject.setId(subjectID);
-							subject.setUserId(cust_id);
-							subject.setBody(txtNew.getText().toString().trim());
-							// subject.setCreationDate(1);
-
-							insert_new_item(subject, 0);
-
-							// show new item in ListView
-							lvDefault.setAdapter(new ListAdapter(act, 0));
-							txtNew.setText("");
-						}
+						post_new();
 
 					}
 					return true;
