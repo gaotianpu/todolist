@@ -53,19 +53,7 @@ public class Util {
 		return dates;
 	}
 	
-	public static List  getPickDates(){
-		List list=new ArrayList(); 
-		list.add( "今天 "  + getDateStr(0)  );
-		list.add( "明天 " + getDateStr(1)  );
-		list.add("后天 "  + getDateStr(2)  );
-		list.add("10天后 " + getDateStr(10)   );
-		return list;
-		 
-		//list.add(“王利虎”);
-//		String[] array = (String[])list.toArray(new String[list.size()]);
-//		return array;
-		
-	}
+	 
 	
 	public static Date str2Date(String dateString) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

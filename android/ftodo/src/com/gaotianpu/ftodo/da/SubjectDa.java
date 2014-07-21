@@ -1,7 +1,7 @@
 package com.gaotianpu.ftodo.da;
 
 import java.util.ArrayList;
-import java.util.Date;
+ 
 import java.util.List;
 
 import com.gaotianpu.ftodo.bean.ReportBean;
@@ -189,7 +189,7 @@ public class SubjectDa {
 
 	private void update_version(SQLiteDatabase db, long local_id) {
 		// 累加版本号
-		db.execSQL("update subjects set local_version=local_version+1,last_update=datetime('now') where pk_id="  
+		db.execSQL("update subjects set local_version=local_version+1,last_update=datetime('now','localtime') where pk_id="  
 				+ String.valueOf(local_id));
 	}
 

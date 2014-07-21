@@ -125,7 +125,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void updateMenu() {
-		user = app.getUser(); // UserDa.load_current_user(this);
+		user = app.getUser();  
 		if ( user.getUserId() != 0) {
 			// 菜单显示 未登录...
 			mDrawerItems[0] = String.valueOf( user.getMobile() );
@@ -229,9 +229,7 @@ public class MainActivity extends Activity {
 //			Bundle args1 = new Bundle();			
 //			args1.putInt(ListFragment.LIST_SORT, position);
 //			fragment.setArguments(args0);
-			break;
-//		case 3: // 提醒
-			
+			break; 
 		case 6:
 		default:
 			fragment = new SettingFragment();

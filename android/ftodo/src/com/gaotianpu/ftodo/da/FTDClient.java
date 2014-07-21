@@ -17,7 +17,6 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.util.Log;
 
-import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.bean.SubjectBean;
 import com.loopj.android.http.*;
 
@@ -44,24 +43,25 @@ public class FTDClient {
 		// 单例模式？
 	}
 
-//	public void update_task(long user_id, String access_token, long remote_id,
-//			String content, AsyncHttpResponseHandler responseHandler) {
-//		String url = RES_BASE_URL + "edit";
-//
-//		RequestParams params = new RequestParams();
-//		params.put("user_id", String.valueOf(user_id));
-//		params.put("remote_id", String.valueOf(remote_id));
-//		params.put("access_token", access_token);
-//		params.put("content", content);
-//		client.post(url, params, responseHandler);
-//		return;
-//	}
+	// public void update_task(long user_id, String access_token, long
+	// remote_id,
+	// String content, AsyncHttpResponseHandler responseHandler) {
+	// String url = RES_BASE_URL + "edit";
+	//
+	// RequestParams params = new RequestParams();
+	// params.put("user_id", String.valueOf(user_id));
+	// params.put("remote_id", String.valueOf(remote_id));
+	// params.put("access_token", access_token);
+	// params.put("content", content);
+	// client.post(url, params, responseHandler);
+	// return;
+	// }
 
-	public void post_task(long user_id, String access_token,SubjectBean subject, 
-			AsyncHttpResponseHandler responseHandler) {
+	public void post_task(long user_id, String access_token,
+			SubjectBean subject, AsyncHttpResponseHandler responseHandler) {
 
 		String edit_or_new = (subject.getRemoteId() == 0) ? "new" : "edit";
-		String url = RES_BASE_URL + edit_or_new; 
+		String url = RES_BASE_URL + edit_or_new;
 		Log.i("AsyncService", url);
 
 		RequestParams params = new RequestParams();
@@ -69,22 +69,23 @@ public class FTDClient {
 		params.put("access_token", access_token);
 		params.put("content", subject.getBody());
 		params.put("creation_date", subject.getCreationDate()); //
-		params.put("last_update", subject.getUpdateDate()); //		
+		params.put("last_update", subject.getUpdateDate()); //
 		params.put("is_remind", String.valueOf(subject.isRemind() ? 1 : 0));
 		params.put("local_id", String.valueOf(subject.getId()));
 		params.put("remote_id", String.valueOf(subject.getRemoteId()));
 		params.put("local_version", String.valueOf(subject.getLocalVersion()));
 		params.put("is_del", String.valueOf(subject.getIsDel()));
-		
+
 		params.put("is_todo", String.valueOf(subject.isTodo() ? 1 : 0));
 		params.put("plan_start_date", subject.getPlanStartDate());
-		params.put("task_status", String.valueOf(subject.getStatus())); 
-		
-		params.put("remind_datetime", subject.getRemindDate()); 
-		params.put("remind_next", subject.getNextRemindDate()); 
-		params.put("remind_frequency", String.valueOf(subject.getRemindFrequency())); 
-		
-		params.put("closed_date", subject.getClosedDate()); 
+		params.put("task_status", String.valueOf(subject.getStatus()));
+
+		params.put("remind_datetime", subject.getRemindDate());
+		params.put("remind_next", subject.getNextRemindDate());
+		params.put("remind_frequency",
+				String.valueOf(subject.getRemindFrequency()));
+
+		params.put("closed_date", subject.getClosedDate());
 
 		Log.i("AsyncService", params.toString());
 
@@ -130,7 +131,7 @@ public class FTDClient {
 
 	public void search(long user_id, String access_token, String query,
 			long offset, int size, AsyncHttpResponseHandler responseHandler) {
-		 
+
 		String url = RES_BASE_URL + "search";
 
 		RequestParams params = new RequestParams();
@@ -176,24 +177,22 @@ public class FTDClient {
 				subject.setBody(item.getString("body"));
 				subject.setCreationDate(item.getString("app_created_date"));
 				subject.setUpdateDate(item.getString("last_update"));
-				
-				
+
 				subject.setIsDel(item.getInt("is_delete"));
-				
-				subject.setIsTodo(item.getInt("is_todo")==1 );
-				subject.setIsRemind(item.getInt("is_remind")==1);
-				 	
-				subject.setPlanStartDate( item.getString("plan_start_date") );
-				
-				subject.setStatus( item.getInt("task_status") );
-				
-				subject.setRemindDate(item.getString( "remind_datetime"));
-				subject.setNextRemindDate(item.getString( "remind_next"));
-				subject.setRemindFrequency(item.getInt( "remind_frequency" ));
-				
-				
-				subject.setClosedDate(item.getString( "closed_date"));
-				
+
+				subject.setIsTodo(item.getInt("is_todo") == 1);
+				subject.setIsRemind(item.getInt("is_remind") == 1);
+
+				subject.setPlanStartDate(item.getString("plan_start_date"));
+
+				subject.setStatus(item.getInt("task_status"));
+
+				subject.setRemindDate(item.getString("remind_datetime"));
+				subject.setNextRemindDate(item.getString("remind_next"));
+				subject.setRemindFrequency(item.getInt("remind_frequency"));
+
+				subject.setClosedDate(item.getString("closed_date"));
+
 				subjectList.add(subject);
 
 				// item.getString("created_date");

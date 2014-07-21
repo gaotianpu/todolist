@@ -40,10 +40,8 @@ public class AsyncService extends Service {
 	}
 
 	public static final String TAG = "AsyncService";
-	private Handler mHandler;
-
-	private String devie_no;
-	private String device_type;
+	private Handler mHandler; 
+	 
 	private Context context;
 
 	private MyApplication app;
@@ -53,15 +51,14 @@ public class AsyncService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
+		context = this;
 
 		app = (MyApplication) getApplicationContext();
 		ftd = new FTDClient(context);
+		subjectDa = new SubjectDa(context);
 
-		mHandler = new Handler();
-
-		context = this;
-		subjectDa = new SubjectDa(this);
-
+		mHandler = new Handler();  
 	}
 
 	@Override
@@ -102,29 +99,25 @@ public class AsyncService extends Service {
 		super.onDestroy();
 	}
 
-	private void upload() {
-		// Log.i(TAG, "has_active_user " );
-		// need changed?
+	private void upload() {		 
 		List<SubjectBean> subjectList = subjectDa
 				.load_changed_but_not_uploaded(user.getUserId());
-		// Log.i(TAG, String.valueOf(subjectList.size() ) );
+		
 		if (subjectList.size() == 0) {
 			return;
 		}
 
-		// Log.i(TAG, "has not async subjects times ");
-
 		// todo, 单个上传要改成批量上传
 		for (SubjectBean subject : subjectList) {
-			Log.i(TAG,
-					String.valueOf(subject.getCreationDate()) + ","
-							+ String.valueOf(subject.getUpdateDate()));
+//			Log.i(TAG,
+//					String.valueOf(subject.getCreationDate()) + ","
+//							+ String.valueOf(subject.getUpdateDate()));
 			long user_id = subject.getUserId();
 			if (user_id == 0) {
 				user_id = user.getUserId();
 			}
 
-			Log.i(TAG, String.valueOf(subject.getRemoteId()));
+//			Log.i(TAG, String.valueOf(subject.getRemoteId()));
 
 			ftd.post_task(user_id, user.getAccessToken(), subject,
 					new JsonHttpResponseHandler() {
@@ -138,7 +131,7 @@ public class AsyncService extends Service {
 										data.getLong("pk_id"),
 										data.getLong("user_id"),
 										data.getInt("version"));
-								Log.d(TAG, "sucess");
+								//Log.d(TAG, "sucess");
 
 							} catch (JSONException e) {
 								Log.e(TAG, e.toString());
@@ -153,7 +146,7 @@ public class AsyncService extends Service {
 								app.set_token_failure();
 							}
 
-							Log.d(TAG, String.valueOf(statusCode));
+							//Log.d(TAG, String.valueOf(statusCode));
 
 						}
 					});
@@ -239,7 +232,7 @@ public class AsyncService extends Service {
 		//Log.i("next_remind", String.valueOf( subjectList.size()));
 		
 		for (SubjectBean subject : subjectList) {
-			String next_remind_date = Util.getNextDate(subject.getRemindDate(),
+			String next_remind_date = Util.getNextDate2(subject.getRemindDate(),
 					subject.getRemindFrequency());
 			subjectDa.set_next_remind(subject.getId(), next_remind_date);
 		}

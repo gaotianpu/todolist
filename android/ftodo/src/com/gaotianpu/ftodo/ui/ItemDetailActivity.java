@@ -9,7 +9,6 @@ import java.util.List;
 import com.gaotianpu.ftodo.MainActivity;
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
-import com.gaotianpu.ftodo.bean.DateBean;
 
 import com.gaotianpu.ftodo.bean.SettingBean;
 import com.gaotianpu.ftodo.bean.SubjectBean;
@@ -27,7 +26,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
+
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -36,17 +35,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnKeyListener;
-import android.view.inputmethod.InputMethodManager;
+
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
+
 import android.widget.ListView;
-import android.widget.RadioButton;
+
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -80,11 +77,11 @@ public class ItemDetailActivity extends Activity {
 		user = app.getUser();
 		subjectDa = new SubjectDa(this);
 
-		// 2 UI		
+		// 2 UI
+		//返回按钮
 		act.getActionBar().setHomeButtonEnabled(true);
 		act.getActionBar().setDisplayHomeAsUpEnabled(true);
 		act.getActionBar().setDisplayShowHomeEnabled(true);
-		
 
 		// 3 load data
 		subject = subjectDa.load_by_localId(user.getUserId(), subject_local_id);
@@ -114,7 +111,6 @@ public class ItemDetailActivity extends Activity {
 
 		// Log.i("back", String.valueOf( KeyEvent.KEYCODE_HOME ));
 		//
-		
 
 		if (item.isChecked()) {
 			return true;
@@ -125,7 +121,7 @@ public class ItemDetailActivity extends Activity {
 			// //goback?
 			Runtime runtime = Runtime.getRuntime();
 			try {
-				
+
 				runtime.exec("input keyevent " + KeyEvent.KEYCODE_BACK);
 				return true;
 			} catch (IOException e) {
@@ -160,14 +156,9 @@ public class ItemDetailActivity extends Activity {
 								intent.setClass(getApplicationContext(),
 										MainActivity.class);
 								startActivity(intent);
-								finish();
+								finish(); 
 
-								// goback?
-								// Runtime runtime = Runtime.getRuntime();
-								// runtime.exec("input keyevent " +
-								// KeyEvent.KEYCODE_BACK);
-
-								Log.i("dialog", "ok");
+								//Log.i("dialog", "ok");
 							}
 						})
 				.setNegativeButton(R.string.dialog_cancel,
@@ -185,8 +176,6 @@ public class ItemDetailActivity extends Activity {
 
 		private List<SettingBean> infoList;
 		private ListAdapter listAdapter;
-		
-		
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -211,15 +200,15 @@ public class ItemDetailActivity extends Activity {
 
 			return rootView;
 		}
-		
+
 		private Builder b;
-		private Builder builderDialog(){
-			if(b==null){
+		private Builder builderDialog() {
+			if (b == null) {
 				b = new AlertDialog.Builder(act);
 			}
 			return b;
 		}
-		
+
 		@Override
 		public void onResume() {
 			listAdapter.notifyDataSetChanged();
@@ -227,40 +216,41 @@ public class ItemDetailActivity extends Activity {
 		}
 
 		private void load_infos() {
-			infoList.clear(); 
-			 
-			subject = subjectDa.load_by_localId(user.getUserId(), subject_local_id);
-			
+			infoList.clear();
+
+			subject = subjectDa.load_by_localId(user.getUserId(),
+					subject_local_id);
+
 			txtSubjectBody.setText(subject.getBody());
 
 			infoList.add(new SettingBean("creation_date",
 					getString(R.string.label_creation_date), subject
 							.getCreationDate()));
-			infoList.add(new SettingBean("a_update_date",
-					 "* "+getString(R.string.label_last_update), subject
-							.getUpdateDate()));
+			infoList.add(new SettingBean("a_update_date", "* "
+					+ getString(R.string.label_last_update), subject
+					.getUpdateDate()));
 
-			//remind
+			// remind
 			if (subject.isRemind()) {
 				infoList.add(new SettingBean("a_sort", "* "
 						+ getString(R.string.label_subject_sort),
 						getString(R.string.label_remind)));
 				infoList.add(new SettingBean("a_remind_date", "* "
-						+ getString(R.string.label_remind_date), subject.getRemindDate()));
+						+ getString(R.string.label_remind_date), subject
+						.getRemindDate()));
 
 				String remind_f = "";
 				if (subject.getRemindFrequency() > 0) {
 					remind_f = act.getResources().getStringArray(
 							R.array.remind_frequency_items)[subject
-							.getRemindFrequency() - 1]; 
+							.getRemindFrequency() - 1];
 				}
 				infoList.add(new SettingBean("a_remind_frequency", "* "
 						+ getString(R.string.label_remind_frequency), remind_f));
 
 				infoList.add(new SettingBean("a_remind_next", "* "
-						+ getString(R.string.label_remind_next), subject.getNextRemindDate()));
-				
-				
+						+ getString(R.string.label_remind_next), subject
+						.getNextRemindDate()));
 
 			} else if (subject.isTodo()) {
 				infoList.add(new SettingBean("a_sort", "* "
@@ -307,153 +297,161 @@ public class ItemDetailActivity extends Activity {
 			listAdapter.notifyDataSetChanged();
 
 		}
-		
-		private void sort_status_picker() { 
+
+		private void sort_status_picker() {
 			String[] pickdates = act.getResources().getStringArray(
-					R.array.subject_sorts) ;  
-			
+					R.array.subject_sorts);
+
 			int choic_index = -1;
-			if(subject.isRemind()){
+			if (subject.isRemind()) {
 				choic_index = 4;
-			}else if(subject.isTodo()){
-				if(subject.getStatus()==3){
+			} else if (subject.isTodo()) {
+				if (subject.getStatus() == 3) {
 					choic_index = 2;
-				}else if(subject.getStatus()==2){
+				} else if (subject.getStatus() == 2) {
 					choic_index = 3;
-				}else{
+				} else {
 					choic_index = 1;
 				}
-				
-			}else{
+
+			} else {
 				choic_index = 0;
 			}
-			
-			//new AlertDialog.Builder(act)
+
+			// new AlertDialog.Builder(act)
 			new AlertDialog.Builder(act)
-					.setTitle(subject.getBody())					 
+					.setTitle(subject.getBody())
 					.setSingleChoiceItems(pickdates, choic_index,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
-										int which) { 
-									switch(which){
+										int which) {
+									switch (which) {
 									case 0:
 										subject.setIsTodo(false);
 										subject.setIsRemind(false);
-										subjectDa.set_todo(subject.getId(), false);
-										subjectDa.set_remind(subject.getId(), false);
+										subjectDa.set_todo(subject.getId(),
+												false);
+										subjectDa.set_remind(subject.getId(),
+												false);
 										break;
-									case 1: //todo
+									case 1: // todo
 										subject.setIsTodo(true);
 										subject.setStatus(0);
-										subjectDa.set_todo_status(subject.getId(),
-												0);
+										subjectDa.set_todo_status(
+												subject.getId(), 0);
 										break;
-									case 2: //block
+									case 2: // block
 										subject.setIsTodo(true);
 										subject.setStatus(3);
-										subjectDa.set_todo_status(subject.getId(),
-												3);
-										break;		
+										subjectDa.set_todo_status(
+												subject.getId(), 3);
+										break;
 									case 3: // done
 										subject.setIsTodo(true);
 										subject.setStatus(2);
-										subjectDa.set_todo_status(subject.getId(),
-												2);
+										subjectDa.set_todo_status(
+												subject.getId(), 2);
 										break;
 									case 4: // remind
 									default:
 										subject.setIsTodo(false);
 										subject.setIsRemind(true);
-										subjectDa.set_remind(subject.getId(), true);
+										subjectDa.set_remind(subject.getId(),
+												true);
 										break;
 									}
 									dialog.dismiss();
-									load_infos();  
+									load_infos();
 								}
-							}).setNegativeButton(R.string.dialog_cancel, null).show();
-			
+							}).setNegativeButton(R.string.dialog_cancel, null)
+					.show();
+
 		}
-		
-		private void todo_status_picker() { 
+
+		private void todo_status_picker() {
 			String[] pickdates = act.getResources().getStringArray(
-					R.array.subject_todo_status) ;  
-			
+					R.array.subject_todo_status);
+
 			int choic_index = -1;
-			if(subject.getStatus()==3){
+			if (subject.getStatus() == 3) {
 				choic_index = 1;
-			}else if(subject.getStatus()==2){
+			} else if (subject.getStatus() == 2) {
 				choic_index = 2;
-			}else{
+			} else {
 				choic_index = 0;
 			}
-			
+
 			new AlertDialog.Builder(act)
-					.setTitle(subject.getBody())					 
+					.setTitle(subject.getBody())
 					.setSingleChoiceItems(pickdates, choic_index,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
-										int which) { 
-									switch(which){
-									case 0: // todo										 
+										int which) {
+									switch (which) {
+									case 0: // todo
 										subject.setStatus(0);
-										subjectDa.set_todo_status(subject.getId(),
-												0);
+										subjectDa.set_todo_status(
+												subject.getId(), 0);
 										break;
-									case 1: // todo-block												 
+									case 1: // todo-block
 										subject.setStatus(3);
-										subjectDa.set_todo_status(subject.getId(),
-												3);
+										subjectDa.set_todo_status(
+												subject.getId(), 3);
 										break;
-									case 2: 	// todo-done							 
+									case 2: // todo-done
 										subject.setStatus(2);
-										subjectDa.set_todo_status(subject.getId(),
-												3);
+										subjectDa.set_todo_status(
+												subject.getId(), 3);
 										break;
-									} 
-									
-									dialog.dismiss(); 
-									load_infos(); 
-									
+									}
+
+									dialog.dismiss();
+									load_infos();
+
 								}
-							}).setNegativeButton(R.string.dialog_cancel, null).show();
-			
+							}).setNegativeButton(R.string.dialog_cancel, null)
+					.show();
+
 		}
-		
-		private void remind_frequency_picker() { 
+
+		private void remind_frequency_picker() {
 			String[] pickdates = act.getResources().getStringArray(
-					R.array.remind_frequency_items) ; 
+					R.array.remind_frequency_items);
 			int choic_index = -1;
-			if(subject.getRemindFrequency()>0){
-				choic_index = subject.getRemindFrequency()-1;
+			if (subject.getRemindFrequency() > 0) {
+				choic_index = subject.getRemindFrequency() - 1;
 			}
 			new AlertDialog.Builder(act)
-					.setTitle(subject.getBody())					 
+					.setTitle(subject.getBody())
 					.setSingleChoiceItems(pickdates, choic_index,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
-										int which) { 
-									subject.setRemindFrequency(which+1);
-									subjectDa.set_remind_frequency(subject.getId(), subject.getRemindFrequency());
-									
-									
-									
-									String next_remind_date = Util.getNextDate(subject.getRemindDate(),subject.getRemindFrequency());
-									
+										int which) {
+									subject.setRemindFrequency(which + 1);
+									subjectDa.set_remind_frequency(
+											subject.getId(),
+											subject.getRemindFrequency());
+
+									String next_remind_date = Util.getNextDate(
+											subject.getRemindDate(),
+											subject.getRemindFrequency());
+
 									subject.setNextRemindDate(next_remind_date);
-									subjectDa.set_next_remind(subject.getId(), next_remind_date);
-									 
+									subjectDa.set_next_remind(subject.getId(),
+											next_remind_date);
+
 									dialog.dismiss();
-									load_infos(); 
-									
-									
+									load_infos();
+
 								}
-							}).setNegativeButton(R.string.dialog_cancel, null).show();
-			
+							}).setNegativeButton(R.string.dialog_cancel, null)
+					.show();
+
 		}
-		
+
 		private void set_remind_date() {
 			Calendar c = Calendar.getInstance();
-			
+
 			Date d = Util.str2Date(subject.getRemindDate());
 			if (d != null) {
 				c.setTime(d);
@@ -463,108 +461,124 @@ public class ItemDetailActivity extends Activity {
 					new DatePickerDialog.OnDateSetListener() {
 						public void onDateSet(DatePicker dp, int year,
 								int month, int dayOfMonth) {
-							
-							String remind_date = Util.GetDateFromInts(year,month,dayOfMonth); 							 
+
+							String remind_date = Util.GetDateFromInts(year,
+									month, dayOfMonth);
 							subject.setRemindDate(remind_date);
-							subjectDa.set_remind_date(subject.getId(),remind_date); 
-							
-							load_infos(); 
+							subjectDa.set_remind_date(subject.getId(),
+									remind_date);
+
+							load_infos();
 						}
 					}, c.get(Calendar.YEAR), // 传入年份
 					c.get(Calendar.MONTH), // 传入月份
 					c.get(Calendar.DAY_OF_MONTH) // 传入天数
 			);
-			dialog.setTitle("设置提醒日期");
+			dialog.setTitle(R.string.label_set_remind_date);
 			dialog.setCancelable(true);
 			dialog.show();
 		}
-		
-		private void set_todo_plan_date(){			 
- 	
+
+		private void set_todo_plan_date() {
+
 			List<String> dates = Util.load_pick_dates(act);
 			final String[] pickdates = (String[]) dates.toArray(new String[0]);
-			
-			int choic_index = -1;			 
+
+			int choic_index = -1;
 			new AlertDialog.Builder(act)
-					.setTitle(subject.getBody())					 
+					.setTitle(subject.getBody())
 					.setSingleChoiceItems(pickdates, choic_index,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
-										int which) { 
-									String start_date = pickdates[which].split(" ")[1];
+										int which) {
+									String start_date = pickdates[which]
+											.split(" ")[1];
 									subjectDa.set_todo_start_date(
-											subject.getId(), start_date);									 
-									subject.setPlanStartDate(start_date); 
-									 
+											subject.getId(), start_date);
+									subject.setPlanStartDate(start_date);
+
 									dialog.dismiss();
-									load_infos(); 
-									
-									
+									load_infos();
+
 								}
-							}).setNegativeButton(R.string.dialog_cancel, null).show();
+							}).setNegativeButton(R.string.dialog_cancel, null)
+					.show();
 		}
-		
+
 		private void edit_content() {
-			final EditText et = new EditText(act);  
-			et.setText(subject.getBody()); 
-			et.setSelection(subject.getBody().length() );
-			
-//			ViewGroup.LayoutParams lp = et.getLayoutParams();
-//	        lp.height = 50;
-//			et.setLayoutParams(lp); 
-			
+			final EditText et = new EditText(act);
+			et.setText(subject.getBody());
+			et.setSelection(subject.getBody().length());
+
+			// ViewGroup.LayoutParams lp = et.getLayoutParams();
+			// lp.height = 50;
+			// et.setLayoutParams(lp);
+
 			new AlertDialog.Builder(act)
 					.setView(et)
 					.setPositiveButton(R.string.dialog_sure,
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,
-										int i) {									
-									String newTxt = et.getText().toString().trim();
+										int i) {
+									String newTxt = et.getText().toString()
+											.trim();
 									act.setTitle(newTxt);
 									subject.setBody(newTxt);
-									subjectDa.edit_content(subject.getId(), newTxt);
-									
-									load_infos(); 
+									subjectDa.edit_content(subject.getId(),
+											newTxt);
+
+									load_infos();
 
 								}
 							}).setNegativeButton(R.string.dialog_cancel, null)
 					.show();
-			
-//			InputMethodManager imm = (InputMethodManager)act.getSystemService(Context.INPUT_METHOD_SERVICE);  
-//			//得到InputMethodManager的实例
-//			if (imm.isActive()) {
-//			//如果开启
-//			imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS); 
-//			//关闭软键盘，开启方法相同，这个方法是切换开启与关闭状态的
-//			}
+
+			// InputMethodManager imm =
+			// (InputMethodManager)act.getSystemService(Context.INPUT_METHOD_SERVICE);
+			// //得到InputMethodManager的实例
+			// if (imm.isActive()) {
+			// //如果开启
+			// imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
+			// InputMethodManager.HIDE_NOT_ALWAYS);
+			// //关闭软键盘，开启方法相同，这个方法是切换开启与关闭状态的
+			// }
 		}
-		
-		private void remin_next(){
+
+		private void remin_next() {
 			new AlertDialog.Builder(act)
-			.setTitle("进入下一次提醒?")
-			//.setMessage("已执行")
-			.setPositiveButton(R.string.dialog_sure,
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int i) { 
-							Log.i("remin_next",subject.getRemindDate()+" " + String.valueOf(subject.getRemindFrequency()) );
-							String next_remind_date = Util.getNextDate2(subject.getNextRemindDate(),subject.getRemindFrequency());
-							Log.i("remin_next", next_remind_date );
-							
-							subject.setNextRemindDate(next_remind_date);
-							subjectDa.set_next_remind(subject.getId(), next_remind_date);
-							
-							load_infos(); 
-						}
-					})
-			.setNegativeButton(R.string.dialog_cancel,
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int i) {
-							// Log.i("dialog", "cancel");
-						}
-					}).show();
+					.setTitle(R.string.label_run_next_remind)
+					// .setMessage("已执行")
+					.setPositiveButton(R.string.dialog_sure,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int i) {
+//									Log.i("remin_next",
+//											subject.getRemindDate()
+//													+ " "
+//													+ String.valueOf(subject
+//															.getRemindFrequency()));
+									String next_remind_date = Util.getNextDate2(
+											subject.getNextRemindDate(),
+											subject.getRemindFrequency());
+//									Log.i("remin_next", next_remind_date);
+
+									subject.setNextRemindDate(next_remind_date);
+									subjectDa.set_next_remind(subject.getId(),
+											next_remind_date);
+
+									load_infos();
+								}
+							})
+					.setNegativeButton(R.string.dialog_cancel,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int i) {
+									// Log.i("dialog", "cancel");
+								}
+							}).show();
 		}
 
 		private void lvSubjectInfos_setOnItemClickListener() {
@@ -575,25 +589,25 @@ public class ItemDetailActivity extends Activity {
 						int arg2, long arg3) {
 
 					SettingBean item = infoList.get(arg2);
-					if(item.getId().equals("a_sort") ){						 
+					if (item.getId().equals("a_sort")) {
 						sort_status_picker();
-					}else if(item.getId().equals("a_remind_date")){
+					} else if (item.getId().equals("a_remind_date")) {
 						set_remind_date();
-					}else if(item.getId().equals("a_remind_frequency")){						 
+					} else if (item.getId().equals("a_remind_frequency")) {
 						remind_frequency_picker();
-					}else if(item.getId().equals("a_task_status")){
+					} else if (item.getId().equals("a_task_status")) {
 						todo_status_picker();
-					}else if(item.getId().equals("a_plan_start_date")){
+					} else if (item.getId().equals("a_plan_start_date")) {
 						set_todo_plan_date();
-					}else if(item.getId().equals("a_update_date")){
+					} else if (item.getId().equals("a_update_date")) {
 						edit_content();
-					}else if(item.getId().equals("a_remind_next")){
+					} else if (item.getId().equals("a_remind_next")) {
 						remin_next();
-					}else{
+					} else {
 						//
-						//Log.i("click","----------------");
-					} 
-					 
+						// Log.i("click","----------------");
+					}
+
 				}
 			});
 
@@ -649,6 +663,6 @@ public class ItemDetailActivity extends Activity {
 
 		}
 
-	} 
+	}
 
 }

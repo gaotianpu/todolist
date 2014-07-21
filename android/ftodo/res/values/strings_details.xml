@@ -15,6 +15,8 @@
     <string name="label_remind">提醒</string>
     <string name="label_remind_date">提醒日期</string>
     <string name="label_remind_frequency">提醒周期</string>
+     <string name="label_set_remind_date">设置提醒日期</string> 
+      <string name="label_run_next_remind">进入下一次提醒</string> 
     <string name="label_remind_next">已执行？</string>
     
     <string name="label_note">备忘</string>

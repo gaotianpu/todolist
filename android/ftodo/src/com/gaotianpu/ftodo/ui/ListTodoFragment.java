@@ -284,13 +284,12 @@ public class ListTodoFragment extends Fragment {
 
 	private void item_img_btn_click(final SubjectBean subject) {
 		List<String> dates = Util.load_pick_dates(act);
-		dates.add("已完成");
-		dates.add("先暂停"); 
+		dates.add(getResources().getString(R.string.todo_set_done)); 
+		dates.add(getResources().getString(R.string.todo_set_pause)); ;
 		 
 		final String[] pickdates1 = (String[]) dates.toArray(new String[dates.size()]);
 		new AlertDialog.Builder(act)
-				.setTitle(subject.getBody())
-				 
+				.setTitle(subject.getBody())				 
 				.setSingleChoiceItems(pickdates1, -1,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,

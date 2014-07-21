@@ -38,6 +38,19 @@
         <item>每月</item>
         <item>每年</item> 
       </string-array> 
+      
+     <string-array name="setting_list_items">       
+        <item>账号(手机号)</item>
+        <item>密码</item>
+        <item>电子邮箱</item>
+        <item>关于</item> 
+        <item>退出</item>
+      </string-array> 
+      
+    <string name="todo_set_done">已完成</string>
+    <string name="todo_set_pause">先暂停</string>
+    
+    <string name="login_or_register">登录或注册</string>
     
 <string name="day">天</string>
     <string name="dialog_delete_title">删除</string>

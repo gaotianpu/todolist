@@ -522,25 +522,14 @@ public class ListFragment extends Fragment {
 			if(list_sort.equals("remind") && subject.isRemind() ){				
 				if(subject.getNextRemindDate()!=null){
 					content = content + subject.getNextRemindDate();
-				}
+				} 
+				 
 				if(subject.getRemindFrequency()>0){
-					switch(subject.getRemindFrequency()){
-					case 1:
-						content = content + " 天 ";
-						break;
-					case 2:
-						content = content + " 周 ";
-						break;
-					case 3:
-						content = content + " 月 ";
-						break;
-					case 4:
-						content = content + " 年 ";
-						break;
-					}					
+					int index = subject.getRemindFrequency()-1;
+					content = content + " "+ getResources().getStringArray(R.array.remind_frequency_items)[index]; 
 				}
 				
-				Log.i("remind",String.valueOf(subject.getRemindFrequency()));
+				//Log.i("remind",String.valueOf(subject.getRemindFrequency()));
 				
 				String days = "";
 				try{
@@ -615,15 +604,15 @@ public class ListFragment extends Fragment {
 			return;
 		}
 
-		Log.i(TAG, "cust_id & token status is ok");
+	//	Log.i(TAG, "cust_id & token status is ok");
 
 		// get max remote_id from sqlite
 		long max_remote_id_in_sqlite = subjectDa.get_max_remote_id(user
 				.getUserId());
 
-		Log.i("max_remote_id_in_sqlite",
-				"max_remote_id_in_sqlite "
-						+ String.valueOf(max_remote_id_in_sqlite));
+//		Log.i("max_remote_id_in_sqlite",
+//				"max_remote_id_in_sqlite "
+//						+ String.valueOf(max_remote_id_in_sqlite));
 
 		// max_remote_id_in_sqlite = 500;
 
@@ -644,9 +633,9 @@ public class ListFragment extends Fragment {
 							long user_id = result.getLong("user_id");
 							subjectDa.save_download_records(user_id, total); // 每次都要全部写入？
 
-							Log.i(TAG,
-									"subject count "
-											+ String.valueOf(subjectList.size()));
+//							Log.i(TAG,
+//									"subject count "
+//											+ String.valueOf(subjectList.size()));
 
 							for (SubjectBean s : subjectList) {
 

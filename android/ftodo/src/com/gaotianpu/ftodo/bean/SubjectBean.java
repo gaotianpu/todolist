@@ -3,7 +3,7 @@ package com.gaotianpu.ftodo.bean;
 import java.util.Date;
 import android.util.Log;
 
-import com.gaotianpu.ftodo.R;
+ 
 import com.gaotianpu.ftodo.da.Util;
 
 public class SubjectBean {

@@ -1,28 +1,17 @@
 package com.gaotianpu.ftodo;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.gaotianpu.ftodo.bean.UserBean;
 import com.gaotianpu.ftodo.da.SQLiteHelper;
 import com.gaotianpu.ftodo.da.UserDa;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import android.app.AlertDialog;
 import android.app.Application;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 public class MyApplication extends Application {
-	private final String TAG = "MyApplication";
 
 	private UserBean user;
 	private UserDa userDa;
@@ -31,7 +20,7 @@ public class MyApplication extends Application {
 		userDa = new UserDa(this);
 
 		if (this.user != null) {
-			// Log.i(TAG, "getUser");
+
 			return this.user;
 		}
 
@@ -39,7 +28,7 @@ public class MyApplication extends Application {
 	}
 
 	public UserBean changeUser() {
-		// Log.i(TAG, "changeUser");
+
 		user = userDa.load_current_user();
 		if (user == null) {
 			return new UserBean();
@@ -69,7 +58,7 @@ public class MyApplication extends Application {
 	}
 
 	public String get_channel_no() {
-		return "baidu"; //dev,360,baidu
+		return "dev"; // dev,360,baidu,qq
 	}
 
 	public String get_version_no() {
@@ -87,43 +76,43 @@ public class MyApplication extends Application {
 
 	}
 
-//	public void set_api_host() {
-//		SharedPreferences hostSp = getSharedPreferences("APIHost", 0);
-//		int last = hostSp.getInt("timestamp", 0);
-//		
-//		if (!network_available()) {
-//			return;
-//		}
-//
-//		if (true) {// last<curent- 5days
-//			AsyncHttpClient client = new AsyncHttpClient();
-//			client.setTimeout(20000);
-//			client.post("http://ftodo.sinaapp.com/host", null,
-//					new JsonHttpResponseHandler() {
-//						@Override
-//						public void onSuccess(JSONObject result) {
-//							int timestamp = 0;
-//							String host = "";
-//							try {
-//								host = result.getString("host");
-//							} catch (JSONException e) {
-//								Log.e("hosterr", e.toString());
-//							}
-//							SharedPreferences hostSp = getSharedPreferences(
-//									"APIHost", 0);
-//							hostSp.edit().putString("host", host).commit();
-//							hostSp.edit().putInt("timestamp", timestamp)
-//									.commit();
-//						}
-//					});
-//
-//		}
-//	}
-//
-//	public String get_api_host() {
-//		SharedPreferences hostSp = getSharedPreferences("APIHost", 0);
-//		return hostSp.getString("host", "ftodo.sinaapp.com");
-//	}
+	// public void set_api_host() {
+	// SharedPreferences hostSp = getSharedPreferences("APIHost", 0);
+	// int last = hostSp.getInt("timestamp", 0);
+	//
+	// if (!network_available()) {
+	// return;
+	// }
+	//
+	// if (true) {// last<curent- 5days
+	// AsyncHttpClient client = new AsyncHttpClient();
+	// client.setTimeout(20000);
+	// client.post("http://ftodo.sinaapp.com/host", null,
+	// new JsonHttpResponseHandler() {
+	// @Override
+	// public void onSuccess(JSONObject result) {
+	// int timestamp = 0;
+	// String host = "";
+	// try {
+	// host = result.getString("host");
+	// } catch (JSONException e) {
+	// Log.e("hosterr", e.toString());
+	// }
+	// SharedPreferences hostSp = getSharedPreferences(
+	// "APIHost", 0);
+	// hostSp.edit().putString("host", host).commit();
+	// hostSp.edit().putInt("timestamp", timestamp)
+	// .commit();
+	// }
+	// });
+	//
+	// }
+	// }
+	//
+	// public String get_api_host() {
+	// SharedPreferences hostSp = getSharedPreferences("APIHost", 0);
+	// return hostSp.getString("host", "ftodo.sinaapp.com");
+	// }
 
 	private SQLiteHelper dbHelper;
 
@@ -133,14 +122,13 @@ public class MyApplication extends Application {
 		}
 		return dbHelper.getWritableDatabase();
 	}
-	
-	
-//	private Builder b;
-//	public Builder builderDialog(){
-//		if(b==null){
-//			b = new AlertDialog.Builder(this); //防止重复弹出对话框
-//		}
-//		return b;
-//	}
+
+	// private Builder b;
+	// public Builder builderDialog(){
+	// if(b==null){
+	// b = new AlertDialog.Builder(this); //防止重复弹出对话框
+	// }
+	// return b;
+	// }
 
 }
