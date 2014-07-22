@@ -132,26 +132,36 @@ class AndroidPage:
         profile = da.user.load_user(1)
         return render(profile) 
 
+############################################
 class account_mobile_code:   
     def GET(self):
         i = web.input(user_id=0,mobile="") #无需验证token等
-        return ""
-class account_mobile_validate:   
-    i = web.input(user_id=0,mobile="",sms_code="") #无需验证token等
+        r = {'code':1,"user_id":i.user_id,"mobile":i.mobile,'data':None}
+        return  json.dumps(r,cls=CJsonEncoder)
+
+class account_mobile_validate:       
     def GET(self):
-        return ""        
-class account_password_change: 
-    i = web.input(user_id=0,oldpwd="",newpwd="") #无需验证token等  
+        i = web.input(user_id=0,mobile="",sms_code="") #无需验证token等
+        r = {'code':1,"user_id":i.user_id,"mobile":i.mobile,'data':None}
+        return  json.dumps(r,cls=CJsonEncoder)
+
+class account_password_change:      
     def GET(self):
-        return ""
-class account_password_find:   
-    i = web.input(mobile="",code="") #无需验证token等
+        i = web.input(user_id=0,oldpwd="",newpwd="") #无需验证token等 
+        r = {'code':1,"user_id":i.user_id,'data':None}
+        return  json.dumps(r,cls=CJsonEncoder)
+
+class account_password_find:       
     def GET(self):
-        return "" 
+        i = web.input(mobile="",code="") #无需验证token等
+        r = {'code':1,'data':None}
+        return  json.dumps(r,cls=CJsonEncoder)
+
 class account_email_validate:   
     def GET(self):
         i = web.input(user_id=0,email="",password="") #无需验证token等?
-        return "" 
+        r = {'code':1, "user_id":i.user_id,"email":i.email,'data':None}
+        return  json.dumps(r,cls=CJsonEncoder)
 
 
 def api_loadhook():
