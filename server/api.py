@@ -134,14 +134,14 @@ class AndroidPage:
 
 class account_mobile_code:   
     def GET(self):
-        i = web.input(mobile="") #无需验证token等
+        i = web.input(user_id=0,mobile="") #无需验证token等
         return ""
 class account_mobile_validate:   
-    i = web.input(mobile="",code="") #无需验证token等
+    i = web.input(user_id=0,mobile="",sms_code="") #无需验证token等
     def GET(self):
         return ""        
 class account_password_change: 
-    i = web.input(mobile="",oldpwd="",newpwd="") #无需验证token等  
+    i = web.input(user_id=0,oldpwd="",newpwd="") #无需验证token等  
     def GET(self):
         return ""
 class account_password_find:   
@@ -150,7 +150,7 @@ class account_password_find:
         return "" 
 class account_email_validate:   
     def GET(self):
-        i = web.input(email="",password="") #无需验证token等?
+        i = web.input(user_id=0,email="",password="") #无需验证token等?
         return "" 
 
 

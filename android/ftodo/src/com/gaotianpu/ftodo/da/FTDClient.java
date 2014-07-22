@@ -233,4 +233,44 @@ public class FTDClient {
 		client.post(RES_BASE_URL + "profile", params, responseHandler);
 	}
 
+	public void load_sms_code(long user_id, String mobile,
+			AsyncHttpResponseHandler responseHandler) {
+		RequestParams params = new RequestParams();
+		params.put("user_id", String.valueOf(user_id));
+		params.put("mobile", mobile);
+
+		client.post(RES_BASE_URL + "account_mobile_code", params, responseHandler);
+	}
+
+	public void validate_mobile(long user_id, String mobile, String sms_code,
+			AsyncHttpResponseHandler responseHandler) {
+		RequestParams params = new RequestParams();
+		params.put("user_id", String.valueOf(user_id));
+		params.put("mobile", mobile);
+		params.put("sms_code", sms_code);
+
+		client.post(RES_BASE_URL + "account_mobile_validate", params, responseHandler);
+	}
+
+	public void change_password(long user_id, String old_password,
+			String new_password, AsyncHttpResponseHandler responseHandler) {
+		RequestParams params = new RequestParams();
+		params.put("user_id", String.valueOf(user_id));
+		params.put("old_password", old_password);
+		params.put("new_password", new_password);
+
+		client.post(RES_BASE_URL + "account_password_change", params, responseHandler);
+	} 
+	
+
+	public void update_email(long user_id, String email, String password,
+			AsyncHttpResponseHandler responseHandler) {
+		RequestParams params = new RequestParams();
+		params.put("user_id", String.valueOf(user_id));
+		params.put("email", email);
+		params.put("password", password);
+
+		client.post(RES_BASE_URL + "account_email_validate", params, responseHandler);
+	}
+
 }
