@@ -4,18 +4,25 @@ import java.io.IOException;
 
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
- 
+
 import com.gaotianpu.ftodo.bean.UserBean;
- 
+import com.gaotianpu.ftodo.ui.ItemDetailActivity.DetailReadFragment;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
- 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import android.view.MenuItem;
 import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class SettingDetailActivity extends Activity {
 
@@ -35,8 +42,8 @@ public class SettingDetailActivity extends Activity {
 
 		// 0.外部传入参数
 		Intent intent = getIntent();
-		setting_item_id = intent.getStringExtra(SETTING_ITEM_ID);  
-		
+		setting_item_id = intent.getStringExtra(SETTING_ITEM_ID);
+
 		this.setTitle(intent.getStringExtra(SETTING_ITEM_TITLE));
 
 		// 1 全局
@@ -44,22 +51,20 @@ public class SettingDetailActivity extends Activity {
 		app = (MyApplication) getApplicationContext();
 		user = app.getUser();
 
-		if (app.network_available()) {
-			WebView webview = new WebView(act);
-			// webview.getSettings().setJavaScriptEnabled(true);
-			String url = "http://ftodo.sinaapp.com/api/android_page?user_id="
-					+ String.valueOf(user.getUserId()) + "&access_token="
-					+ user.getAccessToken() + "&item=" + setting_item_id
-					+ "&module=setting";
-
-			if (setting_item_id.equals( "about")) { //java 判断字符串相等，不能使用==
-				url = "http://ftodo.sinaapp.com/about";
+		if (savedInstanceState == null) {
+			Fragment f;
+			if (setting_item_id.equals("mobile")) {
+				f = new MobileFragment();
+			} else if (setting_item_id.equals("password")) {
+				f = new PasswordFragment();
+			} else if (setting_item_id.equals("email")) {
+				f = new EmailFragment();
+			} else { // about
+				f = new AboutFragment();
 			}
-			
-			webview.loadUrl(url);
-			setContentView(webview);
 
-			return;
+			getFragmentManager().beginTransaction().replace(R.id.container, f)
+					.commit();
 		}
 
 	}
@@ -71,7 +76,7 @@ public class SettingDetailActivity extends Activity {
 			// //goback?
 			Runtime runtime = Runtime.getRuntime();
 			try {
-				//Log.i("back", String.valueOf(item.getItemId()));
+				// Log.i("back", String.valueOf(item.getItemId()));
 				runtime.exec("input keyevent " + KeyEvent.KEYCODE_BACK);
 				return true;
 			} catch (IOException e) {
@@ -83,5 +88,143 @@ public class SettingDetailActivity extends Activity {
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	public static class MobileFragment extends Fragment {
+		private EditText txtMobile;
+		private EditText txtSmsCode;
+		private Button btnGetSmsCode;
+		private Button btnPost;
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View rootView = inflater.inflate(R.layout.setting_mobile,
+					container, false);
+
+			txtMobile = (EditText) rootView.findViewById(R.id.txtMobile);
+			txtSmsCode = (EditText) rootView.findViewById(R.id.txtSmsCode);
+			btnGetSmsCode = (Button) rootView.findViewById(R.id.btnGetSmsCode);
+			btnPost = (Button) rootView.findViewById(R.id.btnPost);
+
+			load_data();
+
+			btn_bindding();
+
+			return rootView;
+		}
+
+		private void load_data() {
+			String mobile = String.valueOf(user.getMobile());
+			txtMobile.setText(mobile);
+			txtMobile.setSelection(mobile.length());
+		}
+
+		private void btn_bindding() {
+			btnGetSmsCode.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// post_new();
+				}
+			});
+
+			btnPost.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// post_new();
+				}
+			});
+		}
+
+	}
+
+	public static class PasswordFragment extends Fragment {
+		private TextView tvMobile;
+		private EditText txtOldPassword;
+		private EditText txtNewPassword;
+		private Button btnPost;
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View rootView = inflater.inflate(R.layout.setting_password,
+					container, false);
+
+			tvMobile = (TextView) rootView.findViewById(R.id.tvMobile);
+			txtOldPassword = (EditText) rootView
+					.findViewById(R.id.txtOldPassword);
+			txtNewPassword = (EditText) rootView
+					.findViewById(R.id.txtNewPassword);
+			btnPost = (Button) rootView.findViewById(R.id.btnPost);
+
+			load_data();
+			btn_bindding();
+
+			return rootView;
+		}
+
+		private void load_data() {
+			String mobile = String.valueOf(user.getMobile());
+			tvMobile.setText(mobile);
+
+		}
+
+		private void btn_bindding() {
+
+			btnPost.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// post_new();
+				}
+			});
+		}
+	}
+
+	public static class EmailFragment extends Fragment {
+		private EditText txtEmail;
+		private EditText txtOldPassword;
+		private Button btnPost;
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View rootView = inflater.inflate(R.layout.setting_email, container,
+					false);
+
+			txtEmail = (EditText) rootView.findViewById(R.id.txtEmail);
+			txtOldPassword = (EditText) rootView
+					.findViewById(R.id.txtOldPassword);
+			btnPost = (Button) rootView.findViewById(R.id.btnPost);
+
+			load_data();
+			btn_bindding();
+
+			return rootView;
+		}
+
+		private void load_data() {
+			txtEmail.setText(user.getEmail());
+			txtEmail.setSelection(user.getEmail().length());
+		}
+
+		private void btn_bindding() {
+			btnPost.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// post_new();
+				}
+			});
+		}
+	}
+
+	public static class AboutFragment extends Fragment {
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			WebView webview = new WebView(act);
+			webview.loadUrl("http://ftodo.sinaapp.com/about");
+			return webview;
+		}
+
 	}
 }

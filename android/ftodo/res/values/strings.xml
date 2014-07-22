@@ -42,7 +42,12 @@
         <item>关于</item>
         <item>退出</item>
     </string-array>
-
+    <string name="setting_password_old_promot">输入原始密码</string>
+    <string name="setting_password_new_promot">输入新密码</string>
+    
+    
+    <string name="setting_mobile_input_sms_code">短信验证码</string>
+ <string name="setting_mobile_get_sms_code">获取验证码</string>
     <string name="todo_set_done">已完成</string>
     <string name="todo_set_pause">先暂停</string>
     <string name="login_or_register">登录或注册</string>

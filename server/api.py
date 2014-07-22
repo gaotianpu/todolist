@@ -14,7 +14,12 @@ urls = (
     "/total","Total",
     "/android_page","AndroidPage",
     "/search","Search",
-    "/profile","Profile")
+    "/profile","Profile",
+    "/account_mobile_code","account_mobile_code",
+    "/account_mobile_validate","account_mobile_validate",
+    "/account_password_change","account_password_change", 
+    "/account_password_find", "account_password_find",
+    "/account_email_validate","account_email_validate")
 
 #register, mobile + sms_validate_code
 #login, mobile + password_encryption
@@ -118,13 +123,36 @@ class Profile:
         r = {'code':1,'data':profile}
         return  json.dumps(r,cls=CJsonEncoder)
 
-class AndroidPage:
-    @validate_token
+#@validate_token
+class AndroidPage:   
     def GET(self):
         web.header('Content-Type', 'text/html; charset=utf-8')
         i = web.input(module="",item="")
-        #self.token.user_id
-        return  "<h1>Coming soon</h1>"
+        render = web.template.frender('templates/android/' + i.module + '.html')
+        profile = da.user.load_user(1)
+        return render(profile) 
+
+class account_mobile_code:   
+    def GET(self):
+        i = web.input(mobile="") #无需验证token等
+        return ""
+class account_mobile_validate:   
+    i = web.input(mobile="",code="") #无需验证token等
+    def GET(self):
+        return ""        
+class account_password_change: 
+    i = web.input(mobile="",oldpwd="",newpwd="") #无需验证token等  
+    def GET(self):
+        return ""
+class account_password_find:   
+    i = web.input(mobile="",code="") #无需验证token等
+    def GET(self):
+        return "" 
+class account_email_validate:   
+    def GET(self):
+        i = web.input(email="",password="") #无需验证token等?
+        return "" 
+
 
 def api_loadhook():
     # 如果把login剔除api，所有资源访问都可以加上user_id+device_no+access_token?
