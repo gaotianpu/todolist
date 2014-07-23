@@ -28,7 +28,7 @@ public class UserBean {
 	}
 
 	public String getEmail() {
-		return email==null ? "" :email ;
+		return email.equals(null)  ? "" : email ;
 	}
 
 	public void setEmail(String email) {

@@ -16,6 +16,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -110,8 +112,8 @@ public class SettingDetailActivity extends Activity {
 					container, false);
 
 			txtMobile = (EditText) rootView.findViewById(R.id.txtMobile);
-			txtMobile.setInputType(EditorInfo.TYPE_CLASS_PHONE);  
-			
+			txtMobile.setInputType(EditorInfo.TYPE_CLASS_PHONE);
+
 			txtSmsCode = (EditText) rootView.findViewById(R.id.txtSmsCode);
 			btnGetSmsCode = (Button) rootView.findViewById(R.id.btnGetSmsCode);
 			btnPost = (Button) rootView.findViewById(R.id.btnPost);
@@ -129,13 +131,44 @@ public class SettingDetailActivity extends Activity {
 			txtMobile.setSelection(mobile.length());
 		}
 
+		/*
+		 * 定义一个倒计时的内部类 *
+		 * http://www.cnblogs.com/-cyb/archive/2011/12/18/Android_CountDownTimer
+		 * .html
+		 */
+		private class TimeCount extends CountDownTimer {
+			public TimeCount(long millisInFuture, long countDownInterval) {
+				super(millisInFuture, countDownInterval);// 参数依次为总时长,和计时的时间间隔
+			}
+
+			@Override
+			public void onFinish() {// 计时完毕时触发
+				btnGetSmsCode.setText(act.getResources().getString(
+						R.string.setting_mobile_get_sms_code));
+				btnGetSmsCode.setClickable(true);
+			}
+
+			@Override
+			public void onTick(long millisUntilFinished) {// 计时过程显示
+				btnGetSmsCode.setClickable(false);
+				btnGetSmsCode.setText(millisUntilFinished
+						/ 1000
+						+ act.getResources().getString(
+								R.string.setting_mobile_get_sms_code_tip));
+			}
+		}
+
 		private void btn_bindding() {
 			btnGetSmsCode.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					//1.validate txtMobile format, int, 11
-					
-					//60s 禁用期
+					// 1.validate txtMobile format, int, 11
+					//Log.i("TimeCount", "before");
+					// 60s 禁用期
+					TimeCount time = new TimeCount(60000, 1000);
+					time.start();
+
+					//Log.i("TimeCount", "after");
 
 					ftd.load_sms_code(user.getUserId(), txtMobile.getText()
 							.toString(), new JsonHttpResponseHandler() {
@@ -143,16 +176,18 @@ public class SettingDetailActivity extends Activity {
 						public void onSuccess(JSONObject result) {
 							try {
 								int code = result.getInt("code");
+								 
 							} catch (Exception ex) {
 								Log.i("setting", ex.toString());
 							}
-							
+
 						}
 
 						@Override
 						public void onFailure(int statusCode, Throwable e,
 								JSONObject errorResponse) {
-
+							
+							 
 							if (statusCode == 401) {
 								app.set_token_failure();
 							}
@@ -166,8 +201,8 @@ public class SettingDetailActivity extends Activity {
 			btnPost.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					//1.validate txtMobile format, int, 11
-					
+					// 1.validate txtMobile format, int, 11
+
 					ftd.validate_mobile(user.getUserId(), txtMobile.getText()
 							.toString(), txtSmsCode.getText().toString(),
 							new JsonHttpResponseHandler() {
@@ -175,9 +210,9 @@ public class SettingDetailActivity extends Activity {
 								public void onSuccess(JSONObject result) {
 									try {
 										int code = result.getInt("code");
-										
-										//修改成功后跳转至setting list ？
-										
+
+										// 修改成功后跳转至setting list ？
+
 									} catch (Exception ex) {
 										Log.i("setting", ex.toString());
 									}
