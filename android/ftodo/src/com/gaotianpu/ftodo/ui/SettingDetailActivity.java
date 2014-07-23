@@ -2,11 +2,15 @@ package com.gaotianpu.ftodo.ui;
 
 import java.io.IOException;
 
+import org.json.JSONObject;
+
 import com.gaotianpu.ftodo.MyApplication;
 import com.gaotianpu.ftodo.R;
 
 import com.gaotianpu.ftodo.bean.UserBean;
+import com.gaotianpu.ftodo.da.FTDClient;
 import com.gaotianpu.ftodo.ui.ItemDetailActivity.DetailReadFragment;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -30,8 +34,9 @@ public class SettingDetailActivity extends Activity {
 	public static final String SETTING_ITEM_TITLE = "SETTING_ITEM_TITLE";
 
 	private static Activity act;
-	private MyApplication app;
+	private static MyApplication app;
 	private static UserBean user;
+	private static FTDClient ftd;
 
 	private String setting_item_id;
 
@@ -50,6 +55,7 @@ public class SettingDetailActivity extends Activity {
 		act = this;
 		app = (MyApplication) getApplicationContext();
 		user = app.getUser();
+		ftd = new FTDClient(act);
 
 		if (savedInstanceState == null) {
 			Fragment f;
@@ -124,14 +130,45 @@ public class SettingDetailActivity extends Activity {
 			btnGetSmsCode.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// post_new();
+
+					ftd.load_sms_code(user.getUserId(), txtMobile.getText()
+							.toString(), new JsonHttpResponseHandler() {
+						@Override
+						public void onSuccess(JSONObject result) {
+						}
+
+						@Override
+						public void onFailure(int statusCode, Throwable e,
+								JSONObject errorResponse) {
+
+							if (statusCode == 401) {
+								app.set_token_failure();
+							}
+
+						}
+					});
+
 				}
 			});
 
 			btnPost.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// post_new();
+					ftd.validate_mobile(user.getUserId(), txtMobile.getText()
+							.toString(), txtSmsCode.getText().toString(),
+							new JsonHttpResponseHandler() {
+								@Override
+								public void onSuccess(JSONObject result) {
+								}
+
+								@Override
+								public void onFailure(int statusCode,
+										Throwable e, JSONObject errorResponse) {
+									if (statusCode == 401) {
+										app.set_token_failure();
+									}
+								}
+							});
 				}
 			});
 		}
@@ -174,7 +211,21 @@ public class SettingDetailActivity extends Activity {
 			btnPost.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// post_new();
+					ftd.change_password(user.getUserId(), txtOldPassword
+							.getText().toString(), txtNewPassword.getText()
+							.toString(), new JsonHttpResponseHandler() {
+						@Override
+						public void onSuccess(JSONObject result) {
+						}
+
+						@Override
+						public void onFailure(int statusCode, Throwable e,
+								JSONObject errorResponse) {
+							if (statusCode == 401) {
+								app.set_token_failure();
+							}
+						}
+					});
 				}
 			});
 		}
@@ -211,7 +262,21 @@ public class SettingDetailActivity extends Activity {
 			btnPost.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// post_new();
+					ftd.update_email(user.getUserId(), txtEmail.getText()
+							.toString(), txtOldPassword.getText().toString(),
+							new JsonHttpResponseHandler() {
+								@Override
+								public void onSuccess(JSONObject result) {
+								}
+
+								@Override
+								public void onFailure(int statusCode,
+										Throwable e, JSONObject errorResponse) {
+									if (statusCode == 401) {
+										app.set_token_failure();
+									}
+								}
+							});
 				}
 			});
 		}

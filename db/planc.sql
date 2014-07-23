@@ -231,6 +231,27 @@ CREATE TABLE `terms` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `user_account_validate`
+--
+
+DROP TABLE IF EXISTS `user_account_validate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_account_validate` (
+  `pk_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `validate_sort` int(11) NOT NULL,
+  `validate_account` varchar(50) NOT NULL,
+  `validate_code` varchar(50) NOT NULL,
+  `code_status` int(11) NOT NULL,
+  `creation_date` datetime NOT NULL,
+  `last_update` datetime NOT NULL,
+  PRIMARY KEY (`pk_id`),
+  KEY `ix_multi` (`user_id`,`validate_sort`,`validate_code`,`code_status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `user_devices`
 --
 
@@ -284,4 +305,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-07-22 14:38:52
+-- Dump completed on 2014-07-23 11:56:04
