@@ -20,12 +20,12 @@ def update_code_status(pk_id,status):
         vars=locals())
 
 def check_code(user_id,val_sort,val_account,val_code):
-    result = list(dbr.select(tname,what="pk_id,validate_account",
+    result = list(dbr.select(tname,what="pk_id,user_id,validate_sort,validate_account",
         where="user_id=$user_id and validate_sort=$val_sort and validate_code=$val_code and code_status=1",
         vars=locals()))
     if result:
         pk_id = result[0].pk_id
         if result[0].validate_account == val_account:
             update_code_status(pk_id,2)
-            return True
+            return result[0]
     return False
