@@ -3,7 +3,7 @@
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">手机号 </string>
+    <string name="prompt_mobile">手机号 </string>
     <string name="prompt_password">密码</string>
     <string name="action_sign_in_register"><b>登录</b> 或注册</string>
     <string name="action_sign_in_short">登录</string>

@@ -91,6 +91,7 @@ public class LoginFragment extends Fragment {
 
 		mMobile = act.getIntent().getStringExtra(EXTRA_MOBILE);
 		mMobileView.setText(mMobile);
+		mMobileView.setInputType(EditorInfo.TYPE_CLASS_PHONE);  
 
 		mPasswordView
 				.setOnEditorActionListener(new TextView.OnEditorActionListener() {

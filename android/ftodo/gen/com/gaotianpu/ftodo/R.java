@@ -206,7 +206,7 @@ public final class R {
         public static final int pref_title_vibrate=0x7f06004b;
         /**  Strings related to login 
          */
-        public static final int prompt_email=0x7f060033;
+        public static final int prompt_mobile=0x7f060033;
         public static final int prompt_password=0x7f060034;
         public static final int search_hint=0x7f060024;
         public static final int search_label=0x7f060025;
