@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -109,6 +110,8 @@ public class SettingDetailActivity extends Activity {
 					container, false);
 
 			txtMobile = (EditText) rootView.findViewById(R.id.txtMobile);
+			txtMobile.setInputType(EditorInfo.TYPE_CLASS_PHONE);  
+			
 			txtSmsCode = (EditText) rootView.findViewById(R.id.txtSmsCode);
 			btnGetSmsCode = (Button) rootView.findViewById(R.id.btnGetSmsCode);
 			btnPost = (Button) rootView.findViewById(R.id.btnPost);
@@ -130,11 +133,20 @@ public class SettingDetailActivity extends Activity {
 			btnGetSmsCode.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					//1.validate txtMobile format, int, 11
+					
+					//60s 禁用期
 
 					ftd.load_sms_code(user.getUserId(), txtMobile.getText()
 							.toString(), new JsonHttpResponseHandler() {
 						@Override
 						public void onSuccess(JSONObject result) {
+							try {
+								int code = result.getInt("code");
+							} catch (Exception ex) {
+								Log.i("setting", ex.toString());
+							}
+							
 						}
 
 						@Override
@@ -154,11 +166,21 @@ public class SettingDetailActivity extends Activity {
 			btnPost.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					//1.validate txtMobile format, int, 11
+					
 					ftd.validate_mobile(user.getUserId(), txtMobile.getText()
 							.toString(), txtSmsCode.getText().toString(),
 							new JsonHttpResponseHandler() {
 								@Override
 								public void onSuccess(JSONObject result) {
+									try {
+										int code = result.getInt("code");
+										
+										//修改成功后跳转至setting list ？
+										
+									} catch (Exception ex) {
+										Log.i("setting", ex.toString());
+									}
 								}
 
 								@Override
@@ -216,6 +238,11 @@ public class SettingDetailActivity extends Activity {
 							.toString(), new JsonHttpResponseHandler() {
 						@Override
 						public void onSuccess(JSONObject result) {
+							try {
+								int code = result.getInt("code");
+							} catch (Exception ex) {
+								Log.i("setting", ex.toString());
+							}
 						}
 
 						@Override
@@ -267,6 +294,11 @@ public class SettingDetailActivity extends Activity {
 							new JsonHttpResponseHandler() {
 								@Override
 								public void onSuccess(JSONObject result) {
+									try {
+										int code = result.getInt("code");
+									} catch (Exception ex) {
+										Log.i("setting", ex.toString());
+									}
 								}
 
 								@Override

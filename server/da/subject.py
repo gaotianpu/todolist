@@ -5,6 +5,9 @@ from config import dbr,dbw
 
 table_name = 'subjects'
 
+task_status = (0,10,2,3) #尚未开始 NotBegun 0，已开始 Doing 10，结束Done2，Block3
+remind_frequency = (1,2,3,4) #1每天，2每周，3每月，4每年
+
 def insert(user_id,subject):
     #避免重复提交
     last_one = load_last_one(user_id)
