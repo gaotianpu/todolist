@@ -163,17 +163,17 @@ public class SettingDetailActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 					// 1.validate txtMobile format, int, 11
-					//Log.i("TimeCount", "before");
+					 
 					// 60s 禁用期
 					TimeCount time = new TimeCount(60000, 1000);
-					time.start();
-
-					//Log.i("TimeCount", "after");
+					time.start(); 
 
 					ftd.load_sms_code(user.getUserId(), txtMobile.getText()
 							.toString(), new JsonHttpResponseHandler() {
 						@Override
 						public void onSuccess(JSONObject result) {
+							//Log.i("TimeCount", "onSuccess");
+							
 							try {
 								int code = result.getInt("code");
 								 
@@ -187,7 +187,7 @@ public class SettingDetailActivity extends Activity {
 						public void onFailure(int statusCode, Throwable e,
 								JSONObject errorResponse) {
 							
-							 
+							Log.i("TimeCount", "onFailure");
 							if (statusCode == 401) {
 								app.set_token_failure();
 							}
@@ -259,8 +259,7 @@ public class SettingDetailActivity extends Activity {
 
 		private void load_data() {
 			String mobile = String.valueOf(user.getMobile());
-			tvMobile.setText(mobile);
-
+			tvMobile.setText(mobile); 
 		}
 
 		private void btn_bindding() {

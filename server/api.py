@@ -140,13 +140,13 @@ class account_mobile_code:
         return  json.dumps(r,cls=CJsonEncoder)
 
 class account_mobile_validate:       
-    def GET(self):
+    def POST(self):
         i = web.input(user_id=0,mobile="",sms_code="") #无需验证token等
         r = {'code':1,"user_id":i.user_id,"mobile":i.mobile,'data':None}
         return  json.dumps(r,cls=CJsonEncoder)
 
 class account_password_change:      
-    def GET(self):
+    def POST(self):
         i = web.input(user_id=0,oldpwd="",newpwd="") #无需验证token等 
         r = {'code':1,"user_id":i.user_id,'data':None}
         return  json.dumps(r,cls=CJsonEncoder)
@@ -158,7 +158,7 @@ class account_password_find:
         return  json.dumps(r,cls=CJsonEncoder)
 
 class account_email_validate:   
-    def GET(self):
+    def POST(self):
         i = web.input(user_id=0,email="",password="") #无需验证token等?
         r = {'code':1, "user_id":i.user_id,"email":i.email,'data':None}
         return  json.dumps(r,cls=CJsonEncoder)

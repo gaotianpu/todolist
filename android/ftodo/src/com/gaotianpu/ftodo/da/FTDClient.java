@@ -238,8 +238,8 @@ public class FTDClient {
 		RequestParams params = new RequestParams();
 		params.put("user_id", String.valueOf(user_id));
 		params.put("mobile", mobile);
-
-		client.post(RES_BASE_URL + "account_mobile_code", params, responseHandler);
+		
+		client.get(RES_BASE_URL + "account_mobile_code", params, responseHandler);
 	}
 
 	public void validate_mobile(long user_id, String mobile, String sms_code,
