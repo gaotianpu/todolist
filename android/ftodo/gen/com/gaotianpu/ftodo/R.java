@@ -226,6 +226,7 @@ public final class R {
         public static final int title_activity_search=0x7f06002c;
         public static final int title_activity_setting_detail=0x7f060031;
         public static final int title_activity_settings=0x7f06003e;
+        public static final int today=0x7f06005f;
         public static final int todo_set_done=0x7f060006;
         public static final int todo_set_pause=0x7f060007;
         public static final int user_unlogin=0x7f06002f;

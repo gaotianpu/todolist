@@ -20,6 +20,8 @@
     <string name="label_remind_next">已执行？</string>
     
     <string name="label_note">备忘</string>
+    
+     <string name="today">今天</string>
 
     <string-array name="subject_sorts">
         <item>备忘</item>

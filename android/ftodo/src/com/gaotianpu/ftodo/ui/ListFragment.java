@@ -549,8 +549,12 @@ public class ListFragment extends Fragment {
 				String days = "";
 				try{
 				   int d = Util.daysBetween(Util.getDateStr(0),subject.getNextRemindDate() );
-				   if(d<31){
+				   if(d==0){
+					   content = act.getString(R.string.today) + " " + content;
+				   }else if(d<31){
 					   content = String.valueOf(d)+ act.getString(R.string.day) + " " + content;
+				   }else{
+					   
 				   }
 				}catch(Exception e){
 					Log.i("err",e.toString()); 

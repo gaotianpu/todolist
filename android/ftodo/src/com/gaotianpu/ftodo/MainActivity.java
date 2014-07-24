@@ -181,12 +181,11 @@ public class MainActivity extends Activity {
 		}
 	}
 	
-	@Override
-	public void onBackPressed() {
-		//?左侧菜单？
-		
-		return ;
-	}
+//	@Override
+//	public void onBackPressed() {
+//		//?左侧菜单？ 
+//		return ;
+//	}
 
 	private void mDrawerList_setOnItemClickListener() {
 		mDrawerList.setOnItemClickListener(new OnItemClickListener() {
