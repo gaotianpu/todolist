@@ -109,6 +109,19 @@ public class SubjectDa {
 
 		return subjectID;
 	}
+	
+	public void set_uploading(long local_id,int status){
+		ContentValues values = new ContentValues(); 
+		values.put("is_uploading", status);  //0, 已结束， 1，正在上传
+		
+		db = dbHelper.getWritableDatabase();
+
+		db.update("subjects", values, "pk_id=?",
+				new String[] { String.valueOf(local_id) });
+		
+		Log.i("AsyncService","set_uploading");
+
+	}
 
 	public void set_remoteId(long local_id, long remote_id, long user_id,
 			int serverVersion) {
@@ -120,7 +133,7 @@ public class SubjectDa {
 		values.put("user_id", user_id);
 		values.put("server_version", serverVersion);
 
-		values.put("last_sync", 1); //
+		values.put("last_sync", Util.getNowStr()  ); //
 
 		db = dbHelper.getWritableDatabase();
 
@@ -330,7 +343,7 @@ public class SubjectDa {
 	private final String[] list_selected_fields = new String[] { "pk_id",
 			"user_id", "body", "creation_date", "last_update", "remote_id",
 			"is_todo", "is_remind", "parent_id", "local_version", "is_del","date(plan_start_date) as plan_start_date","task_status",
-			"date(remind_datetime) as remind_datetime","date(remind_next) as  remind_next","remind_frequency","closed_date"};
+			"date(remind_datetime) as remind_datetime","date(remind_next) as  remind_next","remind_frequency","closed_date","server_version"};
 
 	private List<SubjectBean> load_list(Cursor cursor) {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
@@ -356,7 +369,9 @@ public class SubjectDa {
 			subject.setNextRemindDate(cursor.getString( 14));
 			subject.setRemindFrequency(cursor.getInt( 15 ));
 			
-			subject.setClosedDate(cursor.getString( 16 ));
+			subject.setClosedDate(cursor.getString( 16 ));  
+			subject.setServerVersion(cursor.getInt(17));
+			
 
 			subjectList.add(subject);
 			cursor.moveToNext();
@@ -369,10 +384,10 @@ public class SubjectDa {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		db = dbHelper.getWritableDatabase();
 		try {
-			String sqlwhere = "(user_id=? or user_id=0) and (local_version>server_version or remote_id=0)";
+			String sqlwhere = "is_uploading=0 and (user_id=? or user_id=0) and (local_version>server_version or remote_id=0) ";
 			Cursor cursor = db.query("subjects", list_selected_fields,
 					sqlwhere, new String[] { String.valueOf(user_id) }, null,
-					null, "pk_id desc");
+					null, "pk_id desc limit 0,1");
 
 			subjectList = load_list(cursor);
 		} catch (IllegalArgumentException e) {

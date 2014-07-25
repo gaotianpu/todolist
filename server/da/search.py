@@ -56,7 +56,9 @@ def load_subjects(user_id,terms,offset,size):
 
     term_ids = [str(r.term_id) for r in terms]
 
-    r = dbr.query("""select s.pk_id,user_id,s.body,s.created_date,s.last_update,s.local_id,s.is_delete from 
+
+
+    r = dbr.query("""select s.pk_id,user_id,s.body,s.created_date,s.last_update,s.app_created_date,s.local_id,s.is_delete,s.is_todo,s.is_remind,s.plan_start_date,s.task_status,s.remind_datetime,s.remind_frequency,s.remind_next,s.closed_date from 
         (SELECT doc_id,sum(tf_idf) as tf_idf FROM term_doc  where user_id=%s and  term_id in (%s) group by doc_id) as t
         left join subjects s on t.doc_id = s.pk_id
         order by t.tf_idf desc limit 0,200""" %(str(user_id),','.join(term_ids)) )

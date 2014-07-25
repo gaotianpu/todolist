@@ -67,13 +67,17 @@ public class AsyncService extends Service {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-
+				 Log.i(TAG,"run");
+				 
 				if (app.network_available()) {
 					user = app.getUser();
-					// Log.i("onStartCommand",
-					// String.valueOf(user.getUserId()) + ","
-					// + String.valueOf(user.getTokenStatus()));
+					 Log.i(TAG,
+					 String.valueOf(user.getUserId()) + ","
+					 + String.valueOf(user.getTokenStatus()));
+					 
 					if (user.getUserId() != 0 && user.getTokenStatus() != 0) {
+						
+						
 						upload();
 						
 						download();
@@ -103,12 +107,17 @@ public class AsyncService extends Service {
 		List<SubjectBean> subjectList = subjectDa
 				.load_changed_but_not_uploaded(user.getUserId());
 		
+		//Log.i(TAG,"upload");
+		
 		if (subjectList.size() == 0) {
 			return;
 		}
+		
+		//Log.i(TAG, "getLocalVersion:" + String.valueOf( subjectList.get(0).getLocalVersion()   ) );
+		//Log.i(TAG, "getserverVersion:" + String.valueOf( subjectList.get(0).getServerVersion()  ) );
 
 		// todo, 单个上传要改成批量上传
-		for (SubjectBean subject : subjectList) {
+		for (final SubjectBean subject : subjectList) {
 //			Log.i(TAG,
 //					String.valueOf(subject.getCreationDate()) + ","
 //							+ String.valueOf(subject.getUpdateDate()));
@@ -116,16 +125,18 @@ public class AsyncService extends Service {
 			if (user_id == 0) {
 				user_id = user.getUserId();
 			}
-
-//			Log.i(TAG, String.valueOf(subject.getRemoteId()));
+  
+			
+			//Log.i(TAG, String.valueOf(subject.getRemoteId()));
+			
+			subjectDa.set_uploading(subject.getId(), 1);
 
 			ftd.post_task(user_id, user.getAccessToken(), subject,
 					new JsonHttpResponseHandler() {
 						@Override
 						public void onSuccess(JSONObject result) {
-							try {
-								JSONObject data = result.getJSONObject("data");
-
+							try { 
+								JSONObject data = result.getJSONObject("data"); 
 								subjectDa.set_remoteId(
 										data.getLong("local_id"),
 										data.getLong("pk_id"),
@@ -135,6 +146,8 @@ public class AsyncService extends Service {
 
 							} catch (JSONException e) {
 								Log.e(TAG, e.toString());
+							}finally{
+								subjectDa.set_uploading(subject.getId(), 0);
 							}
 						}
 
@@ -145,8 +158,10 @@ public class AsyncService extends Service {
 								// add code here
 								app.set_token_failure();
 							}
+							
+							subjectDa.set_uploading(subject.getId(), 0);
 
-							//Log.d(TAG, String.valueOf(statusCode));
+						//	Log.d(TAG, String.valueOf(statusCode));
 
 						}
 					});
@@ -232,8 +247,10 @@ public class AsyncService extends Service {
 		//Log.i("next_remind", String.valueOf( subjectList.size()));
 		
 		for (SubjectBean subject : subjectList) {
-			String next_remind_date = Util.getNextDate2(subject.getRemindDate(),
+			String next_remind_date = Util.getNextDate2(subject.getNextRemindDate(),
 					subject.getRemindFrequency());
+			
+			//Log.i(TAG,next_remind_date);
 			subjectDa.set_next_remind(subject.getId(), next_remind_date);
 		}
 	}

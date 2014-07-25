@@ -33,6 +33,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "remind_next datetime ,"
 				+ "local_version INTEGER NOT NULL default 0,"	
 				+ "server_version INTEGER NOT NULL default 0,"	
+				+ "is_uploading INTEGER NOT NULL default 0,"	
 				+ "remote_id  INTEGER NOT NULL default 0)");
 		
 		db.execSQL("CREATE INDEX  ix_remote_id ON subjects (remote_id DESC)");

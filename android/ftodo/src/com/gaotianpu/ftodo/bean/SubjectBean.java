@@ -32,6 +32,17 @@ public class SubjectBean {
 		this.localVersion = localVersion;
 	} 
 	
+private int _server_version=0;	
+	public int getServerVersion() {
+		return _server_version;
+	}
+	public void setServerVersion(int server_version) {
+		this._server_version = server_version;
+	} 
+	
+	
+	
+	
 	public long getId() {
 		return pk_id;
 	}

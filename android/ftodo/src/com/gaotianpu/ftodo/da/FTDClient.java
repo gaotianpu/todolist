@@ -25,7 +25,9 @@ public class FTDClient {
 	private String RES_BASE_URL = "http://ftodo.sinaapp.com/api/";
 
 	private AsyncHttpClient client;
-
+	
+	private final String TAG = "FTDClient";
+	
 	// private PersistentCookieStore myCookieStore;
 
 	public FTDClient(Context context) {
@@ -141,6 +143,9 @@ public class FTDClient {
 		params.put("offset", String.valueOf(offset));
 		params.put("size", String.valueOf(size));
 		client.get(url, params, responseHandler);
+		
+		//Log.i(TAG,url+"?"+params.toString());
+		
 		return;
 
 	}
