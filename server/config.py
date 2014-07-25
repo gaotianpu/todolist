@@ -19,3 +19,6 @@ else:
     dbr = web.database(dbn='mysql', host='127.0.0.1', db='planc', user='root', pw='root')
     mc = False  
     redirect_uri = 'http://127.0.0.1:8080/callback'
+
+
+smtp_host = ("smtp.sina.com", 25, "damon@vampire.com", "password", False)

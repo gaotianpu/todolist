@@ -6,8 +6,9 @@ from datetime import *
 import json 
 import cron
 import api
-from config import dbw 
+from config import dbw, smtp_host
 import search
+
 
 web.config.debug = False
 
@@ -26,6 +27,7 @@ urls = (
     '/about','About',  
     '/host',"Host",
     '/mkindex','MkIndex',
+    '/sendmail',"SendMail",
     '/', 'Index',
 )
 
@@ -206,6 +208,12 @@ class About:
         i = web.input(os='android')
         r1 = web.template.render('templates/android',base='layout') 
         return r1.about()
+
+from sae.mail import send_mail
+class sendmail:
+    def GET(self):
+        send_mail("gaotianpu@qq.com", "invite", "to tonight's party", smtp_host)
+        return ""
 
 if __name__ == "__main__":
     # da.subject.load_page(1,10)
