@@ -4,6 +4,7 @@ import web
 import da
 import json 
 from datetime import *
+import search
 
 
 urls = (     
@@ -56,6 +57,12 @@ class New:
             i.creation_date,i.last_update) 
 
         task = da.subject.load_by_id(pk_id)
+
+        try:
+            search.make_index(task)
+        except:
+            pass  
+
         task.local_id = i.local_id  #local_id必须是本次请求的id
         #cron.update_term_count(task) #remove to eda?
         r = {"code":1,"data":task}
@@ -73,8 +80,13 @@ class Edit:
             parent_id=i.parent_id,version=i.local_version,is_delete=i.is_del,
             plan_start_date = i.plan_start_date,task_status=i.task_status,
             remind_datetime=i.remind_datetime,remind_next=i.remind_next,remind_frequency=i.remind_frequency,
-            closed_date=i.closed_date) 
+            closed_date=i.closed_date)         
         task = da.subject.load_by_id(i.remote_id) 
+        try:
+            search.make_index(task)
+        except:
+            pass  
+
         task.local_id = i.local_id        
         r = {"code":1,"data":task}
         return json.dumps(r,cls=CJsonEncoder) 

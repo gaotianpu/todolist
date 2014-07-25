@@ -107,7 +107,7 @@ public class AsyncService extends Service {
 		List<SubjectBean> subjectList = subjectDa
 				.load_changed_but_not_uploaded(user.getUserId());
 		
-		//Log.i(TAG,"upload");
+		Log.i(TAG,"upload");
 		
 		if (subjectList.size() == 0) {
 			return;

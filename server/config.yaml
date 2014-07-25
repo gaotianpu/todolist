@@ -1,4 +1,7 @@
----
 name: ftodo
 version: 1
-...
+cron:
+    - description: mkindex
+      url: /mkindex
+      schedule: "5 0 * * *"
+

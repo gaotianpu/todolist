@@ -384,7 +384,7 @@ public class SubjectDa {
 		List<SubjectBean> subjectList = new ArrayList<SubjectBean>();
 		db = dbHelper.getWritableDatabase();
 		try {
-			String sqlwhere = "is_uploading=0 and (user_id=? or user_id=0) and (local_version>server_version or remote_id=0) ";
+			String sqlwhere = "(user_id=? or user_id=0) and (local_version>server_version or remote_id=0) ";
 			Cursor cursor = db.query("subjects", list_selected_fields,
 					sqlwhere, new String[] { String.valueOf(user_id) }, null,
 					null, "pk_id desc limit 0,1");

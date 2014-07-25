@@ -7,6 +7,7 @@ import json
 import cron
 import api
 from config import dbw 
+import search
 
 web.config.debug = False
 
@@ -24,6 +25,7 @@ urls = (
     '/wordlist','WordList',   
     '/about','About',  
     '/host',"Host",
+    '/mkindex','MkIndex',
     '/', 'Index',
 )
 
@@ -129,7 +131,10 @@ class New:
         content = web.websafe(i.content)
         pk_id = da.subject.insert(session.user_id,content)
         task = da.subject.load_by_id(pk_id)
-        cron.update_term_count(task) #remove to eda?
+        try:
+            search.make_index(task)
+        except:
+            pass  
         r = {"code":1,"data":task}
         return json.dumps(r,cls=CJsonEncoder)  
 
@@ -137,6 +142,10 @@ class Details:
     def GET(self):
         i = web.input(pk_id=0)
         detail = da.subject.load_by_id(i.pk_id)
+        try:
+            search.make_index(task)
+        except:
+            pass  
         r = {"code":1,"data":detail}
         if detail.user_id != session.user_id:
             r = {"code":-1,"data":"not permid"}        
@@ -148,7 +157,10 @@ class Details:
         cron.update_term_count_by_id(i.pk_id) #remove to eda?
         return  
 
-
+class MkIndex:
+    def GET(self):
+        da.search.compute_tf_idf()
+        return "ok"
 
 import cron
 class Done:
