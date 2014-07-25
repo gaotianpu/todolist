@@ -81,6 +81,7 @@
     <string name="tab_all">全部</string>
     <string name="tab_todo">待办</string>
     <string name="tab_remind">提醒</string>
+    <string name="search">搜索</string>
     <string name="search_hint">搜索</string>
     <string name="search_label"></string>
     <string name="settings_description">settings_description</string>

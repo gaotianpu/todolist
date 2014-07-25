@@ -1,5 +1,6 @@
 package com.gaotianpu.ftodo.ui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,12 +26,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 
-
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 
+import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -76,15 +78,17 @@ public class SearchActivity extends Activity {
 		Intent intent = getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			query = intent.getStringExtra(SearchManager.QUERY);
-			setTitle(query);
-		} 
+
+			setTitle(this.getResources().getString(R.string.search) + ": "
+					+ query);
+		}
 
 		user = app.getUser();
 		if (user.getUserId() == 0 || user.getTokenStatus() == 0) {
 			txtTips.setText(R.string.user_unlogin);
 			return;
-		} 
-	 
+		}
+
 		if (!app.network_available()) {
 			txtTips.setText(R.string.network_failed);
 			return;
@@ -95,13 +99,47 @@ public class SearchActivity extends Activity {
 		listAdapter = new ListAdapter(this);
 		lvDefault.setAdapter(listAdapter);
 
+		// 返回按钮
+		act.getActionBar().setHomeButtonEnabled(true);
+		act.getActionBar().setDisplayHomeAsUpEnabled(true);
+		act.getActionBar().setDisplayShowHomeEnabled(true);
+
 		load_search_results(0, 100);
 
 		lvDefault_setOnItemClickListener();
 		// lvDefault_setOnScrollListener();
 
 	}
-	
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		int id = item.getItemId();
+
+		// Log.i("back", String.valueOf( KeyEvent.KEYCODE_HOME ));
+		//
+
+		if (item.isChecked()) {
+			return true;
+		}
+
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// //goback?
+			Runtime runtime = Runtime.getRuntime();
+			try {
+				runtime.exec("input keyevent " + KeyEvent.KEYCODE_BACK);
+				return true;
+			} catch (IOException e) {
+				Log.e("goback", e.toString());
+				e.printStackTrace();
+			}
+			break;
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
+
 	@Override
 	public void onResume() {
 		listAdapter.notifyDataSetChanged();
@@ -146,13 +184,13 @@ public class SearchActivity extends Activity {
 				size, new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(JSONObject result) {
-						 Log.i("search", "search onSuccess");
+						Log.i("search", "search onSuccess");
 						try {
 							subjectList.addAll(FTDClient
 									.Json2SubjectList(result));
-						
-							Log.i("search",String.valueOf(subjectList.size()));
-							
+
+							Log.i("search", String.valueOf(subjectList.size()));
+
 						} catch (Exception e) {
 							Log.e("search", e.toString());
 
@@ -251,66 +289,63 @@ public class SearchActivity extends Activity {
 		public long getItemId(int position) {
 			return position;
 		}
-		
+
 		private void item_img_btn_click(final SubjectBean subject) {
 			String[] pickdates = act.getResources().getStringArray(
-					R.array.subject_sorts) ;  
-			
+					R.array.subject_sorts);
+
 			int choic_index = -1;
-			if(subject.isRemind()){
+			if (subject.isRemind()) {
 				choic_index = 4;
-			}else if(subject.isTodo()){
-				if(subject.getStatus()==3){
+			} else if (subject.isTodo()) {
+				if (subject.getStatus() == 3) {
 					choic_index = 2;
-				}else if(subject.getStatus()==2){
+				} else if (subject.getStatus() == 2) {
 					choic_index = 3;
-				}else{
+				} else {
 					choic_index = 1;
 				}
-				
-			}else{
+
+			} else {
 				choic_index = 0;
 			}
-			
+
 			SubjectBean s = subjectDa.load_by_remoteId(subject.getUserId(),
 					subject.getRemoteId());
-			
+
 			final long local_id = s.getId();
-			
+
 			new AlertDialog.Builder(act)
-					.setTitle(subject.getBody())					 
+					.setTitle(subject.getBody())
 					.setSingleChoiceItems(pickdates, choic_index,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
-										int which) { 
-									Log.i("which",String.valueOf(which ) );
-									switch(which){
+										int which) {
+									Log.i("which", String.valueOf(which));
+									switch (which) {
 									case 0:
 										subject.setIsTodo(false);
 										subject.setIsRemind(false);
 										subjectDa.set_todo(local_id, false);
 										subjectDa.set_remind(local_id, false);
 										break;
-									case 1: //todo
+									case 1: // todo
 										subject.setIsTodo(true);
 										subject.setIsRemind(false);
 										subject.setStatus(0);
-										subjectDa.set_todo_status(local_id,
-												0);
+										subjectDa.set_todo_status(local_id, 0);
 										break;
-									case 2: //block
+									case 2: // block
 										subject.setIsRemind(false);
 										subject.setIsTodo(true);
 										subject.setStatus(3);
-										subjectDa.set_todo_status(local_id,
-												3);
-										break;		
+										subjectDa.set_todo_status(local_id, 3);
+										break;
 									case 3: // done
 										subject.setIsRemind(false);
 										subject.setIsTodo(true);
 										subject.setStatus(2);
-										subjectDa.set_todo_status(local_id,
-												2);
+										subjectDa.set_todo_status(local_id, 2);
 										break;
 									case 4: // remind
 									default:
@@ -319,14 +354,15 @@ public class SearchActivity extends Activity {
 										subjectDa.set_remind(local_id, true);
 										break;
 									}
-									dialog.dismiss();								
-									
-									listAdapter.notifyDataSetChanged();
-									//lvDefault.setSelection(0);
-								}
-							}).setNegativeButton(R.string.action_item_cancel, null).show(); 
-		}
+									dialog.dismiss();
 
+									listAdapter.notifyDataSetChanged();
+									// lvDefault.setSelection(0);
+								}
+							})
+					.setNegativeButton(R.string.action_item_cancel, null)
+					.show();
+		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
@@ -335,17 +371,17 @@ public class SearchActivity extends Activity {
 			convertView = inflater1.inflate(R.layout.listview_item, null);
 			TextView tv = (TextView) convertView.findViewById(R.id.tvBody);
 			tv.setText("" + subject.getBody().replaceAll("\n", ""));
-			
+
 			ImageButton ibtn = (ImageButton) convertView
 					.findViewById(R.id.btnIcon);
-			
+
 			ibtn.setOnClickListener(new View.OnClickListener() {
 				@Override
-				public void onClick(View v) { 
-					item_img_btn_click(subject); 
+				public void onClick(View v) {
+					item_img_btn_click(subject);
 				}
 			});
-			
+
 			switch (subject.get_sort_status()) {
 			case 0:
 			default: // 0, 普通备忘
