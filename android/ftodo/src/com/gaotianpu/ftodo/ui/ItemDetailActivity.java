@@ -221,7 +221,8 @@ public class ItemDetailActivity extends Activity {
 			subject = subjectDa.load_by_localId(user.getUserId(),
 					subject_local_id);
 
-			txtSubjectBody.setText(String.valueOf(subject.getRemoteId()) + ":" +  String.valueOf(subject_local_id) +";" +  subject.getBody());
+			//String.valueOf(subject.getRemoteId()) + ":" +  String.valueOf(subject_local_id) +";" + 
+			txtSubjectBody.setText( subject.getBody());
 
 			infoList.add(new SettingBean("creation_date",
 					getString(R.string.label_creation_date), subject

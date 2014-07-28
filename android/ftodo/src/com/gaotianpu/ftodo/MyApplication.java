@@ -58,7 +58,7 @@ public class MyApplication extends Application {
 	}
 
 	public String get_channel_no() {
-		return "baidu"; // dev,360,baidu,qq
+		return "360"; // dev,360,baidu,qq
 	}
 
 	public String get_version_no() {

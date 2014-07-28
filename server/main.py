@@ -16,6 +16,7 @@ urls = (
     '/api', api.app,     
     '/register','Register',
     '/login','Login',
+    '/mind','Mind',    
     '/list','List',    
     '/datelist','DateList',    
     '/new','New',       
@@ -51,6 +52,11 @@ class Index:
         if not session.user_id:
             raise web.seeother("/login")
         render = web.template.frender('templates/index2.html')
+        return render() 
+
+class Mind:
+    def GET(self):
+        render = web.template.frender('templates/mind.html')
         return render() 
 
 class Host:
@@ -209,10 +215,10 @@ class About:
         r1 = web.template.render('templates/android',base='layout') 
         return r1.about()
 
-from sae.mail import send_mail
+# from sae.mail import send_mail
 class sendmail:
     def GET(self):
-        send_mail("gaotianpu@qq.com", "invite", "to tonight's party", smtp_host)
+        # send_mail("gaotianpu@qq.com", "invite", "to tonight's party", smtp_host)
         return ""
 
 if __name__ == "__main__":
